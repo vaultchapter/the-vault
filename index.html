@@ -773,7 +773,7 @@ var activeThread=null;
 var perfChart=null;
 var chartVis={attendance:true,dues:true,gpa:true,overall:true};
 
-function nid(){window.nidVal++;save('nid',window.nidVal);return window.nidVal;}
+function nid(){window.nidVal++;saveQuiet('nid',window.nidVal);return window.nidVal;}
 function initials(n){return((n||'?').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2)||'?').toUpperCase();}
 function avColor(i){var c=[['#EEEDFE','#534AB7'],['#E1F5EE','#0F6E56'],['#FAECE7','#993C1D'],['#E6F1FB','#185FA5'],['#FAEEDA','#854F0B']];return c[(i||0)%c.length];}
 function fmtDate(d){

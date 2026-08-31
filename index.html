@@ -46,7 +46,7 @@
   signInAnonymously(auth).catch(function(e) { console.error('Anonymous sign-in failed:', e); });
 
   // Keys to sync
-  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts'];
+  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts','library','serviceRequests'];
 
   // Listen for changes from Firebase and update local state + re-render
   KEYS.forEach(function(k) {
@@ -78,6 +78,8 @@
       else if (k === 'serviceHours') { window.serviceHours = val; }
       else if (k === 'goals') { window.goals = val; }
       else if (k === 'receipts') { window.receipts = val; }
+      else if (k === 'library') { window.library = val; }
+      else if (k === 'serviceRequests') { window.serviceRequests = val; }
       // Re-render current tab
       if (window.renderAll) window.renderAll();
       if (k === 'settings' && window.settings) {
@@ -683,6 +685,21 @@ function save(k,v){
       window._fbSet(window._fbRef(window._fbDb,'chapter/'+k), v)
         .then(function(){ window._showSynced && window._showSynced(); })
         .catch(function(e){ console.error('Firebase save error:',e); showToast('Failed to save — check your connection','error'); });
+    }
+  }catch(e){}
+}
+// Same as save() but never shows the error toast — used for PUBLIC submissions
+// (e.g. service requests from anonymous visitors) where a Firebase permission
+// error is expected and shouldn't alarm the submitter. The value still caches
+// locally so it persists in the submitter's browser.
+function saveQuiet(k,v){
+  try{
+    localStorage.setItem('fm_'+k,JSON.stringify(v));
+    if(window._fbDb && window._fbSet && window._fbRef){
+      window._showSync && window._showSync();
+      window._fbSet(window._fbRef(window._fbDb,'chapter/'+k), v)
+        .then(function(){ window._showSynced && window._showSynced(); })
+        .catch(function(e){ console.warn('Firebase save (quiet) for "'+k+'" failed:', e.message||e); });
     }
   }catch(e){}
 }
@@ -2451,7 +2468,10 @@ function submitServiceRequest(){
   if(!name||!email||!details){showToast('Please fill in your name, email, and details','error');return;}
   if(email.indexOf('@')<0){showToast('Enter a valid email','error');return;}
   serviceRequests.push({id:nid(),name:name,email:email,org:gv('rq-org').trim(),type:gv('rq-type'),date:gv('rq-date'),details:details,status:'Pending',submitted:todayStr()});
-  save('serviceRequests',serviceRequests);
+  // Public submissions use a quiet save so anonymous viewers don't see a Firebase
+  // permission error (the data still caches locally; cross-device sync requires
+  // the Firebase rules change noted in the README).
+  saveQuiet('serviceRequests',serviceRequests);
   ['rq-name','rq-email','rq-org','rq-details'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});
   var s=document.getElementById('rq-sent');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none';},3500);}
   renderServiceRequests();

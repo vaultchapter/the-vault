@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apex</title>
+<title>The Vault</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpolygon points='32,2 60,14 60,34 32,62 4,34 4,14' fill='%236d1a2a'/%3E%3Ctext x='32' y='40' font-family='Georgia, serif' font-weight='700' font-size='15' fill='%23c3c7cf' text-anchor='middle'%3E%CE%A4%CE%9A%CE%95%3C/text%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
@@ -85,7 +85,7 @@
       if (k === 'settings' && window.settings) {
         var el1 = document.getElementById('sb-chapter');
         var el2 = document.getElementById('sb-sub');
-        if (el1) el1.textContent = window.settings.chapterName || 'Apex';
+        if (el1) el1.textContent = window.settings.chapterName || 'The Vault';
         if (el2) el2.textContent = window.settings.semester || 'Fall 2026';
       }
     });
@@ -340,7 +340,7 @@ textarea.inp{resize:vertical;min-height:70px}
           <span>ΤΚΕ</span>
         </div>
         <div>
-          <div class="ch-name" id="sb-chapter" title="Double-click to edit settings">Apex</div>
+          <div class="ch-name" id="sb-chapter" title="Double-click to edit settings">The Vault</div>
           <div class="ch-sub" id="sb-sub">Fall 2026</div>
         </div>
       </div>
@@ -737,7 +737,7 @@ window.announcements=load('announcements',[]);
 window.messages=load('messages',{});
 window.chores=load('chores',[]);
 window.maintenance=load('maintenance',[]);
-window.settings=load('settings',{chapterName:'Apex',semester:'Fall 2026',gpaThreshold:2.5,fineAmount:25,studyMin:10,pointsPerEvent:5,pointsPerStudyHour:1});
+window.settings=load('settings',{chapterName:'The Vault',semester:'Fall 2026',gpaThreshold:2.5,fineAmount:25,studyMin:10,pointsPerEvent:5,pointsPerStudyHour:1});
 window.studyHours=load('studyHours',[]);
 window.perfHistory=load('perfHistory',[]);
 window.nidVal=load('nid',300);
@@ -2302,7 +2302,7 @@ function renderBlastPreview(){
   if(type!=='custom')out+=templates[type];
   if(title)out+=(title.toUpperCase())+'\n'+'—'.repeat(Math.min(title.length,30))+'\n\n';
   if(body)out+=body+'\n\n';
-  if(chap)out+='— '+(settings.chapterName||'Apex')+'\n';
+  if(chap)out+='— '+(settings.chapterName||'The Vault')+'\n';
   if(sig)out+=(officerEmail||'Officer')+'\n';
   var preview=document.getElementById('blast-preview');
   if(preview)preview.textContent=out||'Fill in the fields above to preview your message.';

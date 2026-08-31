@@ -368,6 +368,8 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('announce',this)"><i class="ti ti-speakerphone"></i><span>Announcements</span></div>
     <div class="nav-item" onclick="go('messages',this)"><i class="ti ti-message"></i><span>Messages</span></div>
     <div class="nav-item" onclick="go('blast',this)"><i class="ti ti-send"></i><span>Message Blast</span></div>
+    <div class="nav-sec">Resources</div>
+    <div class="nav-item" onclick="go('library',this)"><i class="ti ti-folders"></i><span>Library</span></div>
     </div>
     <div class="sb-foot" style="flex-direction:column;align-items:flex-start;gap:6px">
       <div id="auth-status" style="font-size:12px;color:rgba(255,255,255,0.7)">Viewing (not logged in)</div>
@@ -536,6 +538,44 @@ textarea.inp{resize:vertical;min-height:70px}
           <thead><tr><th>Rank</th><th>Member</th><th>Service Hours</th></tr></thead>
           <tbody id="service-body"></tbody>
         </table></div>
+
+        <div style="margin-top:20px">
+          <div class="sc" style="border-top-color:var(--gold);margin-bottom:14px">
+            <div class="sl">Submit a service request</div>
+            <div class="ss">Open to everyone — no login required. An officer will review your request and follow up.</div>
+          </div>
+          <div style="max-width:680px">
+            <div class="fr2">
+              <div class="fr"><label class="fl">Your name</label><input class="inp" id="rq-name" placeholder="First and last name"></div>
+              <div class="fr"><label class="fl">Email</label><input class="inp" id="rq-email" type="email" placeholder="you@example.com"></div>
+            </div>
+            <div class="fr2">
+              <div class="fr"><label class="fl">Organization</label><input class="inp" id="rq-org" placeholder="Optional"></div>
+              <div class="fr"><label class="fl">Preferred date</label><input class="inp" id="rq-date" type="date"></div>
+            </div>
+            <div class="fr"><label class="fl">Type of service</label>
+              <select class="inp" id="rq-type">
+                <option>Community service</option>
+                <option>Philanthropy / fundraising</option>
+                <option>Event support</option>
+                <option>Campus cleanup</option>
+                <option>Mentoring / tutoring</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="fr"><label class="fl">Details</label><textarea class="inp" id="rq-details" rows="3" placeholder="Tell us what you need..."></textarea></div>
+            <button class="btn btn-primary" onclick="submitServiceRequest()"><i class="ti ti-send"></i> Submit request</button>
+            <span id="rq-sent" style="font-size:12px;color:var(--green);margin-left:10px;display:none">✓ Request submitted!</span>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-size:13px;font-weight:600;color:var(--text2)">Service requests</div>
+            <div style="font-size:12px;color:var(--text3)" id="rq-count"></div>
+          </div>
+          <div id="rq-list"></div>
+        </div>
       </div>
 
       <div class="panel" id="panel-attendance">
@@ -613,6 +653,20 @@ textarea.inp{resize:vertical;min-height:70px}
         </div>
       </div>
 
+      <div class="panel" id="panel-library">
+        <div class="sb">
+          <input class="inp" style="flex:1" type="text" id="lib-search" placeholder="Search documents..." oninput="renderLibrary()">
+          <select class="inp" style="width:150px" id="lib-filter" onchange="renderLibrary()">
+            <option value="all">All categories</option>
+            <option value="Form">Form</option>
+            <option value="Document">Document</option>
+            <option value="Policy">Policy</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div id="lib-list"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -679,6 +733,8 @@ window.nationalEvents=load('nationalEvents',[]);
 window.serviceHours=load('serviceHours',[]);
 window.goals=load('goals',[]);
 window.receipts=load('receipts',[]);
+window.library=load('library',[]);
+window.serviceRequests=load('serviceRequests',[]);
 // Shorthand references (these point to window.X)
 var members=window.members,events=window.events,dues=window.dues,transactions=window.transactions,
     budget=window.budget,fines=window.fines,prospects=window.prospects,announcements=window.announcements,
@@ -686,7 +742,7 @@ var members=window.members,events=window.events,dues=window.dues,transactions=wi
     settings=window.settings,perfHistory=window.perfHistory,nidVal=window.nidVal,studyHours=window.studyHours,
     points=window.points,concessions=window.concessions,volunteers=window.volunteers,soberDrivers=window.soberDrivers,
     tkeWeek=window.tkeWeek,nationalEvents=window.nationalEvents,serviceHours=window.serviceHours,goals=window.goals,
-    receipts=window.receipts;
+    receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests;
 var curTab='dashboard';
 var evTab='upcoming';
 var calMonth=new Date().getMonth();
@@ -784,8 +840,8 @@ function gv(id){var el=document.getElementById(id);return el?el.value:'';}
 function gc(id){var el=document.getElementById(id);return el?el.checked:false;}
 
 // NAV
-var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Concession Schedule',volunteers:'Volunteer Board',sober:'Sober Drivers',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',blast:'Message Blast'};
-var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points'};
+var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Concession Schedule',volunteers:'Volunteer Board',sober:'Sober Drivers',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',blast:'Message Blast',library:'Library'};
+var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document'};
 function go(tab,el){
   curTab=tab;
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
@@ -808,12 +864,12 @@ function closeSidebar(){
   if(bd)bd.classList.remove('open');
 }
 function updateAddBtn(){
-  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),blast:false};
+  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),blast:false,library:canEdit()};
   document.getElementById('add-btn').style.display=(show[curTab])?'inline-flex':'none';
   document.getElementById('add-lbl').textContent=addLabels[curTab]||'Add';
 }
 function handleAdd(){
-  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal};
+  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal,library:addLibraryModal};
   if(h[curTab])h[curTab]();
 }
 function renderAll(){
@@ -837,6 +893,7 @@ function renderAll(){
   else if(curTab==='attendance')renderAttendanceOverview();
   else if(curTab==='points')renderPoints();
   else if(curTab==='blast')renderBlastPreview();
+  else if(curTab==='library')renderLibrary();
 }
 window.renderAll = renderAll;
 
@@ -2119,12 +2176,15 @@ function renderService(){
     return hb-ha;
   });
   var body=document.getElementById('service-body');
-  if(!sorted.length){body.innerHTML='<tr><td colspan="3" class="empty">No members</td></tr>';return;}
+  if(!sorted.length){body.innerHTML='<tr><td colspan="3" class="empty">No members</td></tr>';}
+  else{
   body.innerHTML=sorted.map(function(m,i){
     var hrs=serviceHours.filter(function(s){return s.memberId===m.id;}).reduce(function(a,s){return a+s.hours;},0);
     var cv=avColor(m.id||0);
     return '<tr><td>'+(i+1)+'</td><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+'</div></td><td><strong>'+hrs+'</strong> hrs</td></tr>';
   }).join('');
+  }
+  renderServiceRequests();
 }
 function addServiceModal(){
   var active=members.filter(function(m){return m.status!=='Alumni';});
@@ -2330,6 +2390,114 @@ function printRoster(){
   if(!w){showToast('Enable pop-ups to print the roster','error');return;}
   w.document.write(html);w.document.close();
   setTimeout(function(){w.print();},300);
+}
+
+// LIBRARY
+var LIB_CATS=['Form','Document','Policy','Other'];
+function renderLibrary(){
+  var q=(gv('lib-search')||'').toLowerCase();
+  var f=gv('lib-filter')||'all';
+  var sorted=[].concat(library).sort(function(a,b){return (b.added||'').localeCompare(a.added||'');});
+  var list=document.getElementById('lib-list');
+  var n=0;
+  var html=sorted.map(function(d){
+    if(q&&(d.title||'').toLowerCase().indexOf(q)<0&&(d.desc||'').toLowerCase().indexOf(q)<0)return'';
+    if(f!=='all'&&d.cat!==f)return'';
+    n++;
+    var badgeBg=d.cat==='Form'?'#E6F1FB':d.cat==='Document'?'#E1F5EE':d.cat==='Policy'?'#FAEEDA':'#EEEDFE';
+    var badgeFg=d.cat==='Form'?'#185FA5':d.cat==='Document'?'#0F6E56':d.cat==='Policy'?'#854F0B':'#534AB7';
+    var linkBtn=(d.link)?'<a class="btn btn-sm btn-primary" href="'+esc(d.link)+'" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> Open</a>':'<span style="font-size:12px;color:var(--text3)">No link</span>';
+    var delBtn=canEdit()?'<button class="btn btn-sm" onclick="deleteLibraryItem('+d.id+')" title="Delete"><i class="ti ti-trash"></i></button>':'';
+    return '<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;padding:14px 16px">'+
+      '<i class="ti '+(d.cat==='Form'?'ti-form':d.cat==='Document'?'ti-file-text':'ti-file')+'" style="font-size:22px;color:var(--gold)"></i>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong style="font-size:14px">'+esc(d.title)+'</strong>'+
+        '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:'+badgeBg+';color:'+badgeFg+';padding:2px 8px;border-radius:20px">'+esc(d.cat)+'</span></div>'+
+        (d.desc?'<div style="font-size:12px;color:var(--text2);margin-top:3px">'+esc(d.desc)+'</div>':'')+
+        (d.link?'<div style="font-size:11px;color:var(--text3);margin-top:3px;word-break:break-all">'+esc(d.link)+'</div>':'')+
+      '</div>'+
+      '<div style="display:flex;gap:6px;flex-shrink:0">'+linkBtn+delBtn+'</div>'+
+    '</div>';
+  }).join('');
+  list.innerHTML=html||'<div class="empty">No documents yet'+(canEdit()?'. Click “Add Document” to upload one.' :'. Check back soon.')+'</div>';
+}
+function addLibraryModal(){
+  openModal('Add document',
+    '<div class="fr"><label class="fl">Title</label><input class="inp" id="lb-title" placeholder="e.g. Pledge Application Form"></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Category</label><select class="inp" id="lb-cat">'+LIB_CATS.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'+
+    '<div class="fr"><label class="fl">Link (URL)</label><input class="inp" id="lb-link" placeholder="https://... (Google Drive, PDF, etc.)"></div></div>'+
+    '<div class="fr"><label class="fl">Description</label><input class="inp" id="lb-desc" placeholder="What is this document for?"></div>'+
+    '<div style="font-size:12px;color:var(--text3);margin:6px 0 4px"><i class="ti ti-info-circle"></i> Paste a shareable link (e.g. Google Drive set to “Anyone with link”). Files aren’t stored on this site.</div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLibraryItem()">Add to library</button></div>'
+  );
+}
+function saveLibraryItem(){
+  var title=gv('lb-title').trim();
+  if(!title){showToast('Enter a title','error');return;}
+  library.push({id:nid(),title:title,cat:gv('lb-cat'),link:gv('lb-link').trim(),desc:gv('lb-desc').trim(),added:todayStr()});
+  save('library',library);closeModal();renderLibrary();showToast('Document added to library');
+}
+function deleteLibraryItem(id){
+  if(!confirm('Remove this document from the library?'))return;
+  library=library.filter(function(d){return d.id!==id;});
+  save('library',library);renderLibrary();showToast('Document removed');
+}
+
+// SERVICE REQUESTS (public — no login needed)
+function submitServiceRequest(){
+  var name=gv('rq-name').trim();
+  var email=gv('rq-email').trim();
+  var details=gv('rq-details').trim();
+  if(!name||!email||!details){showToast('Please fill in your name, email, and details','error');return;}
+  if(email.indexOf('@')<0){showToast('Enter a valid email','error');return;}
+  serviceRequests.push({id:nid(),name:name,email:email,org:gv('rq-org').trim(),type:gv('rq-type'),date:gv('rq-date'),details:details,status:'Pending',submitted:todayStr()});
+  save('serviceRequests',serviceRequests);
+  ['rq-name','rq-email','rq-org','rq-details'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});
+  var s=document.getElementById('rq-sent');if(s){s.style.display='inline';setTimeout(function(){s.style.display='none';},3500);}
+  renderServiceRequests();
+  showToast('Request submitted — an officer will review it');
+}
+function renderServiceRequests(){
+  var list=document.getElementById('rq-list');
+  if(!list)return;
+  var cnt=document.getElementById('rq-count');
+  var pending=serviceRequests.filter(function(r){return r.status==='Pending';}).length;
+  if(cnt)cnt.textContent=serviceRequests.length+' total · '+pending+' pending';
+  var sorted=[].concat(serviceRequests).sort(function(a,b){return (b.submitted||'').localeCompare(a.submitted||'');});
+  if(!sorted.length){list.innerHTML='<div class="empty">No service requests yet.</div>';return;}
+  list.innerHTML=sorted.map(function(r){
+    var st=r.status==='Pending'?'#FAEEDA':r.status==='Accepted'?'#E1F5EE':'#FAECE7';
+    var sf=r.status==='Pending'?'#854F0B':r.status==='Accepted'?'#0F6E56':'#993C1D';
+    var act=canEdit()&&r.status==='Pending'?'<div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="acceptServiceRequest('+r.id+')"><i class="ti ti-check"></i> Accept</button><button class="btn btn-sm" onclick="declineServiceRequest('+r.id+')"><i class="ti ti-x"></i> Decline</button></div>':'';
+    var acted=r.handledBy?'<div style="font-size:11px;color:var(--text3);margin-top:6px">Reviewed by '+esc(r.handledBy)+' on '+esc(r.handledDate||'—')+'</div>':'';
+    return '<div class="card" style="margin-bottom:10px;padding:14px 16px">'+
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">'+
+        '<div style="flex:1;min-width:180px">'+
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong style="font-size:14px">'+esc(r.name)+'</strong>'+
+          '<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;background:'+st+';color:'+sf+';padding:2px 8px;border-radius:20px">'+esc(r.status)+'</span></div>'+
+          '<div style="font-size:12px;color:var(--text2);margin-top:4px">'+esc(r.type)+(r.date?' · '+esc(r.date):'')+(r.org?' · '+esc(r.org):'')+'</div>'+
+          '<div style="font-size:12px;color:var(--text3);margin-top:4px">'+esc(r.email)+'</div>'+
+          '<div style="font-size:13px;color:var(--text);margin-top:6px;white-space:pre-wrap">'+esc(r.details)+'</div>'+
+          (r.submitted?'<div style="font-size:11px;color:var(--text3);margin-top:6px">Submitted '+esc(r.submitted)+'</div>':'')+
+          acted+
+        '</div>'+
+        act+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+function acceptServiceRequest(id){
+  var r=serviceRequests.find(function(x){return x.id===id;});
+  if(!r)return;
+  r.status='Accepted';r.handledBy=officerEmail||'Officer';r.handledDate=todayStr();
+  save('serviceRequests',serviceRequests);renderServiceRequests();showToast('Request accepted');
+}
+function declineServiceRequest(id){
+  if(!confirm('Decline this service request?'))return;
+  var r=serviceRequests.find(function(x){return x.id===id;});
+  if(!r)return;
+  r.status='Declined';r.handledBy=officerEmail||'Officer';r.handledDate=todayStr();
+  save('serviceRequests',serviceRequests);renderServiceRequests();showToast('Request declined');
 }
 
 // INIT

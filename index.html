@@ -1225,7 +1225,7 @@ function renderEvents(){
       if(officerAuthed)btns+='<button class="btn btn-sm" onclick="rsvpEvent('+e.id+')"><i class="ti ti-check"></i> RSVP</button>';
       else btns+='<span style="font-size:11px;color:var(--text3)">Log in to RSVP</span>';
     }
-    if(canOfficer()&&!up)btns+='<button class="btn btn-sm" onclick="logAttModal('+e.id+')"><i class="ti ti-checkbox"></i> Attendance</button>';
+    if(canOfficer())btns+='<button class="btn btn-sm" onclick="logAttModal('+e.id+')"><i class="ti ti-checkbox"></i> Attendance</button>';
     if(canOfficer())btns+='<button class="btn btn-sm" onclick="editEventModal('+e.id+')"><i class="ti ti-edit"></i></button>';
     return '<div class="ev-card">'+
       '<div class="ev-date"><div class="ev-month">'+f.month+'</div><div class="ev-day">'+f.day+'</div></div>'+
@@ -1904,7 +1904,7 @@ function renderAttendanceTakeList(){
     el.innerHTML='<div class="empty">Log in as an officer to take attendance.</div>';
     return;
   }
-  var evs=[].concat(events).filter(function(e){return !isUpcoming(e.date);}).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,20);
+  var evs=[].concat(events).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,20);
   if(!evs.length){el.innerHTML='<div class="empty">No events yet — add one from the Events tab, then come back here to take attendance.</div>';return;}
   el.innerHTML=evs.map(function(e){
     var f=fmtDate(e.date);

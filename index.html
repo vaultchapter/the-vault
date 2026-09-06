@@ -582,6 +582,8 @@ textarea.inp{resize:vertical;min-height:70px}
 
       <div class="panel" id="panel-attendance">
         <div class="sg" id="att-overview-stats"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Take attendance</div>
+        <div id="att-take-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Member attendance overview</div>
         <div class="tw"><table>
           <thead><tr><th>Member</th><th>Attended</th><th>Required Events</th><th>Rate</th><th>Status</th></tr></thead>
@@ -1892,6 +1894,31 @@ function renderAttendanceOverview(){
       '<td><div style="display:flex;align-items:center;gap:8px"><div class="bar-bg" style="width:80px;display:inline-block"><div class="bar-fill" style="width:'+rate+'%;background:'+(rate>=90?'var(--green)':rate>=70?'var(--gold)':'var(--red)')+'"></div></div>'+rate+'%</div></td>'+
       '<td><span class="badge '+status+'">'+label+'</span></td>'+
       '</tr>';
+  }).join('');
+  renderAttendanceTakeList();
+}
+function renderAttendanceTakeList(){
+  var el=document.getElementById('att-take-list');
+  if(!el)return;
+  if(!canOfficer()){
+    el.innerHTML='<div class="empty">Log in as an officer to take attendance.</div>';
+    return;
+  }
+  var evs=[].concat(events).filter(function(e){return !isUpcoming(e.date);}).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,20);
+  if(!evs.length){el.innerHTML='<div class="empty">No events yet — add one from the Events tab, then come back here to take attendance.</div>';return;}
+  el.innerHTML=evs.map(function(e){
+    var f=fmtDate(e.date);
+    var taken=e.total>0;
+    var pct=taken?Math.round(e.attended/e.total*100):null;
+    var status=taken?(e.attended+'/'+e.total+' attended ('+pct+'%)'):'Attendance not taken yet';
+    return '<div class="ev-card">'+
+      '<div class="ev-date"><div class="ev-month">'+f.month+'</div><div class="ev-day">'+f.day+'</div></div>'+
+      '<div class="ev-info">'+
+        '<div style="display:flex;align-items:center;gap:7px"><div class="ev-name">'+esc(e.name)+'</div>'+(e.required?'<span class="badge b-req" style="font-size:10px">Required</span>':'')+'</div>'+
+        '<div class="ev-meta"><span>'+status+'</span></div>'+
+      '</div>'+
+      '<div><button class="btn btn-sm btn-primary" onclick="logAttModal('+e.id+')"><i class="ti ti-checkbox"></i> '+(taken?'Edit':'Take')+' attendance</button></div>'+
+      '</div>';
   }).join('');
 }
 

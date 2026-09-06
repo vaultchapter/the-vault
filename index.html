@@ -763,6 +763,7 @@ var members=window.members,events=window.events,dues=window.dues,transactions=wi
     tkeWeek=window.tkeWeek,nationalEvents=window.nationalEvents,serviceHours=window.serviceHours,goals=window.goals,
     receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests;
 var curTab='dashboard';
+var attTakeEventId=null;
 var evTab='upcoming';
 var calMonth=new Date().getMonth();
 var calYear=new Date().getFullYear();
@@ -1904,22 +1905,41 @@ function renderAttendanceTakeList(){
     el.innerHTML='<div class="empty">Log in as an officer to take attendance.</div>';
     return;
   }
-  var evs=[].concat(events).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,20);
-  if(!evs.length){el.innerHTML='<div class="empty">No events yet — add one from the Events tab, then come back here to take attendance.</div>';return;}
-  el.innerHTML=evs.map(function(e){
-    var f=fmtDate(e.date);
-    var taken=e.total>0;
-    var pct=taken?Math.round(e.attended/e.total*100):null;
-    var status=taken?(e.attended+'/'+e.total+' attended ('+pct+'%)'):'Attendance not taken yet';
-    return '<div class="ev-card">'+
-      '<div class="ev-date"><div class="ev-month">'+f.month+'</div><div class="ev-day">'+f.day+'</div></div>'+
-      '<div class="ev-info">'+
-        '<div style="display:flex;align-items:center;gap:7px"><div class="ev-name">'+esc(e.name)+'</div>'+(e.required?'<span class="badge b-req" style="font-size:10px">Required</span>':'')+'</div>'+
-        '<div class="ev-meta"><span>'+status+'</span></div>'+
-      '</div>'+
-      '<div><button class="btn btn-sm btn-primary" onclick="logAttModal('+e.id+')"><i class="ti ti-checkbox"></i> '+(taken?'Edit':'Take')+' attendance</button></div>'+
+  if(!events.length){el.innerHTML='<div class="empty">No events yet — add one from the Events tab (e.g. your weekly chapter meeting), then come back here to take attendance.</div>';return;}
+  var sortedEv=[].concat(events).sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(attTakeEventId===null||!events.some(function(e){return e.id===attTakeEventId;})){
+    var meetingDefault=sortedEv.find(function(e){return e.type==='Meeting'&&!isUpcoming(e.date);})||sortedEv.find(function(e){return e.type==='Meeting';});
+    attTakeEventId=(meetingDefault||sortedEv[0]).id;
+  }
+  var ev=events.find(function(e){return e.id===attTakeEventId;});
+  var options=sortedEv.map(function(e){var f=fmtDate(e.date);return '<option value="'+e.id+'"'+(e.id===attTakeEventId?' selected':'')+'>'+esc(e.name)+' ('+esc(e.type||'Event')+') — '+f.full+'</option>';}).join('');
+  var mlist=members.filter(function(m){return m.status!=='Alumni';}).slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  var chips=mlist.map(function(m){
+    var present=ev&&(ev.attendance||[]).indexOf(m.id)>=0;
+    var cv=avColor(m.id||0);
+    return '<div onclick="toggleAttendanceFor('+m.id+')" style="cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid '+(present?'var(--green)':'var(--border)')+';background:'+(present?'var(--green-l)':'var(--bg)')+';border-radius:99px;font-size:13px">'+
+      '<span class="av" style="width:22px;height:22px;font-size:9px;background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</span>'+
+      esc(m.name)+
+      (present?'<i class="ti ti-check" style="color:var(--green);font-size:15px"></i>':'')+
       '</div>';
   }).join('');
+  el.innerHTML=
+    '<div style="margin-bottom:10px"><label class="fl" style="display:block;margin-bottom:4px">Taking attendance for</label>'+
+    '<select class="inp" style="max-width:360px" onchange="attTakeEventId=parseInt(this.value);renderAttendanceTakeList()">'+options+'</select></div>'+
+    '<div style="font-size:12px;color:var(--text2);margin-bottom:8px">Click a name to mark present/absent'+(ev?' — '+(ev.attendance||[]).length+'/'+mlist.length+' marked present so far':'')+'</div>'+
+    '<div style="display:flex;flex-wrap:wrap;gap:8px">'+(chips||'<div class="empty">No active members or pledges to mark</div>')+'</div>';
+}
+function toggleAttendanceFor(mid){
+  var ev=events.find(function(e){return e.id===attTakeEventId;});
+  if(!ev)return;
+  if(!ev.attendance)ev.attendance=[];
+  var idx=ev.attendance.indexOf(mid);
+  if(idx>=0)ev.attendance.splice(idx,1);else ev.attendance.push(mid);
+  ev.attended=ev.attendance.length;
+  ev.total=members.filter(function(m){return m.status!=='Alumni';}).length;
+  save('events',events);
+  renderAttendanceTakeList();
+  renderAttendanceOverview();
 }
 
 // GOALS

@@ -863,6 +863,7 @@ textarea.inp{resize:vertical;min-height:70px}
 
       <div class="panel" id="panel-attendance">
         <div class="sg" id="att-overview-stats"></div>
+        <div class="dash-panel" id="att-last-meeting" style="margin-bottom:16px"></div>
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Take attendance</div>
         <div id="att-take-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
@@ -873,7 +874,7 @@ textarea.inp{resize:vertical;min-height:70px}
           </div>
         </div>
         <div class="tw"><table>
-          <thead><tr><th>Member</th><th>Attended</th><th>Required Events</th><th>Rate</th><th>Status</th></tr></thead>
+          <thead><tr id="att-overview-thead"><th>Member</th><th>Attended</th><th>Sessions</th><th>Rate</th><th>Status</th></tr></thead>
           <tbody id="att-overview-body"></tbody>
         </table></div>
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin:18px 0 10px">Attendance log</div>
@@ -2618,30 +2619,36 @@ function saveStudyHours(){
 function renderAttendanceOverview(){
   var reqEv=events.filter(function(e){return e.required&&!isUpcoming(e.date);});
   var allEv=events.filter(function(e){return !isUpcoming(e.date);});
+  var basisEv=reqEv.length?reqEv:allEv; // fall back to all sessions if nothing is flagged "required"
+  var basisLabel=reqEv.length?'Required events':'Sessions logged';
   var activeM=members.filter(function(m){return m.status!=='Alumni';});
-  var avgRate=activeM.length&&reqEv.length?(function(){
+  var avgRate=activeM.length&&basisEv.length?(function(){
     var total=activeM.reduce(function(a,m){
-      var att=reqEv.filter(function(e){return (e.attendance||[]).indexOf(m.id)>=0;}).length;
-      return a+att/reqEv.length;
+      var att=basisEv.filter(function(e){return (e.attendance||[]).indexOf(m.id)>=0;}).length;
+      return a+att/basisEv.length;
     },0);
     return Math.round(total/activeM.length*100);
   })():0;
   document.getElementById('att-overview-stats').innerHTML=
-    '<div class="sc"><div class="sl">Required events</div><div class="sv">'+reqEv.length+'</div></div>'+
-    '<div class="sc"><div class="sl">Total events</div><div class="sv">'+allEv.length+'</div></div>'+
+    '<div class="sc"><div class="sl">'+basisLabel+'</div><div class="sv">'+basisEv.length+'</div></div>'+
+    '<div class="sc"><div class="sl">Total sessions</div><div class="sv">'+allEv.length+'</div></div>'+
     '<div class="sc"><div class="sl">Avg attendance rate</div><div class="sv">'+avgRate+'%</div></div>'+
-    '<div class="sc"><div class="sl">Perfect attendance</div><div class="sv">'+activeM.filter(function(m){return reqEv.length&&reqEv.every(function(e){return (e.attendance||[]).indexOf(m.id)>=0;});}).length+'</div></div>';
+    '<div class="sc"><div class="sl">Perfect attendance</div><div class="sv">'+activeM.filter(function(m){return basisEv.length&&basisEv.every(function(e){return (e.attendance||[]).indexOf(m.id)>=0;});}).length+'</div></div>';
+
+  renderLastMeeting(allEv);
 
   var filterEl=document.getElementById('att-filter-row');
   if(filterEl)filterEl.innerHTML=['All','Excellent','OK','At risk'].map(function(s){return '<button class="chip'+(attStatusFilter===s?' on':'')+'" onclick="setAttFilter(\''+s+'\')">'+s+'</button>';}).join('');
 
   var q=(document.getElementById('att-search')?document.getElementById('att-search').value:'').toLowerCase();
   var body=document.getElementById('att-overview-body');
+  var theadRow=document.getElementById('att-overview-thead');
+  if(theadRow)theadRow.children[2].textContent=reqEv.length?'Required Events':'Sessions';
   if(!activeM.length){body.innerHTML='<tr><td colspan="5" class="empty">No members</td></tr>';return;}
   var withRate=activeM.map(function(m){
-    var att=reqEv.filter(function(e){return (e.attendance||[]).indexOf(m.id)>=0;}).length;
-    var rate=reqEv.length?Math.round(att/reqEv.length*100):100;
-    var label=rate>=90?'Excellent':rate>=70?'OK':'At risk';
+    var att=basisEv.filter(function(e){return (e.attendance||[]).indexOf(m.id)>=0;}).length;
+    var rate=basisEv.length?Math.round(att/basisEv.length*100):0;
+    var label=!basisEv.length?'No data':rate>=90?'Excellent':rate>=70?'OK':'At risk';
     return {m:m,att:att,rate:rate,label:label};
   }).filter(function(r){
     if(attStatusFilter!=='All'&&r.label!==attStatusFilter)return false;
@@ -2652,11 +2659,11 @@ function renderAttendanceOverview(){
   body.innerHTML=withRate.map(function(r){
     var m=r.m,att=r.att,rate=r.rate,label=r.label;
     var cv=avColor(m.id||0);
-    var status=rate>=90?'b-paid':rate>=70?'b-partial':'b-unpaid';
+    var status=label==='No data'?'b-partial':rate>=90?'b-paid':rate>=70?'b-partial':'b-unpaid';
     return '<tr>'+
       '<td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+'</div></td>'+
       '<td>'+att+'</td>'+
-      '<td>'+reqEv.length+'</td>'+
+      '<td>'+basisEv.length+'</td>'+
       '<td><div style="display:flex;align-items:center;gap:8px"><div class="bar-bg" style="width:80px;display:inline-block"><div class="bar-fill" style="width:'+rate+'%;background:'+(rate>=90?'var(--green)':rate>=70?'var(--gold)':'var(--red)')+'"></div></div>'+rate+'%</div></td>'+
       '<td><span class="badge '+status+'">'+label+'</span></td>'+
       '</tr>';
@@ -2733,6 +2740,25 @@ function saveQuickAttendanceSession(){
   closeModal();
   renderAttendanceOverview();
   showToast('Session started — tap names to mark present');
+}
+function renderLastMeeting(allEv){
+  var el=document.getElementById('att-last-meeting');
+  if(!el)return;
+  var withAtt=allEv.filter(function(e){return e.attendance&&e.attendance.length;});
+  var last=withAtt.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');})[0];
+  if(!last){el.innerHTML='<div class="dash-panel-hdr">Last meeting</div><div class="empty">No sessions taken yet — start one below</div>';return;}
+  var activeM=members.filter(function(m){return m.status!=='Alumni';}).slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  var presentIds=last.attendance||[];
+  var present=activeM.filter(function(m){return presentIds.indexOf(m.id)>=0;});
+  var absent=activeM.filter(function(m){return presentIds.indexOf(m.id)<0;});
+  var f=fmtDate(last.date);
+  el.innerHTML='<div class="dash-panel-hdr"><span>Last meeting — '+esc(last.name)+' ('+f.full+')</span><span style="font-size:11px;color:var(--text3);cursor:pointer" onclick="attTakeEventId='+last.id+';renderAttendanceOverview();document.getElementById(\'att-take-list\').scrollIntoView({behavior:\'smooth\'})">Edit this session</span></div>'+
+    '<div style="display:flex;gap:24px;flex-wrap:wrap">'+
+    '<div style="flex:1;min-width:200px"><div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:6px">Present ('+present.length+')</div>'+
+    (present.length?present.map(function(m){return '<div style="font-size:12.5px;padding:3px 0">'+esc(m.name)+'</div>';}).join(''):'<div class="empty" style="padding:6px 0">Nobody marked present</div>')+'</div>'+
+    '<div style="flex:1;min-width:200px"><div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:6px">Absent ('+absent.length+')</div>'+
+    (absent.length?absent.map(function(m){return '<div style="font-size:12.5px;padding:3px 0">'+esc(m.name)+'</div>';}).join(''):'<div class="empty" style="padding:6px 0">Everyone was present 🎉</div>')+'</div>'+
+    '</div>';
 }
 function renderAttendanceLog(){
   var logEl=document.getElementById('att-log-body');

@@ -865,7 +865,13 @@ textarea.inp{resize:vertical;min-height:70px}
         <div class="sg" id="att-overview-stats"></div>
         <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Take attendance</div>
         <div id="att-take-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px"></div>
-        <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">Member attendance overview</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:600;color:var(--text2)">Member attendance overview</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input class="inp" style="max-width:200px" type="text" id="att-search" placeholder="Search members..." oninput="renderAttendanceOverview()">
+            <div id="att-filter-row"></div>
+          </div>
+        </div>
         <div class="tw"><table>
           <thead><tr><th>Member</th><th>Attended</th><th>Required Events</th><th>Rate</th><th>Status</th></tr></thead>
           <tbody id="att-overview-body"></tbody>
@@ -1087,6 +1093,7 @@ var members=window.members,events=window.events,dues=window.dues,transactions=wi
     receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests;
 var curTab='dashboard';
 var attTakeEventId=null;
+var attStatusFilter='All';
 var evTab='upcoming';
 var calMonth=new Date().getMonth();
 var calYear=new Date().getFullYear();
@@ -2619,19 +2626,28 @@ function renderAttendanceOverview(){
     '<div class="sc"><div class="sl">Total events</div><div class="sv">'+allEv.length+'</div></div>'+
     '<div class="sc"><div class="sl">Avg attendance rate</div><div class="sv">'+avgRate+'%</div></div>'+
     '<div class="sc"><div class="sl">Perfect attendance</div><div class="sv">'+activeM.filter(function(m){return reqEv.length&&reqEv.every(function(e){return (e.attendance||[]).indexOf(m.id)>=0;});}).length+'</div></div>';
+
+  var filterEl=document.getElementById('att-filter-row');
+  if(filterEl)filterEl.innerHTML=['All','Excellent','OK','At risk'].map(function(s){return '<button class="chip'+(attStatusFilter===s?' on':'')+'" onclick="setAttFilter(\''+s+'\')">'+s+'</button>';}).join('');
+
+  var q=(document.getElementById('att-search')?document.getElementById('att-search').value:'').toLowerCase();
   var body=document.getElementById('att-overview-body');
   if(!activeM.length){body.innerHTML='<tr><td colspan="5" class="empty">No members</td></tr>';return;}
-  var sorted=[].concat(activeM).sort(function(a,b){
-    var ra=reqEv.filter(function(e){return (e.attendance||[]).indexOf(a.id)>=0;}).length;
-    var rb=reqEv.filter(function(e){return (e.attendance||[]).indexOf(b.id)>=0;}).length;
-    return rb-ra;
-  });
-  body.innerHTML=sorted.map(function(m){
+  var withRate=activeM.map(function(m){
     var att=reqEv.filter(function(e){return (e.attendance||[]).indexOf(m.id)>=0;}).length;
     var rate=reqEv.length?Math.round(att/reqEv.length*100):100;
+    var label=rate>=90?'Excellent':rate>=70?'OK':'At risk';
+    return {m:m,att:att,rate:rate,label:label};
+  }).filter(function(r){
+    if(attStatusFilter!=='All'&&r.label!==attStatusFilter)return false;
+    if(q&&r.m.name.toLowerCase().indexOf(q)<0)return false;
+    return true;
+  }).sort(function(a,b){return b.rate-a.rate;});
+  if(!withRate.length){body.innerHTML='<tr><td colspan="5" class="empty">No members match this filter</td></tr>';return;}
+  body.innerHTML=withRate.map(function(r){
+    var m=r.m,att=r.att,rate=r.rate,label=r.label;
     var cv=avColor(m.id||0);
     var status=rate>=90?'b-paid':rate>=70?'b-partial':'b-unpaid';
-    var label=rate>=90?'Excellent':rate>=70?'OK':'At risk';
     return '<tr>'+
       '<td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+'</div></td>'+
       '<td>'+att+'</td>'+
@@ -2642,6 +2658,7 @@ function renderAttendanceOverview(){
   }).join('');
   renderAttendanceTakeList();
 }
+function setAttFilter(s){attStatusFilter=s;renderAttendanceOverview();}
 function renderAttendanceTakeList(){
   var el=document.getElementById('att-take-list');
   if(!el)return;
@@ -2656,22 +2673,49 @@ function renderAttendanceTakeList(){
     attTakeEventId=(meetingDefault||sortedEv[0]).id;
   }
   var ev=events.find(function(e){return e.id===attTakeEventId;});
-  var options=sortedEv.map(function(e){var f=fmtDate(e.date);return '<option value="'+e.id+'"'+(e.id===attTakeEventId?' selected':'')+'>'+esc(e.name)+' ('+esc(e.type||'Event')+') — '+f.full+'</option>';}).join('');
+  var options=sortedEv.map(function(e){var f=fmtDate(e.date);return '<option value="'+e.id+'"'+(e.id===attTakeEventId?' selected':'')+'>'+esc(e.name)+(e.required?' ★':'')+' ('+esc(e.type||'Event')+') — '+f.full+'</option>';}).join('');
   var mlist=members.filter(function(m){return m.status!=='Alumni';}).slice().sort(function(a,b){return a.name.localeCompare(b.name);});
-  var chips=mlist.map(function(m){
+  var takeQ=(document.getElementById('att-take-search')?document.getElementById('att-take-search').value:'').toLowerCase();
+  var prevSearchEl=document.getElementById('att-take-search');
+  var hadFocus=prevSearchEl&&document.activeElement===prevSearchEl;
+  var caretPos=hadFocus?prevSearchEl.selectionStart:null;
+  var visible=takeQ?mlist.filter(function(m){return m.name.toLowerCase().indexOf(takeQ)>=0;}):mlist;
+  var presentCount=ev?(ev.attendance||[]).length:0;
+  var pct=mlist.length?Math.round(presentCount/mlist.length*100):0;
+  var chips=visible.map(function(m){
     var present=ev&&(ev.attendance||[]).indexOf(m.id)>=0;
     var cv=avColor(m.id||0);
-    return '<div onclick="toggleAttendanceFor('+m.id+')" style="cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid '+(present?'var(--green)':'var(--border)')+';background:'+(present?'var(--green-l)':'var(--bg)')+';border-radius:99px;font-size:13px">'+
+    return '<div onclick="toggleAttendanceFor('+m.id+')" style="cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid '+(present?'var(--green)':'var(--border)')+';background:'+(present?'var(--green-l)':'var(--bg)')+';border-radius:99px;font-size:13px;transition:transform .12s" onmouseover="this.style.transform=\'scale(1.03)\'" onmouseout="this.style.transform=\'scale(1)\'">'+
       '<span class="av" style="width:22px;height:22px;font-size:9px;background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</span>'+
       esc(m.name)+
       (present?'<i class="ti ti-check" style="color:var(--green);font-size:15px"></i>':'')+
       '</div>';
   }).join('');
   el.innerHTML=
-    '<div style="margin-bottom:10px"><label class="fl" style="display:block;margin-bottom:4px">Taking attendance for</label>'+
+    '<div style="margin-bottom:10px"><label class="fl" style="display:block;margin-bottom:4px">Taking attendance for'+(ev&&ev.required?' <span class="badge b-partial" style="margin-left:4px">Required</span>':'')+'</label>'+
     '<select class="inp" style="max-width:360px" onchange="attTakeEventId=parseInt(this.value);renderAttendanceTakeList()">'+options+'</select></div>'+
-    '<div style="font-size:12px;color:var(--text2);margin-bottom:8px">Click a name to mark present/absent'+(ev?' — '+(ev.attendance||[]).length+'/'+mlist.length+' marked present so far':'')+'</div>'+
-    '<div style="display:flex;flex-wrap:wrap;gap:8px">'+(chips||'<div class="empty">No active members or pledges to mark</div>')+'</div>';
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">'+
+      '<div class="bar-bg" style="width:120px"><div class="bar-fill" style="width:'+pct+'%;background:'+(pct>=90?'var(--green)':pct>=50?'var(--gold)':'var(--red)')+'"></div></div>'+
+      '<span style="font-size:12px;color:var(--text2)">'+presentCount+'/'+mlist.length+' present ('+pct+'%)</span>'+
+      '<button class="btn btn-sm" onclick="markAllAttendance(true)"><i class="ti ti-checks"></i> Mark all present</button>'+
+      '<button class="btn btn-sm" onclick="markAllAttendance(false)"><i class="ti ti-x"></i> Clear all</button>'+
+    '</div>'+
+    '<input class="inp" style="max-width:240px;margin-bottom:10px" type="text" id="att-take-search" placeholder="Search a name..." value="'+esc(takeQ)+'" oninput="renderAttendanceTakeList()">'+
+    '<div style="display:flex;flex-wrap:wrap;gap:8px">'+(chips||'<div class="empty">No members match that search</div>')+'</div>';
+  if(hadFocus){
+    var newSearchEl=document.getElementById('att-take-search');
+    if(newSearchEl){newSearchEl.focus();if(caretPos!==null)newSearchEl.setSelectionRange(caretPos,caretPos);}
+  }
+}
+function markAllAttendance(present){
+  var ev=events.find(function(e){return e.id===attTakeEventId;});
+  if(!ev)return;
+  var mlist=members.filter(function(m){return m.status!=='Alumni';});
+  ev.attendance=present?mlist.map(function(m){return m.id;}):[];
+  ev.attended=ev.attendance.length;
+  ev.total=mlist.length;
+  save('events',events);
+  renderAttendanceOverview();
 }
 function toggleAttendanceFor(mid){
   var ev=events.find(function(e){return e.id===attTakeEventId;});

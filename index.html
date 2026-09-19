@@ -876,6 +876,11 @@ textarea.inp{resize:vertical;min-height:70px}
           <thead><tr><th>Member</th><th>Attended</th><th>Required Events</th><th>Rate</th><th>Status</th></tr></thead>
           <tbody id="att-overview-body"></tbody>
         </table></div>
+        <div style="font-size:13px;font-weight:600;color:var(--text2);margin:18px 0 10px">Attendance log</div>
+        <div class="tw"><table>
+          <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Present</th><th>Rate</th></tr></thead>
+          <tbody id="att-log-body"></tbody>
+        </table></div>
       </div>
 
       <div class="panel" id="panel-points">
@@ -2657,6 +2662,7 @@ function renderAttendanceOverview(){
       '</tr>';
   }).join('');
   renderAttendanceTakeList();
+  renderAttendanceLog();
 }
 function setAttFilter(s){attStatusFilter=s;renderAttendanceOverview();}
 function renderAttendanceTakeList(){
@@ -2666,7 +2672,7 @@ function renderAttendanceTakeList(){
     el.innerHTML='<div class="empty">Log in as an officer to take attendance.</div>';
     return;
   }
-  if(!events.length){el.innerHTML='<div class="empty">No events yet — add one from the Events tab (e.g. your weekly chapter meeting), then come back here to take attendance.</div>';return;}
+  if(!events.length){el.innerHTML='<div class="empty" style="margin-bottom:10px">No sessions yet.</div><button class="btn btn-primary" onclick="quickAttendanceSessionModal()"><i class="ti ti-plus"></i> Start a new session</button>';return;}
   var sortedEv=[].concat(events).sort(function(a,b){return b.date.localeCompare(a.date);});
   if(attTakeEventId===null||!events.some(function(e){return e.id===attTakeEventId;})){
     var meetingDefault=sortedEv.find(function(e){return e.type==='Meeting'&&!isUpcoming(e.date);})||sortedEv.find(function(e){return e.type==='Meeting';});
@@ -2693,7 +2699,8 @@ function renderAttendanceTakeList(){
   }).join('');
   el.innerHTML=
     '<div style="margin-bottom:10px"><label class="fl" style="display:block;margin-bottom:4px">Taking attendance for'+(ev&&ev.required?' <span class="badge b-partial" style="margin-left:4px">Required</span>':'')+'</label>'+
-    '<select class="inp" style="max-width:360px" onchange="attTakeEventId=parseInt(this.value);renderAttendanceTakeList()">'+options+'</select></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><select class="inp" style="max-width:360px;flex:1" onchange="attTakeEventId=parseInt(this.value);renderAttendanceTakeList()">'+options+'</select>'+
+    '<button class="btn btn-sm btn-primary" onclick="quickAttendanceSessionModal()"><i class="ti ti-plus"></i> New session</button></div></div>'+
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">'+
       '<div class="bar-bg" style="width:120px"><div class="bar-fill" style="width:'+pct+'%;background:'+(pct>=90?'var(--green)':pct>=50?'var(--gold)':'var(--red)')+'"></div></div>'+
       '<span style="font-size:12px;color:var(--text2)">'+presentCount+'/'+mlist.length+' present ('+pct+'%)</span>'+
@@ -2706,6 +2713,39 @@ function renderAttendanceTakeList(){
     var newSearchEl=document.getElementById('att-take-search');
     if(newSearchEl){newSearchEl.focus();if(caretPos!==null)newSearchEl.setSelectionRange(caretPos,caretPos);}
   }
+}
+function quickAttendanceSessionModal(){
+  var types=['Meeting','Social','Service','Philanthropy','Rush','Alumni','Other'];
+  openModal('Start attendance session',
+    '<div class="fr"><label class="fl">Session name</label><input class="inp" id="qan" value="Chapter Meeting"></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Date</label><input class="inp" id="qad" type="date" value="'+todayStr()+'"></div>'+
+    '<div class="fr"><label class="fl">Type</label><select class="inp" id="qaty">'+types.map(function(t){return '<option>'+t+'</option>';}).join('')+'</select></div></div>'+
+    '<div class="fr" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="qar" checked style="width:auto;flex-shrink:0"><label for="qar" class="fl" style="margin:0">Required attendance</label></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveQuickAttendanceSession()">Start taking attendance</button></div>'
+  );
+}
+function saveQuickAttendanceSession(){
+  var name=gv('qan').trim()||'Chapter Meeting';
+  var id=nid();
+  events.push({id:id,name:name,date:gv('qad')||todayStr(),time:'TBD',location:'TBD',type:gv('qaty'),serviceHours:0,required:gc('qar'),attended:0,total:0,attendance:[],rsvps:[]});
+  save('events',events);
+  attTakeEventId=id;
+  closeModal();
+  renderAttendanceOverview();
+  showToast('Session started — tap names to mark present');
+}
+function renderAttendanceLog(){
+  var logEl=document.getElementById('att-log-body');
+  if(!logEl)return;
+  var mCount=members.filter(function(m){return m.status!=='Alumni';}).length||1;
+  var past=[].concat(events).filter(function(e){return !isUpcoming(e.date)||(e.attendance&&e.attendance.length);}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'');}).slice(0,25);
+  if(!past.length){logEl.innerHTML='<tr><td colspan="5" class="empty">No sessions logged yet</td></tr>';return;}
+  logEl.innerHTML=past.map(function(e){
+    var present=(e.attendance||[]).length;
+    var rate=Math.round(present/mCount*100);
+    return '<tr><td>'+(e.date||'—')+'</td><td>'+esc(e.name)+(e.required?' <span class="badge b-partial" style="margin-left:4px">Required</span>':'')+'</td><td>'+esc(e.type||'—')+'</td><td>'+present+'/'+mCount+'</td>'+
+      '<td><div style="display:flex;align-items:center;gap:8px"><div class="bar-bg" style="width:70px;display:inline-block"><div class="bar-fill" style="width:'+Math.min(rate,100)+'%;background:'+(rate>=90?'var(--green)':rate>=50?'var(--gold)':'var(--red)')+'"></div></div>'+rate+'%</div></td></tr>';
+  }).join('');
 }
 function markAllAttendance(present){
   var ev=events.find(function(e){return e.id===attTakeEventId;});

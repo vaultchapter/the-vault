@@ -2707,7 +2707,8 @@ function renderAttendanceTakeList(){
   el.innerHTML=
     '<div style="margin-bottom:10px"><label class="fl" style="display:block;margin-bottom:4px">Taking attendance for'+(ev&&ev.required?' <span class="badge b-partial" style="margin-left:4px">Required</span>':'')+'</label>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><select class="inp" style="max-width:360px;flex:1" onchange="attTakeEventId=parseInt(this.value);renderAttendanceTakeList()">'+options+'</select>'+
-    '<button class="btn btn-sm btn-primary" onclick="quickAttendanceSessionModal()"><i class="ti ti-plus"></i> New session</button></div></div>'+
+    '<button class="btn btn-sm btn-primary" onclick="quickAttendanceSessionModal()"><i class="ti ti-plus"></i> New session</button>'+
+    '<button class="btn btn-sm" onclick="scheduleChapterMeetingsModal()"><i class="ti ti-calendar-repeat"></i> Schedule weekly meetings</button></div></div>'+
     '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">'+
       '<div class="bar-bg" style="width:120px"><div class="bar-fill" style="width:'+pct+'%;background:'+(pct>=90?'var(--green)':pct>=50?'var(--gold)':'var(--red)')+'"></div></div>'+
       '<span style="font-size:12px;color:var(--text2)">'+presentCount+'/'+mlist.length+' present ('+pct+'%)</span>'+
@@ -2720,6 +2721,44 @@ function renderAttendanceTakeList(){
     var newSearchEl=document.getElementById('att-take-search');
     if(newSearchEl){newSearchEl.focus();if(caretPos!==null)newSearchEl.setSelectionRange(caretPos,caretPos);}
   }
+}
+function scheduleChapterMeetingsModal(){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  openModal('Schedule weekly chapter meetings',
+    '<div class="fr"><label class="fl">Meeting name</label><input class="inp" id="scmn" value="Chapter Meeting"></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Day of week</label><select class="inp" id="scmd">'+days.map(function(d,i){return '<option value="'+i+'"'+(i===1?' selected':'')+'>'+d+'</option>';}).join('')+'</select></div>'+
+    '<div class="fr"><label class="fl">Time</label><input class="inp" id="scmt" placeholder="7:00 PM" value="7:00 PM"></div></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Start date</label><input class="inp" id="scms" type="date" value="'+todayStr()+'"></div>'+
+    '<div class="fr"><label class="fl">Number of weeks</label><input class="inp" id="scmw" type="number" min="1" max="26" value="12"></div></div>'+
+    '<div class="fr"><label class="fl">Location</label><input class="inp" id="scml" placeholder="Chapter House"></div>'+
+    '<div class="fr" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="scmr" checked style="width:auto;flex-shrink:0"><label for="scmr" class="fl" style="margin:0">Required attendance</label></div>'+
+    '<div style="font-size:11px;color:var(--text3);margin-bottom:4px">This creates one event per week on the selected day, starting from the closest matching date on or after your start date.</div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveScheduledChapterMeetings()">Schedule meetings</button></div>'
+  );
+}
+function saveScheduledChapterMeetings(){
+  var name=gv('scmn').trim()||'Chapter Meeting';
+  var targetDay=parseInt(gv('scmd'));
+  var weeks=Math.max(1,Math.min(26,parseInt(gv('scmw'))||12));
+  var required=gc('scmr');
+  var time=gv('scmt')||'TBD';
+  var loc=gv('scml')||'Chapter House';
+  var start=new Date((gv('scms')||todayStr())+'T00:00:00');
+  var diff=(targetDay-start.getDay()+7)%7;
+  start.setDate(start.getDate()+diff);
+  var created=0;
+  for(var i=0;i<weeks;i++){
+    var d=new Date(start);
+    d.setDate(d.getDate()+i*7);
+    var dateStr=d.toISOString().split('T')[0];
+    events.push({id:nid(),name:name,date:dateStr,time:time,location:loc,type:'Meeting',serviceHours:0,required:required,attended:0,total:0,attendance:[],rsvps:[]});
+    created++;
+  }
+  save('events',events);
+  closeModal();
+  renderAttendanceOverview();
+  if(typeof renderEvents==='function')renderEvents();
+  showToast('Scheduled '+created+' weekly meeting'+(created===1?'':'s'));
 }
 function quickAttendanceSessionModal(){
   var types=['Meeting','Social','Service','Philanthropy','Rush','Alumni','Other'];

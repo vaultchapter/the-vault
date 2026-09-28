@@ -553,7 +553,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('house',this)"><i class="ti ti-home"></i><span>House</span></div>
     <div class="nav-item" onclick="go('concessions',this)"><i class="ti ti-shopping-cart"></i><span>Concessions</span></div>
     <div class="nav-item" onclick="go('volunteers',this)"><i class="ti ti-hand-stop"></i><span>Volunteers</span></div>
-    <div class="nav-item" onclick="go('sober',this)"><i class="ti ti-car"></i><span>Sober Drivers</span></div>
+    <div class="nav-item" onclick="go('sober',this)"><i class="ti ti-car"></i><span>Brotherhood</span></div>
     <div class="nav-item" onclick="go('tkeweek',this)"><i class="ti ti-heart"></i><span>TKE Week</span></div>
     <div class="nav-item" onclick="go('natevents',this)"><i class="ti ti-plane"></i><span>National Events</span></div>
     <div class="nav-sec">Accountability</div>
@@ -970,7 +970,7 @@ textarea.inp{resize:vertical;min-height:70px}
           <div class="help-card"><div class="help-card-icon"><i class="ti ti-user-question"></i></div><h3>Chapter Contacts</h3><p>Find officers for record corrections, access help, or questions.</p><button class="btn btn-sm" onclick="openOfficerContacts()">View Contacts</button></div>
         </div>
         <div class="help-section"><div class="help-section-title">Point-System Rules</div><div class="help-section-sub">Approved chapter point categories and values.</div><div id="help-points-rules"></div></div>
-        <div class="help-section"><div class="help-section-title">Common Tasks</div><div class="help-tasks"><div><strong>Events & attendance</strong><span>Use Events for dates, required events, and RSVPs.</span></div><div><strong>Assignments</strong><span>Review House, Concessions, Volunteers, and Sober Drivers.</span></div><div><strong>Study & service</strong><span>Log hours promptly so chapter records stay accurate.</span></div><div><strong>Resources</strong><span>Use Library for documents, forms, and chapter policies.</span></div></div></div>
+        <div class="help-section"><div class="help-section-title">Common Tasks</div><div class="help-tasks"><div><strong>Events & attendance</strong><span>Use Events for dates, required events, and RSVPs.</span></div><div><strong>Assignments</strong><span>Review House, Concessions, Volunteers, and Brotherhood.</span></div><div><strong>Study & service</strong><span>Log hours promptly so chapter records stay accurate.</span></div><div><strong>Resources</strong><span>Use Library for documents, forms, and chapter policies.</span></div></div></div>
       </div>
 
       <div class="panel" id="panel-library">
@@ -1311,7 +1311,7 @@ function gv(id){var el=document.getElementById(id);return el?el.value:'';}
 function gc(id){var el=document.getElementById(id);return el?el.checked:false;}
 
 // NAV
-var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Concession Schedule',volunteers:'Volunteer Board',sober:'Sober Drivers',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
+var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Concession Schedule',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
 var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document'};
 function go(tab,el){
   curTab=tab;
@@ -2885,7 +2885,7 @@ function updateGoal(id){
 }
 function deleteGoal(id){if(!confirm('Delete this goal?'))return;goals=goals.filter(function(x){return x.id!==id;});save('goals',goals);closeModal();renderGoals();}
 
-// Generic shift-board renderer used by Volunteers and Sober Drivers
+// Generic shift-board renderer used by Volunteers and Brotherhood
 function renderShiftBoard(dataArr,tab,statsElId,listElId,emptyMsg,editFn){
   var upCount=dataArr.filter(function(c){return isUpcoming(c.date);}).length;
   var unassigned=dataArr.filter(function(c){return isUpcoming(c.date)&&!c.memberId;}).length;
@@ -2955,13 +2955,13 @@ function deleteVolunteer(id){if(!confirm('Delete this opportunity?'))return;volu
 
 // SOBER DRIVERS
 function setSoberTab(t,el){soberTab=t;document.querySelectorAll('#panel-sober .tab-btn').forEach(function(b){b.classList.remove('active');});el.classList.add('active');renderSober();}
-function renderSober(){renderShiftBoard(soberDrivers,soberTab,'sober-stats','sober-list','No sober driver slots scheduled','editSoberModal');}
+function renderSober(){renderShiftBoard(soberDrivers,soberTab,'sober-stats','sober-list','No brotherhood slots scheduled','editSoberModal');}
 function addSoberModal(){
   var active=members.filter(function(m){return m.status!=='Alumni';});
-  openModal('Add sober driver slot',
+  openModal('Add brotherhood slot',
     '<div class="fr2"><div class="fr"><label class="fl">Date</label><input class="inp" id="fsd" type="date" value="'+todayStr()+'"></div>'+
     '<div class="fr"><label class="fl">Event</label><input class="inp" id="fsl" placeholder="e.g. Formal, mixer"></div></div>'+
-    '<div class="fr"><label class="fl">Sober driver</label><select class="inp" id="fsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
+    '<div class="fr"><label class="fl">Brotherhood</label><select class="inp" id="fsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
     '<div class="fr"><label class="fl">Notes</label><input class="inp" id="fsn" placeholder="Pickup times, route, etc."></div>'+
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSober()">Add</button></div>'
   );
@@ -2969,16 +2969,16 @@ function addSoberModal(){
 function saveSober(){
   var date=gv('fsd');if(!date){showToast('Date required','error');return;}
   var mid=gv('fsm');
-  soberDrivers.push({id:nid(),date:date,label:gv('fsl')||'Sober driver',memberId:mid?parseInt(mid):null,notes:gv('fsn')});
+  soberDrivers.push({id:nid(),date:date,label:gv('fsl')||'Brotherhood',memberId:mid?parseInt(mid):null,notes:gv('fsn')});
   save('soberDrivers',soberDrivers);closeModal();renderSober();
 }
 function editSoberModal(id){
   var c=soberDrivers.find(function(x){return x.id===id;});if(!c)return;
   var active=members.filter(function(m){return m.status!=='Alumni';});
-  openModal('Edit sober driver slot',
+  openModal('Edit brotherhood slot',
     '<div class="fr2"><div class="fr"><label class="fl">Date</label><input class="inp" id="fsd" type="date" value="'+c.date+'"></div>'+
     '<div class="fr"><label class="fl">Event</label><input class="inp" id="fsl" value="'+esc(c.label||'')+'"></div></div>'+
-    '<div class="fr"><label class="fl">Sober driver</label><select class="inp" id="fsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'"'+(c.memberId===m.id?' selected':'')+'>'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
+    '<div class="fr"><label class="fl">Brotherhood</label><select class="inp" id="fsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'"'+(c.memberId===m.id?' selected':'')+'>'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
     '<div class="fr"><label class="fl">Notes</label><input class="inp" id="fsn" value="'+esc(c.notes||'')+'"></div>'+
     '<div class="fa"><button class="btn btn-danger" onclick="deleteSober('+id+')">Delete</button><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="updateSober('+id+')">Save</button></div>'
   );
@@ -3502,3 +3502,4 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGlobalS
 </script>
 </body>
 </html>
+

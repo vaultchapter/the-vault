@@ -46,7 +46,7 @@
   signInAnonymously(auth).catch(function(e) { console.error('Anonymous sign-in failed:', e); });
 
   // Keys to sync
-  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts','library','serviceRequests'];
+  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts','library','serviceRequests','kra','riskMgmt','auditLog'];
 
   // Listen for changes from Firebase and update local state + re-render
   KEYS.forEach(function(k) {
@@ -80,6 +80,9 @@
       else if (k === 'receipts') { window.receipts = val; }
       else if (k === 'library') { window.library = val; }
       else if (k === 'serviceRequests') { window.serviceRequests = val; }
+      else if (k === 'kra') { window.kra = val; }
+      else if (k === 'riskMgmt') { window.riskMgmt = val; }
+      else if (k === 'auditLog') { window.auditLog = val; }
       // Re-render current tab
       if (window.renderAll) window.renderAll();
       if (k === 'settings' && window.settings) {
@@ -551,7 +554,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('finance',this)"><i class="ti ti-cash"></i><span>Finances</span></div>
     <div class="nav-item" onclick="go('recruit',this)"><i class="ti ti-user-plus"></i><span>Recruitment</span></div>
     <div class="nav-item" onclick="go('house',this)"><i class="ti ti-home"></i><span>House</span></div>
-    <div class="nav-item" onclick="go('concessions',this)"><i class="ti ti-shopping-cart"></i><span>Concessions</span></div>
+    <div class="nav-item" onclick="go('concessions',this)"><i class="ti ti-shopping-cart"></i><span>Fundraising</span></div>
     <div class="nav-item" onclick="go('volunteers',this)"><i class="ti ti-hand-stop"></i><span>Volunteers</span></div>
     <div class="nav-item" onclick="go('sober',this)"><i class="ti ti-car"></i><span>Brotherhood</span></div>
     <div class="nav-item" onclick="go('tkeweek',this)"><i class="ti ti-heart"></i><span>TKE Week</span></div>
@@ -561,6 +564,8 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('service',this)"><span class="service-hours-icon" aria-hidden="true"><i class="ti ti-sparkles"></i></span><span>Service Hours</span></div>
     <div class="nav-item" onclick="go('attendance',this)"><i class="ti ti-clipboard-check"></i><span>Attendance</span></div>
     <div class="nav-item" onclick="go('points',this)"><i class="ti ti-star"></i><span>Points</span></div>
+    <div class="nav-item" onclick="go('kra',this)"><i class="ti ti-chart-arrows"></i><span>KRA Scorecard</span></div>
+    <div class="nav-item" onclick="go('riskmgmt',this)"><i class="ti ti-shield-check"></i><span>Risk Management</span></div>
     <div class="nav-sec">Communication</div>
     <div class="nav-item" onclick="go('announce',this)"><i class="ti ti-speakerphone"></i><span>Announcements</span></div>
     <div class="nav-item" onclick="go('messages',this)"><i class="ti ti-message"></i><span>Messages</span></div>
@@ -570,6 +575,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('meetings',this)"><i class="ti ti-notebook"></i><span>Meetings</span></div>
     <div class="nav-item" onclick="go('notifications',this)"><i class="ti ti-bell"></i><span>Notifications</span></div>
     <div class="nav-item" onclick="go('help',this)"><i class="ti ti-help-circle"></i><span>Help & Rules</span></div>
+    <div class="nav-item" onclick="go('auditlog',this)"><i class="ti ti-history"></i><span>Audit Log</span></div>
     <div class="nav-item" onclick="go('ai',this)"><span class="ai-nav-icon"><i class="ti ti-sparkles"></i></span><span>Vault AI</span></div>
     </div>
     <div class="sb-foot" style="flex-direction:column;align-items:flex-start;gap:6px">
@@ -657,6 +663,17 @@ textarea.inp{resize:vertical;min-height:70px}
                 <div class="dn-card">
                   <div class="dn-card-hdr">Activity feed</div>
                   <div id="dn-feed"></div>
+                </div>
+              </div>
+
+              <div class="dn-chart-row" style="margin-top:14px">
+                <div class="dn-card">
+                  <div class="dn-card-hdr"><span>KRA scorecard</span><span style="font-size:11px;color:var(--n-text3);cursor:pointer" onclick="dashboardGo('kra')">View all</span></div>
+                  <canvas id="dash-kra-radar" height="210"></canvas>
+                </div>
+                <div class="dn-card">
+                  <div class="dn-card-hdr">KRA score</div>
+                  <div id="dash-kra-summary"></div>
                 </div>
               </div>
             </div>
@@ -895,6 +912,51 @@ textarea.inp{resize:vertical;min-height:70px}
         <div id="points-log"></div>
       </div>
 
+      <div class="panel" id="panel-kra">
+        <div class="sg" id="kra-stats"></div>
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px">
+          <div class="chart-wrap" style="margin-bottom:0">
+            <div class="dash-panel-hdr">Overall KRA score over time</div>
+            <div id="kra-trend-empty" class="empty" style="display:none">Save the scorecard a couple of times to start a trend line</div>
+            <canvas id="kra-trend-chart" height="90"></canvas>
+          </div>
+          <div class="chart-wrap" style="margin-bottom:0">
+            <div class="dash-panel-hdr">Metric breakdown</div>
+            <canvas id="kra-radar-chart" height="220"></canvas>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:14px">
+          <div class="dash-panel">
+            <div class="dash-panel-hdr">Scorecard metrics</div>
+            <div id="kra-metrics"></div>
+          </div>
+          <div class="dash-panel">
+            <div class="dash-panel-hdr">Rankings</div>
+            <div id="kra-rankings"></div>
+            <div class="dv"></div>
+            <div class="dash-panel-hdr">Notes</div>
+            <div id="kra-notes" style="font-size:12.5px;color:var(--text2);line-height:1.6"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6">
+          KRAs (Key Results Areas) are TKE's national metric system for measuring chapter engagement and operational health, covering financial standing, new initiates, service hours, St. Jude philanthropy, risk management compliance, and alumni attendance. Chapters scoring 100% or higher can earn the 100% KRA plaque and award. Source: <a href="https://tke.org/where-does-your-chapter-rank/" target="_blank" rel="noopener">tke.org</a>.
+        </div>
+      </div>
+
+      <div class="panel" id="panel-riskmgmt">
+        <div class="sg" id="risk-stats"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:600;color:var(--text2)">Compliance by member</div>
+          <input class="inp" style="max-width:220px" type="text" id="risk-search" placeholder="Search members..." oninput="renderRiskMgmt()">
+        </div>
+        <div class="tw" id="risk-table-wrap"></div>
+      </div>
+
+      <div class="panel" id="panel-auditlog">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Read-only record of finance and points changes made by officers — who changed what, and when.</div>
+        <div id="auditlog-list"></div>
+      </div>
+
       <div class="panel" id="panel-blast">
         <div style="max-width:600px">
           <div class="sc" style="margin-bottom:16px;border-top-color:var(--gold)">
@@ -1073,7 +1135,9 @@ window.announcements=load('announcements',[]);
 window.messages=load('messages',{});
 window.chores=load('chores',[]);
 window.maintenance=load('maintenance',[]);
-window.settings=load('settings',{chapterName:'The Vault',semester:'Fall 2026',gpaThreshold:2.5,fineAmount:25,studyMin:10,pointsPerEvent:0,pointsPerStudyHour:1,vaultAIProxyUrl:''});
+window.settings=load('settings',{chapterName:'The Vault',semester:'Fall 2026',gpaThreshold:2.5,fineAmount:25,studyMin:10,pointsPerEvent:0,pointsPerStudyHour:1,vaultAIProxyUrl:'',officerRoles:{},rolePermissions:{},lastBackupDate:null});
+if(!window.settings.officerRoles)window.settings.officerRoles={};
+if(!window.settings.rolePermissions)window.settings.rolePermissions={};
 if(window.settings.pointsPerEvent===5){window.settings.pointsPerEvent=0;save('settings',window.settings);}
 window.studyHours=load('studyHours',[]);
 window.perfHistory=load('perfHistory',[]);
@@ -1089,6 +1153,26 @@ window.goals=load('goals',[]);
 window.receipts=load('receipts',[]);
 window.library=load('library',[]);
 window.serviceRequests=load('serviceRequests',[]);
+window.kra=load('kra',{
+  metrics:[
+    {id:'financial',label:'Paid-in-full financial standing',current:0,goal:100,unit:'%'},
+    {id:'initiates',label:'New initiates',current:0,goal:0,unit:''},
+    {id:'service',label:'Community service hours',current:0,goal:0,unit:'hrs'},
+    {id:'philanthropy',label:'St. Jude philanthropic fundraising',current:0,goal:0,unit:'$'},
+    {id:'riskmgmt',label:'Risk management education compliance',current:0,goal:100,unit:'%'},
+    {id:'alumni',label:'Alumni attendance',current:0,goal:0,unit:''}
+  ],
+  regionRank:'',
+  provinceRank:'',
+  nationRank:'',
+  notes:'',
+  history:[]
+});
+window.riskMgmt=load('riskMgmt',{
+  trainings:[{id:1,name:'National Risk Management Training'}],
+  completions:[]
+});
+window.auditLog=load('auditLog',[]);
 // Shorthand references (these point to window.X)
 var members=window.members,events=window.events,dues=window.dues,transactions=window.transactions,
     budget=window.budget,fines=window.fines,prospects=window.prospects,announcements=window.announcements,
@@ -1096,7 +1180,8 @@ var members=window.members,events=window.events,dues=window.dues,transactions=wi
     settings=window.settings,perfHistory=window.perfHistory,nidVal=window.nidVal,studyHours=window.studyHours,
     points=window.points,concessions=window.concessions,volunteers=window.volunteers,soberDrivers=window.soberDrivers,
     tkeWeek=window.tkeWeek,nationalEvents=window.nationalEvents,serviceHours=window.serviceHours,goals=window.goals,
-    receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests;
+    receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests,kra=window.kra,
+    riskMgmt=window.riskMgmt,auditLog=window.auditLog;
 var curTab='dashboard';
 var attTakeEventId=null;
 var attStatusFilter='All';
@@ -1123,8 +1208,46 @@ function fmtDate(d){
 }
 function isUpcoming(d){try{return new Date(d+'T00:00:00')>=new Date();}catch(e){return false;}}
 function todayStr(){return new Date().toISOString().split('T')[0];}
-function canEdit(){return officerAuthed;}
-function canOfficer(){return officerAuthed;}
+// ROLE-BASED PERMISSIONS
+// Each officer (by email) can be assigned a role. Roles map to which tabs they can edit.
+// 'all' means full edit access. Unassigned/unknown roles default to full access so nobody
+// gets accidentally locked out — a chapter only needs to configure this if it wants to restrict.
+var ROLE_PERMISSIONS_DEFAULT={
+  'President':'all','Vice President':'all','Officer':'all',
+  'Treasurer':['finance','kra'],
+  'Secretary':['members','attendance','announce','meetings','messages'],
+  'Recruitment Chair':['recruit'],
+  'Risk Manager':['riskmgmt','house'],
+  'Historian':['library','announce'],
+  'Social Chair':['events','concessions','volunteers','sober','tkeweek']
+};
+var KNOWN_ROLES=Object.keys(ROLE_PERMISSIONS_DEFAULT);
+function officerRole(){
+  if(!officerAuthed)return null;
+  return (settings.officerRoles&&settings.officerRoles[officerEmail])||'Officer';
+}
+function rolePerms(role){
+  var custom=settings.rolePermissions&&settings.rolePermissions[role];
+  if(custom&&custom.length)return custom;
+  return ROLE_PERMISSIONS_DEFAULT[role]||'all';
+}
+function canEditTab(tab){
+  if(!officerAuthed)return false;
+  var perms=rolePerms(officerRole());
+  if(perms==='all')return true;
+  return perms.indexOf(tab)>=0;
+}
+// canEdit/canOfficer are used throughout render functions for the panel currently on
+// screen, so resolving permission against curTab scopes them correctly everywhere.
+function canEdit(){return canEditTab(curTab);}
+function canOfficer(){return canEditTab(curTab);}
+// Settings/role-management access is independent of whichever tab you're viewing —
+// otherwise opening Settings from the sidebar would depend on your last tab.
+function canManageSettings(){
+  if(!officerAuthed)return false;
+  var perms=rolePerms(officerRole());
+  return perms==='all'||perms.indexOf('settings')>=0;
+}
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // AUTH / LOGIN
@@ -1146,6 +1269,13 @@ function doOfficerLogin(){
     var err=document.getElementById('li-error');
     if(err){err.textContent='Login failed — check your email and password.';err.style.display='block';}
   });
+}
+// AUDIT LOG
+function logAudit(action,detail){
+  if(!auditLog)return;
+  auditLog.unshift({id:nid(),ts:new Date().toISOString(),actor:officerEmail||'Unknown',action:action,detail:detail});
+  if(auditLog.length>300)auditLog.length=300;
+  save('auditLog',auditLog);
 }
 function officerLogout(){
   window._fbSignOut(window._fbAuth).then(function(){
@@ -1311,8 +1441,8 @@ function gv(id){var el=document.getElementById(id);return el?el.value:'';}
 function gc(id){var el=document.getElementById(id);return el?el.checked:false;}
 
 // NAV
-var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Concession Schedule',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
-var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document'};
+var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Fundraising',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',kra:'KRA Scorecard',riskmgmt:'Risk Management',auditlog:'Audit Log',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
+var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document',kra:'Update Scorecard',riskmgmt:'Add Training'};
 function go(tab,el){
   curTab=tab;
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
@@ -1335,12 +1465,12 @@ function closeSidebar(){
   if(bd)bd.classList.remove('open');
 }
 function updateAddBtn(){
-  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),blast:false,library:canEdit()};
+  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),kra:canOfficer(),riskmgmt:canOfficer(),auditlog:false,blast:false,library:canEdit()};
   document.getElementById('add-btn').style.display=(show[curTab])?'inline-flex':'none';
   document.getElementById('add-lbl').textContent=addLabels[curTab]||'Add';
 }
 function handleAdd(){
-  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal,library:addLibraryModal};
+  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal,library:addLibraryModal,kra:editKraModal,riskmgmt:addTrainingModal};
   if(h[curTab])h[curTab]();
 }
 function renderAll(){
@@ -1363,6 +1493,9 @@ function renderAll(){
   else if(curTab==='service')renderService();
   else if(curTab==='attendance')renderAttendanceOverview();
   else if(curTab==='points')renderPoints();
+  else if(curTab==='kra')renderKRA();
+  else if(curTab==='riskmgmt')renderRiskMgmt();
+  else if(curTab==='auditlog')renderAuditLog();
   else if(curTab==='blast')renderBlastPreview();
   else if(curTab==='library')renderLibrary();
   else if(curTab==='meetings')renderMeetings();
@@ -1429,6 +1562,8 @@ function renderDashboard(){
   if(belowStudy>0)issues.push(belowStudy+' member'+(belowStudy===1?'':'s')+' below study hour minimum');
   if(overdueDues>0)issues.push(overdueDues+' due'+(overdueDues===1?'':'s')+' overdue');
   if(unpaidFines.length>0)issues.push(unpaidFines.length+' unpaid fine'+(unpaidFines.length===1?'':'s'));
+  var daysSinceBackup=settings.lastBackupDate?Math.floor((new Date(today+'T00:00:00')-new Date(settings.lastBackupDate+'T00:00:00'))/86400000):null;
+  if(daysSinceBackup===null||daysSinceBackup>30)issues.push('backup overdue — <a href="#" onclick="event.preventDefault();exportBackupJSON()" style="color:inherit;text-decoration:underline">download one now</a>');
   var alertEl=document.getElementById('dash-alert');
   if(alertEl)alertEl.innerHTML=issues.length?'<div class="alert-banner">⚠ '+issues.join(' · ')+'</div>':'';
 
@@ -1537,6 +1672,12 @@ function renderDashboard(){
   document.getElementById('dash-ev').innerHTML=upE.length?upE.map(function(e){var f=fmtDate(e.date);return '<div class="dn-ev-row"><div class="dn-ev-date"><div class="m">'+f.month+'</div><div class="d">'+f.day+'</div></div><div><div class="dn-ev-name">'+esc(e.name)+'</div><div class="dn-ev-sub">'+esc(e.time)+' &middot; '+esc(e.location)+'</div></div></div>';}).join(''):'<div class="dn-empty">📅 Nothing on the calendar</div>';
   var bdays=getUpcomingBirthdays().slice(0,5);
   document.getElementById('dash-bday').innerHTML=bdays.length?bdays.map(function(b){return '<div class="dn-ev-row"><div style="font-size:16px;min-width:30px;text-align:center">🎂</div><div><div class="dn-ev-name">'+esc(b.name)+'</div><div class="dn-ev-sub">'+(b.diffDays===0?'Today!':b.diffDays===1?'Tomorrow':'In '+b.diffDays+' days')+'</div></div></div>';}).join(''):'<div class="dn-empty">No birthdays in the next 30 days</div>';
+
+  // KRA scorecard
+  syncKraAutoMetrics();
+  var kraList=(window.kra&&window.kra.metrics)||[];
+  renderKraRadarChart(kraList,'dash-kra-radar');
+  renderDashKraSummary(kraList);
 }
 function buildSparkline(values,color){
   if(!values||values.length<2)return '';
@@ -2168,7 +2309,8 @@ function addDuesModal(){
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveDues()">Add</button></div>'
   );
 }
-function saveDues(){dues.push({id:nid(),memberId:parseInt(gv('fdm')),amount:numOr(parseFloat(gv('fda')),400),dueDate:gv('fdd'),status:gv('fds')});save('dues',dues);closeModal();renderFinance();}
+function saveDues(){var mid=parseInt(gv('fdm'));dues.push({id:nid(),memberId:mid,amount:numOr(parseFloat(gv('fda')),400),dueDate:gv('fdd'),status:gv('fds')});save('dues',dues);logAudit('Dues added',memberName(mid)+' — $'+gv('fda')+' ('+gv('fds')+')');closeModal();renderFinance();}
+function memberName(mid){var m=members.find(function(x){return x.id===mid;});return m?m.name:'Unknown';}
 function editDuesModal(id){
   var d=dues.find(function(x){return x.id===id;});if(!d)return;
   openModal('Edit dues',
@@ -2178,8 +2320,8 @@ function editDuesModal(id){
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="updateDues('+id+')">Save</button></div>'
   );
 }
-function updateDues(id){var d=dues.find(function(x){return x.id===id;});if(!d)return;d.amount=parseFloat(gv('fda'))||d.amount;d.dueDate=gv('fdd');d.status=gv('fds');save('dues',dues);closeModal();renderFinance();}
-function deleteDues(id){dues=dues.filter(function(x){return x.id!==id;});save('dues',dues);renderFinance();}
+function updateDues(id){var d=dues.find(function(x){return x.id===id;});if(!d)return;d.amount=parseFloat(gv('fda'))||d.amount;d.dueDate=gv('fdd');d.status=gv('fds');save('dues',dues);logAudit('Dues updated',memberName(d.memberId)+' — $'+d.amount+' ('+d.status+')');closeModal();renderFinance();}
+function deleteDues(id){var d=dues.find(function(x){return x.id===id;});dues=dues.filter(function(x){return x.id!==id;});save('dues',dues);if(d)logAudit('Dues deleted',memberName(d.memberId)+' — $'+d.amount);renderFinance();}
 function addTxModal(){
   var cats=['Income','Events','House','Philanthropy','Recruitment','National','Other'];
   openModal('Add transaction',
@@ -2190,8 +2332,8 @@ function addTxModal(){
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveTx()">Add</button></div>'
   );
 }
-function saveTx(){var amt=parseFloat(gv('fta'));if(isNaN(amt)){showToast('Enter a valid amount','error');return;}transactions.push({id:nid(),desc:gv('ftd')||'—',category:gv('ftc'),date:gv('ftdt'),amount:amt});save('transactions',transactions);closeModal();renderFinance();}
-function deleteTx(id){transactions=transactions.filter(function(x){return x.id!==id;});save('transactions',transactions);renderFinance();}
+function saveTx(){var amt=parseFloat(gv('fta'));if(isNaN(amt)){showToast('Enter a valid amount','error');return;}var desc=gv('ftd')||'—';transactions.push({id:nid(),desc:desc,category:gv('ftc'),date:gv('ftdt'),amount:amt});save('transactions',transactions);logAudit('Transaction added',desc+' — '+(amt>=0?'+':'')+'$'+Math.abs(amt));closeModal();renderFinance();}
+function deleteTx(id){var t=transactions.find(function(x){return x.id===id;});transactions=transactions.filter(function(x){return x.id!==id;});save('transactions',transactions);if(t)logAudit('Transaction deleted',t.desc+' — $'+t.amount);renderFinance();}
 function addFineModal(){
   openModal('Issue fine',
     '<div class="fr"><label class="fl">Member</label><select class="inp" id="ffm">'+(members.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+'</option>';}).join('')||'<option>No members</option>')+'</select></div>'+
@@ -2201,9 +2343,9 @@ function addFineModal(){
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveFine()">Issue</button></div>'
   );
 }
-function saveFine(){fines.push({id:nid(),memberId:parseInt(gv('ffm')),reason:gv('ffr')||'Fine',amount:numOr(parseFloat(gv('ffa')),25),date:gv('ffd'),paid:false});save('fines',fines);closeModal();renderFinance();}
-function toggleFine(id){var f=fines.find(function(x){return x.id===id;});if(f){f.paid=!f.paid;save('fines',fines);renderFinance();}}
-function deleteFine(id){fines=fines.filter(function(x){return x.id!==id;});save('fines',fines);renderFinance();}
+function saveFine(){var mid=parseInt(gv('ffm'));var amt=numOr(parseFloat(gv('ffa')),25);fines.push({id:nid(),memberId:mid,reason:gv('ffr')||'Fine',amount:amt,date:gv('ffd'),paid:false});save('fines',fines);logAudit('Fine issued',memberName(mid)+' — $'+amt+' ('+(gv('ffr')||'Fine')+')');closeModal();renderFinance();}
+function toggleFine(id){var f=fines.find(function(x){return x.id===id;});if(f){f.paid=!f.paid;save('fines',fines);logAudit('Fine '+(f.paid?'marked paid':'marked unpaid'),memberName(f.memberId)+' — $'+f.amount);renderFinance();}}
+function deleteFine(id){var f=fines.find(function(x){return x.id===id;});fines=fines.filter(function(x){return x.id!==id;});save('fines',fines);if(f)logAudit('Fine deleted',memberName(f.memberId)+' — $'+f.amount);renderFinance();}
 function editBudgetModal(id){
   var b=id?budget.find(function(x){return x.id===id;}):null;
   openModal(b?'Edit budget category':'Add budget category',
@@ -2217,7 +2359,7 @@ function saveBudget(id){
   var cat=gv('fbc')||'Category';var bud=parseFloat(gv('fbb'))||0;var spt=parseFloat(gv('fbs'))||0;
   if(id){var b=budget.find(function(x){return x.id===id;});if(b){b.cat=cat;b.budgeted=bud;b.spent=spt;}}
   else budget.push({id:nid(),cat:cat,budgeted:bud,spent:spt});
-  save('budget',budget);closeModal();renderFinance();
+  save('budget',budget);logAudit('Budget updated',cat+' — budgeted $'+bud+', spent $'+spt);closeModal();renderFinance();
 }
 
 // RECEIPTS
@@ -2251,7 +2393,7 @@ function removeReceiptPhoto(){
   var rm=document.getElementById('receipt-photo-remove');if(rm)rm.style.display='none';
   var fi=document.getElementById('frphoto');if(fi)fi.value='';
 }
-var receiptCats=['Events','House','Philanthropy','Recruitment','National','Concessions','Miscellaneous'];
+var receiptCats=['Events','House','Philanthropy','Recruitment','National','Fundraising','Miscellaneous'];
 function receiptForm(r){
   return '<div class="fr"><label class="fl">Vendor / merchant</label><input class="inp" id="frv" value="'+(r?esc(r.vendor||''):'')+'" placeholder="Home Depot"></div>'+
     '<div class="fr2"><div class="fr"><label class="fl">Amount ($)</label><input class="inp" id="fra" type="number" step="0.01" value="'+(r?r.amount:'')+'" placeholder="42.50"></div>'+
@@ -2452,7 +2594,7 @@ function renderConcessions(){
   if(concTab==='past')list.sort(function(a,b){return b.date.localeCompare(a.date);});
   else list.sort(function(a,b){return a.date.localeCompare(b.date);});
   var el=document.getElementById('conc-list');
-  if(!list.length){el.innerHTML='<div class="empty">No concession shifts scheduled</div>';return;}
+  if(!list.length){el.innerHTML='<div class="empty">No fundraising shifts scheduled</div>';return;}
   el.innerHTML=list.map(function(c){
     var f=fmtDate(c.date);
     var m=members.find(function(x){return x.id===c.memberId;});
@@ -2470,7 +2612,7 @@ function renderConcessions(){
 }
 function addShiftModal(){
   var active=members.filter(function(m){return m.status!=='Alumni';});
-  openModal('Add concession shift',
+  openModal('Add fundraising shift',
     '<div class="fr2"><div class="fr"><label class="fl">Date</label><input class="inp" id="fcsd" type="date" value="'+todayStr()+'"></div>'+
     '<div class="fr"><label class="fl">Shift / time</label><input class="inp" id="fcsl" placeholder="e.g. 5-7 PM"></div></div>'+
     '<div class="fr"><label class="fl">Assign to</label><select class="inp" id="fcsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
@@ -2487,7 +2629,7 @@ function saveShift(){
 function editShiftModal(id){
   var c=concessions.find(function(x){return x.id===id;});if(!c)return;
   var active=members.filter(function(m){return m.status!=='Alumni';});
-  openModal('Edit concession shift',
+  openModal('Edit fundraising shift',
     '<div class="fr2"><div class="fr"><label class="fl">Date</label><input class="inp" id="fcsd" type="date" value="'+c.date+'"></div>'+
     '<div class="fr"><label class="fl">Shift / time</label><input class="inp" id="fcsl" value="'+esc(c.shiftLabel||'')+'"></div></div>'+
     '<div class="fr"><label class="fl">Assign to</label><select class="inp" id="fcsm"><option value="">— Unassigned —</option>'+active.map(function(m){return '<option value="'+m.id+'"'+(c.memberId===m.id?' selected':'')+'>'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
@@ -3230,14 +3372,247 @@ function awardPointsModal(){
 function saveAwardPoints(){
   var amt=parseFloat(gv('fpamt'));
   if(isNaN(amt)||amt===0){showToast('Enter a non-zero point amount','error');return;}
-  points.push({id:nid(),memberId:parseInt(gv('fpm2')),amount:amt,reason:gv('fpreason')||'Manual award',date:gv('fpdate')||todayStr()});
-  save('points',points);closeModal();renderPoints();
+  var mid=parseInt(gv('fpm2'));
+  points.push({id:nid(),memberId:mid,amount:amt,reason:gv('fpreason')||'Manual award',date:gv('fpdate')||todayStr()});
+  save('points',points);logAudit('Points awarded',memberName(mid)+' — '+(amt>=0?'+':'')+amt+' ('+(gv('fpreason')||'Manual award')+')');closeModal();renderPoints();
   showToast('Points awarded','success');
 }
 function deletePointEntry(id){
   if(!confirm('Remove this point entry?'))return;
+  var p=points.find(function(x){return x.id===id;});
   points=points.filter(function(x){return x.id!==id;});
-  save('points',points);renderPoints();
+  save('points',points);if(p)logAudit('Points entry deleted',memberName(p.memberId)+' — '+(p.amount>=0?'+':'')+p.amount);renderPoints();
+}
+
+// KRA SCORECARD
+// Auto-populate metrics that already have a real data source elsewhere in the app,
+// so officers don't have to enter the same number twice. Initiates, philanthropy and
+// alumni attendance have no equivalent tracked data yet, so those stay manual.
+function syncKraAutoMetrics(){
+  var list=(kra&&kra.metrics)||[];
+  var finM=list.find(function(m){return m.id==='financial';});
+  if(finM){
+    var totD=dues.reduce(function(a,d){return a+d.amount;},0);
+    var paidD=dues.filter(function(d){return d.status==='Paid';}).reduce(function(a,d){return a+d.amount;},0);
+    finM.current=totD?Math.round(paidD/totD*100):0;
+    if(!finM.goal)finM.goal=100;
+  }
+  var svcM=list.find(function(m){return m.id==='service';});
+  if(svcM)svcM.current=Math.round(serviceHours.reduce(function(a,s){return a+s.hours;},0));
+  var riskM=list.find(function(m){return m.id==='riskmgmt';});
+  if(riskM){
+    riskM.current=riskMgmtCompliancePct();
+    if(!riskM.goal)riskM.goal=100;
+  }
+}
+function kraOverallPct(){
+  syncKraAutoMetrics();
+  var list=(kra&&kra.metrics)||[];
+  var scored=list.filter(function(m){return m.goal>0;});
+  if(!scored.length)return 0;
+  var sum=scored.reduce(function(a,m){return a+Math.min(m.current/m.goal,1.5);},0);
+  return Math.round(sum/scored.length*100);
+}
+var kraTrendChart=null;
+function kraChartColors(){
+  var cs=getComputedStyle(document.body);
+  return {tick:cs.getPropertyValue('--text3').trim()||'#a89ba0',grid:cs.getPropertyValue('--border').trim()||'rgba(90,20,35,0.10)',navy:cs.getPropertyValue('--navy').trim()||'#6d1a2a',gold:cs.getPropertyValue('--gold-d').trim()||'#7d828c'};
+}
+function renderKraTrendChart(){
+  var canvasEl=document.getElementById('kra-trend-chart');
+  var emptyEl=document.getElementById('kra-trend-empty');
+  if(!canvasEl)return;
+  var hist=(kra&&kra.history)||[];
+  if(kraTrendChart){kraTrendChart.destroy();kraTrendChart=null;}
+  if(hist.length<2){
+    canvasEl.style.display='none';
+    if(emptyEl)emptyEl.style.display='block';
+    return;
+  }
+  canvasEl.style.display='block';
+  if(emptyEl)emptyEl.style.display='none';
+  var c=kraChartColors();
+  kraTrendChart=new Chart(canvasEl.getContext('2d'),{type:'line',data:{labels:hist.map(function(h){return h.date;}),datasets:[{label:'Overall KRA %',data:hist.map(function(h){return h.overall;}),borderColor:c.navy,backgroundColor:c.navy+'22',borderWidth:2,tension:.3,fill:true,pointRadius:3}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{min:0,ticks:{color:c.tick,font:{size:11},callback:function(v){return v+'%';}},grid:{color:c.grid}},x:{ticks:{color:c.tick,font:{size:10}},grid:{display:false}}}}});
+}
+var kraRadarCharts={};
+function renderKraRadarChart(list,canvasId){
+  canvasId=canvasId||'kra-radar-chart';
+  var canvasEl=document.getElementById(canvasId);
+  if(!canvasEl)return;
+  if(kraRadarCharts[canvasId]){kraRadarCharts[canvasId].destroy();kraRadarCharts[canvasId]=null;}
+  if(!list.length)return;
+  var c=kraChartColors();
+  var pts=list.map(function(m){return m.goal>0?Math.min(Math.round(m.current/m.goal*100),150):0;});
+  kraRadarCharts[canvasId]=new Chart(canvasEl.getContext('2d'),{type:'radar',data:{labels:list.map(function(m){return m.label;}),datasets:[{label:'% of goal',data:pts,borderColor:c.navy,backgroundColor:c.navy+'33',borderWidth:2,pointBackgroundColor:c.navy}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{r:{min:0,suggestedMax:100,ticks:{color:c.tick,backdropColor:'transparent',font:{size:9}},grid:{color:c.grid},angleLines:{color:c.grid},pointLabels:{color:c.tick,font:{size:10}}}}}});
+}
+function renderDashKraSummary(list){
+  var el=document.getElementById('dash-kra-summary');
+  if(!el)return;
+  var overall=kraOverallPct();
+  var html='<div style="text-align:center;padding:2px 0 14px"><div style="font-size:26px;font-weight:700;color:var(--n-yellow)">'+overall+'%</div><div style="font-size:10px;color:var(--n-text3);text-transform:uppercase;letter-spacing:.05em">Overall KRA score</div></div>';
+  html+=list.length?list.map(function(m){
+    var pct=m.goal>0?Math.min(Math.round(m.current/m.goal*100),100):0;
+    return '<div class="dn-bar-row"><div class="dn-bar-top"><span>'+esc(m.label)+'</span><b>'+pct+'%</b></div><div class="dn-bar-bg"><div class="dn-bar-fill" style="width:'+pct+'%"></div></div></div>';
+  }).join(''):'<div class="dn-empty">No KRA metrics set up</div>';
+  el.innerHTML=html;
+}
+function renderKRA(){
+  var list=(kra&&kra.metrics)||[];
+  if(!kra.history)kra.history=[];
+  var overall=kraOverallPct();
+  var met=list.filter(function(m){return m.goal>0&&m.current>=m.goal;}).length;
+  document.getElementById('kra-stats').innerHTML=
+    '<div class="sc" style="border-top-color:'+(overall>=100?'var(--green)':'var(--navy)')+'"><div class="sl">Overall KRA score</div><div class="sv" style="color:'+(overall>=100?'var(--green)':'var(--navy)')+'">'+overall+'%</div>'+(overall>=100?'<div class="ss">🏆 100% KRA pace</div>':'')+'</div>'+
+    '<div class="sc"><div class="sl">Metrics on pace</div><div class="sv">'+met+'/'+list.length+'</div></div>'+
+    '<div class="sc"><div class="sl">Region rank</div><div class="sv" style="font-size:16px">'+(kra.regionRank?esc(kra.regionRank):'—')+'</div></div>'+
+    '<div class="sc"><div class="sl">Nation rank</div><div class="sv" style="font-size:16px">'+(kra.nationRank?esc(kra.nationRank):'—')+'</div></div>';
+
+  var metEl=document.getElementById('kra-metrics');
+  metEl.innerHTML=list.length?list.map(function(m){
+    var pct=m.goal>0?Math.round(m.current/m.goal*100):0;
+    var ok=m.goal>0&&m.current>=m.goal;
+    var valStr=(m.unit==='$'?'$':'')+m.current.toLocaleString()+(m.unit&&m.unit!=='$'?' '+m.unit:'');
+    var goalStr=m.goal>0?(m.unit==='$'?'$':'')+m.goal.toLocaleString()+(m.unit&&m.unit!=='$'?' '+m.unit:''):'No goal set';
+    return '<div style="margin-bottom:13px"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>'+esc(m.label)+'</span><span style="color:var(--text2)">'+valStr+' / '+goalStr+'</span></div>'+
+      '<div class="bar-bg" style="max-width:100%"><div class="bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+(ok?'var(--green)':pct>=60?'var(--gold)':'var(--red)')+'"></div></div></div>';
+  }).join(''):'<div class="empty">No KRA metrics set up</div>';
+
+  document.getElementById('kra-rankings').innerHTML=
+    '<div class="pg">'+
+    '<div><div class="pl">Region</div><div class="pv">'+(kra.regionRank?esc(kra.regionRank):'—')+'</div></div>'+
+    '<div><div class="pl">Province</div><div class="pv">'+(kra.provinceRank?esc(kra.provinceRank):'—')+'</div></div>'+
+    '<div><div class="pl">TKE Nation</div><div class="pv">'+(kra.nationRank?esc(kra.nationRank):'—')+'</div></div>'+
+    '</div>';
+  document.getElementById('kra-notes').textContent=kra.notes||'No notes yet.';
+
+  renderKraTrendChart();
+  renderKraRadarChart(list);
+}
+var KRA_AUTO_IDS=['financial','service','riskmgmt'];
+function editKraModal(){
+  syncKraAutoMetrics();
+  var list=(kra&&kra.metrics)||[];
+  var rows=list.map(function(m,i){
+    var auto=KRA_AUTO_IDS.indexOf(m.id)>=0;
+    var curField=auto?
+      '<label class="fl">'+esc(m.label)+' — current (auto)</label><input class="inp" value="'+m.current+'" disabled style="opacity:.65">':
+      '<label class="fl">'+esc(m.label)+' — current</label><input class="inp kra-cur" data-i="'+i+'" type="number" value="'+m.current+'">';
+    return '<div class="fr2"><div class="fr">'+curField+'</div>'+
+      '<div class="fr"><label class="fl">Goal</label><input class="inp kra-goal" data-i="'+i+'" type="number" value="'+m.goal+'"></div></div>';
+  }).join('');
+  openModal('Update KRA scorecard',
+    '<div style="font-size:11px;color:var(--text3);margin-bottom:10px">Financial standing, service hours, and risk management compliance pull automatically from Finances, Service Hours, and Risk Management — only their goals are editable here.</div>'+
+    rows+
+    '<div class="dv"></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Region rank</label><input class="inp" id="kra-region" value="'+esc(kra.regionRank||'')+'" placeholder="e.g. 3rd of 12"></div>'+
+    '<div class="fr"><label class="fl">Province rank</label><input class="inp" id="kra-province" value="'+esc(kra.provinceRank||'')+'"></div></div>'+
+    '<div class="fr"><label class="fl">TKE Nation rank</label><input class="inp" id="kra-nation" value="'+esc(kra.nationRank||'')+'"></div>'+
+    '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="kra-notes-in" rows="2">'+esc(kra.notes||'')+'</textarea></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveKra()">Save</button></div>'
+  );
+}
+function saveKra(){
+  document.querySelectorAll('.kra-cur').forEach(function(inp){
+    var i=parseInt(inp.getAttribute('data-i'));
+    if(kra.metrics[i])kra.metrics[i].current=parseFloat(inp.value)||0;
+  });
+  document.querySelectorAll('.kra-goal').forEach(function(inp){
+    var i=parseInt(inp.getAttribute('data-i'));
+    if(kra.metrics[i])kra.metrics[i].goal=parseFloat(inp.value)||0;
+  });
+  kra.regionRank=gv('kra-region');kra.provinceRank=gv('kra-province');kra.nationRank=gv('kra-nation');kra.notes=gv('kra-notes-in');
+  if(!kra.history)kra.history=[];
+  var today=todayStr();
+  var todayPct=kraOverallPct();
+  var existing=kra.history.find(function(h){return h.date===today;});
+  if(existing)existing.overall=todayPct;
+  else kra.history.push({date:today,overall:todayPct});
+  if(kra.history.length>52)kra.history=kra.history.slice(kra.history.length-52);
+  save('kra',kra);closeModal();renderKRA();
+}
+
+// RISK MANAGEMENT
+function riskMgmtCompliancePct(){
+  var active=members.filter(function(m){return m.status!=='Alumni';});
+  var trainings=(riskMgmt&&riskMgmt.trainings)||[];
+  if(!active.length||!trainings.length)return 0;
+  var compliant=active.filter(function(m){
+    return trainings.every(function(t){
+      return riskMgmt.completions.some(function(c){return c.memberId===m.id&&c.trainingId===t.id;});
+    });
+  }).length;
+  return Math.round(compliant/active.length*100);
+}
+function isTrainingComplete(mid,tid){
+  return riskMgmt.completions.some(function(c){return c.memberId===mid&&c.trainingId===tid;});
+}
+function toggleTrainingComplete(mid,tid){
+  var idx=riskMgmt.completions.findIndex(function(c){return c.memberId===mid&&c.trainingId===tid;});
+  if(idx>=0)riskMgmt.completions.splice(idx,1);
+  else riskMgmt.completions.push({memberId:mid,trainingId:tid,date:todayStr()});
+  save('riskMgmt',riskMgmt);renderRiskMgmt();
+}
+function renderRiskMgmt(){
+  var active=members.filter(function(m){return m.status!=='Alumni';});
+  var trainings=(riskMgmt&&riskMgmt.trainings)||[];
+  var pct=riskMgmtCompliancePct();
+  document.getElementById('risk-stats').innerHTML=
+    '<div class="sc" style="border-top-color:'+(pct>=100?'var(--green)':'var(--navy)')+'"><div class="sl">Chapter compliance</div><div class="sv" style="color:'+(pct>=100?'var(--green)':'inherit')+'">'+pct+'%</div></div>'+
+    '<div class="sc"><div class="sl">Trainings tracked</div><div class="sv">'+trainings.length+'</div></div>'+
+    '<div class="sc"><div class="sl">Active + pledge members</div><div class="sv">'+active.length+'</div></div>';
+  var q=(document.getElementById('risk-search')?document.getElementById('risk-search').value:'').toLowerCase();
+  var list=q?active.filter(function(m){return m.name.toLowerCase().indexOf(q)>=0;}):active;
+  var wrap=document.getElementById('risk-table-wrap');
+  if(!trainings.length){wrap.innerHTML='<div class="empty">No trainings set up yet'+(canOfficer()?'. Click "Add Training" to create one.':'.')+'</div>';return;}
+  var head='<tr><th>Member</th>'+trainings.map(function(t){
+    var delBtn=canOfficer()?' <i class="ti ti-x" style="cursor:pointer;color:var(--text3)" onclick="deleteTraining('+t.id+')" title="Remove training"></i>':'';
+    return '<th>'+esc(t.name)+delBtn+'</th>';
+  }).join('')+'</tr>';
+  var rows=list.map(function(m){
+    var cv=avColor(m.id||0);
+    var cells=trainings.map(function(t){
+      var done=isTrainingComplete(m.id,t.id);
+      var clickable=canOfficer()?' onclick="toggleTrainingComplete('+m.id+','+t.id+')" style="cursor:pointer"':'';
+      return '<td'+clickable+'><span class="badge '+(done?'b-paid':'b-unpaid')+'">'+(done?'Complete':'Pending')+'</span></td>';
+    }).join('');
+    return '<tr><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+'</div></td>'+cells+'</tr>';
+  }).join('')||'<tr><td colspan="'+(trainings.length+1)+'" class="empty">No members match</td></tr>';
+  wrap.innerHTML='<table><thead>'+head+'</thead><tbody>'+rows+'</tbody></table>';
+}
+function addTrainingModal(){
+  openModal('Add training',
+    '<div class="fr"><label class="fl">Training name</label><input class="inp" id="ftrn" placeholder="e.g. Anti-Hazing Training"></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveTraining()">Add</button></div>'
+  );
+}
+function saveTraining(){
+  var name=gv('ftrn').trim();if(!name){showToast('Training name required','error');return;}
+  riskMgmt.trainings.push({id:nid(),name:name});
+  save('riskMgmt',riskMgmt);logAudit('Risk management training added',name);closeModal();renderRiskMgmt();
+}
+function deleteTraining(id){
+  if(!confirm('Remove this training? Completion records for it will also be removed.'))return;
+  var t=riskMgmt.trainings.find(function(x){return x.id===id;});
+  riskMgmt.trainings=riskMgmt.trainings.filter(function(x){return x.id!==id;});
+  riskMgmt.completions=riskMgmt.completions.filter(function(c){return c.trainingId!==id;});
+  save('riskMgmt',riskMgmt);if(t)logAudit('Risk management training removed',t.name);renderRiskMgmt();
+}
+
+// AUDIT LOG (view)
+function renderAuditLog(){
+  var el=document.getElementById('auditlog-list');
+  if(!el)return;
+  if(!officerAuthed){el.innerHTML='<div class="empty">Log in as an officer to view the audit log.</div>';return;}
+  var log=auditLog||[];
+  if(!log.length){el.innerHTML='<div class="empty">No changes logged yet.</div>';return;}
+  el.innerHTML=log.slice(0,100).map(function(e){
+    var d=new Date(e.ts);
+    var when=isNaN(d.getTime())?e.ts:d.toLocaleString();
+    return '<div class="af-item" style="border-bottom:0.5px solid var(--border);padding:9px 0">'+
+      '<div class="af-ic" style="background:var(--purple-l);color:var(--purple)"><i class="ti ti-pencil"></i></div>'+
+      '<div class="af-body"><div class="af-title">'+esc(e.action)+' — '+esc(e.detail||'')+'</div>'+
+      '<div class="af-sub">'+esc(e.actor)+' · '+esc(when)+'</div></div></div>';
+  }).join('');
 }
 
 // MESSAGE BLAST
@@ -3295,12 +3670,17 @@ function copyBlastPhones(){
 
 // SETTINGS
 function openSettingsModal(){
-  if(!canEdit()){showToast('Log in as an officer first to edit settings','error');return;}
+  if(!canManageSettings()){showToast('Log in as an officer with settings access to edit settings','error');return;}
+  var roleLines=Object.keys(settings.officerRoles||{}).map(function(email){return email+' = '+settings.officerRoles[email];}).join('\n');
   openModal('Chapter settings',
-    '<div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border)">'+
+    '<div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border)">'+
     '<button class="btn btn-sm" onclick="exportBackupJSON()"><i class="ti ti-download"></i> Download full backup</button>'+
     '<button class="btn btn-sm" onclick="exportMembersCSV()"><i class="ti ti-file-spreadsheet"></i> Export members (CSV)</button>'+
+    '<span id="settings-backup-note" style="font-size:11px;color:var(--text3)">'+(settings.lastBackupDate?'Last backup: '+settings.lastBackupDate:'No backup downloaded yet')+'</span>'+
     '</div>'+
+    '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:0 0 8px">Officer roles</div>'+
+    '<div class="fr"><label class="fl">One per line: officer email = Role</label><textarea class="inp" id="sroles" rows="4" placeholder="treasurer@chapter.org = Treasurer">'+esc(roleLines)+'</textarea></div>'+
+    '<div style="font-size:11px;color:var(--text3);margin:-4px 0 12px">Known roles: '+KNOWN_ROLES.join(', ')+'. A role not in this list defaults to full access. Roles restrict which tabs an officer can edit — logging in still requires their Firebase email/password.</div>'+
     '<div class="fr"><label class="fl">Chapter name</label><input class="inp" id="scn" value="'+esc(settings.chapterName)+'"></div>'+
     '<div class="fr"><label class="fl">Semester</label><input class="inp" id="ssm" value="'+esc(settings.semester)+'"></div>'+
     '<div class="fr"><label class="fl">GPA probation threshold</label><input class="inp" id="sgt" type="number" step="0.1" value="'+numOr(settings.gpaThreshold,2.5)+'"></div>'+
@@ -3330,6 +3710,15 @@ function saveSettings(){
   settings.vaultAIProxyUrl=gv('svaiurl').trim();
   settings.pointsPerEvent=isNaN(parseFloat(gv('sppe')))?0:parseFloat(gv('sppe'));
   settings.pointsPerStudyHour=isNaN(parseFloat(gv('spph')))?1:parseFloat(gv('spph'));
+  var newRoles={};
+  gv('sroles').split('\n').forEach(function(line){
+    var parts=line.split('=');
+    if(parts.length<2)return;
+    var email=parts[0].trim().toLowerCase();
+    var role=parts.slice(1).join('=').trim();
+    if(email&&role)newRoles[email]=role;
+  });
+  settings.officerRoles=newRoles;
   var lbl=gv('spl');
   if(lbl){perfHistory.push({label:lbl,attendance:numOr(parseInt(gv('spa')),80),dues:numOr(parseInt(gv('spd')),70),gpa:numOr(parseFloat(gv('spg')),3.3)});save('perfHistory',perfHistory);}
   save('settings',settings);
@@ -3346,8 +3735,13 @@ function downloadFile(filename,content,mime){
   URL.revokeObjectURL(url);
 }
 function exportBackupJSON(){
-  var data={members:members,events:events,dues:dues,transactions:transactions,budget:budget,fines:fines,prospects:prospects,announcements:announcements,chores:chores,maintenance:maintenance,studyHours:studyHours,points:points,concessions:concessions,volunteers:volunteers,soberDrivers:soberDrivers,tkeWeek:tkeWeek,nationalEvents:nationalEvents,serviceHours:serviceHours,goals:goals,settings:settings};
+  var data={members:members,events:events,dues:dues,transactions:transactions,budget:budget,fines:fines,prospects:prospects,announcements:announcements,chores:chores,maintenance:maintenance,studyHours:studyHours,points:points,concessions:concessions,volunteers:volunteers,soberDrivers:soberDrivers,tkeWeek:tkeWeek,nationalEvents:nationalEvents,serviceHours:serviceHours,goals:goals,receipts:receipts,library:library,serviceRequests:serviceRequests,kra:kra,riskMgmt:riskMgmt,auditLog:auditLog,settings:settings};
   downloadFile((settings.chapterName||'chapter').replace(/[^a-z0-9]/gi,'-')+'-backup-'+todayStr()+'.json',JSON.stringify(data,null,2),'application/json');
+  settings.lastBackupDate=todayStr();
+  save('settings',settings);
+  var el=document.getElementById('settings-backup-note');
+  if(el)el.textContent='Last backup: '+settings.lastBackupDate;
+  if(curTab==='dashboard')renderDashboard();
 }
 function csvEscape(v){
   v=(v===undefined||v===null)?'':String(v);

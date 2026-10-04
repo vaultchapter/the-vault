@@ -1628,9 +1628,8 @@ function renderDashboard(){
   var lbEl=document.getElementById('dn-leaderboard');
   if(lbEl){
     lbEl.innerHTML=top5.length?top5.map(function(m,i){
-      var cv=avColor(m.id||0);
       var medal=i===0?'👑 ':i===1?'🥈 ':i===2?'🥉 ':'';
-      return '<div class="dn-person-row"><div class="dn-rank">'+(i+1)+'</div><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div><div class="dn-person-name">'+medal+esc(m.name)+'</div><div class="dn-person-pts">'+totalPoints(m.id)+' pts</div></div>';
+      return '<div class="dn-person-row"><div class="dn-rank">'+(i+1)+'</div>'+avatarHTML(m,28)+'<div class="dn-person-name">'+medal+esc(m.name)+pointsTierBadge(totalPoints(m.id))+'</div><div class="dn-person-pts">'+totalPoints(m.id)+' pts</div></div>';
     }).join(''):'<div class="dn-empty">🏆 No point activity yet — go award some!</div>';
   }
 
@@ -1790,7 +1789,7 @@ function renderMembers(){
     var prob=m.gpa&&m.gpa<settings.gpaThreshold?'<span class="badge" style="background:var(--red-l);color:var(--red);margin-left:5px;font-size:10px">Probation</span>':'';
     var editBtn=canEdit()?'<button class="btn btn-sm" onclick="event.stopPropagation();editMemberModal('+m.id+')"><i class="ti ti-edit"></i></button>':'';
     return '<tr style="cursor:pointer" onclick="viewMember('+m.id+')">'+
-      '<td><div class="rn"><div class="av" style="background:'+bg+';color:'+fg+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+prob+'</div></td>'+
+      '<td><div class="rn">'+avatarHTML(m,28)+esc(m.name)+prob+'</div></td>'+
       '<td>'+esc(m.year||'—')+'</td><td>'+esc(m.major||'—')+'</td><td>'+esc(m.role||'—')+'</td>'+
       '<td><span class="badge '+bc+'">'+m.status+'</span></td>'+
       '<td>'+(m.gpa||'—')+'</td><td>'+attRate(m.id)+'</td>'+
@@ -1809,7 +1808,7 @@ function viewMember(id){
   var editBtn=canEdit()?'<button class="btn btn-danger" onclick="closeModal();deleteMember('+id+')">Remove</button><button class="btn btn-primary" onclick="closeModal();editMemberModal('+id+')">Edit</button>':'';
   openModal('Member profile',
     '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'+
-    '<div class="av" style="background:'+cv[0]+';color:'+cv[1]+';width:44px;height:44px;font-size:14px">'+esc(m.initials||initials(m.name))+'</div>'+
+    avatarHTML(m,44)+
     '<div><div style="font-size:15px;font-weight:600">'+esc(m.name)+'</div><div style="font-size:13px;color:var(--text2)">'+esc(m.role||'—')+' &middot; '+m.status+'</div></div></div>'+
     '<div class="pg">'+
     '<div><div class="pl">Year</div><div class="pv">'+esc(m.year||'—')+'</div></div>'+
@@ -1847,26 +1846,69 @@ function memberForm(m){
     '<div class="fr"><label class="fl">Birthday</label><input class="inp" id="fbday" type="date" value="'+(m?m.birthday||'':'')+'"></div>'+
     '<div class="fr"><label class="fl">Pledge class</label><input class="inp" id="fpc" value="'+(m?esc(m.pledgeClass||''):'')+'"></div>'+
     '</div><div class="fr"><label class="fl">Father (optional)</label><select class="inp" id="fbig"><option value="">— None —</option>'+members.filter(function(x){return !m||x.id!==m.id;}).map(function(x){return '<option'+(m&&m.big===x.name?' selected':'')+'>'+esc(x.name)+'</option>';}).join('')+'</select></div>'+
-    '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="fnotes" rows="2">'+(m?esc(m.notes||''):'')+'</textarea></div>';
+    '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="fnotes" rows="2">'+(m?esc(m.notes||''):'')+'</textarea></div>'+
+    '<div class="fr"><label class="fl">Photo (optional)</label><input class="inp" id="fphoto" type="file" accept="image/*" onchange="handleMemberPhoto(event)">'+
+    '<img id="member-photo-preview" src="'+(m&&m.photo?m.photo:'')+'" style="'+(m&&m.photo?'display:block':'display:none')+';width:72px;height:72px;object-fit:cover;border-radius:50%;margin-top:8px;border:0.5px solid var(--border)">'+
+    '<button type="button" id="member-photo-remove" class="btn btn-sm" style="margin-top:6px;'+(m&&m.photo?'display:inline-flex':'display:none')+'" onclick="removeMemberPhoto()">Remove photo</button>'+
+    '</div>';
 }
-function addMemberModal(){openModal('Add member',memberForm(null)+'<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveMember()">Add member</button></div>');}
+window._pendingMemberPhoto=null;
+function handleMemberPhoto(evt){
+  var file=evt.target.files&&evt.target.files[0];if(!file)return;
+  if(file.size>8*1024*1024){showToast('Image too large — pick one under 8MB','error');return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var size=320;
+      var scale=Math.max(size/img.width,size/img.height);
+      var canvas=document.createElement('canvas');
+      canvas.width=size;canvas.height=size;
+      var ctx=canvas.getContext('2d');
+      var w=img.width*scale,h=img.height*scale;
+      ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+      window._pendingMemberPhoto=canvas.toDataURL('image/jpeg',0.8);
+      var prev=document.getElementById('member-photo-preview');
+      if(prev){prev.src=window._pendingMemberPhoto;prev.style.display='block';}
+      var rm=document.getElementById('member-photo-remove');
+      if(rm)rm.style.display='inline-flex';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function removeMemberPhoto(){
+  window._pendingMemberPhoto=null;
+  var prev=document.getElementById('member-photo-preview');if(prev)prev.style.display='none';
+  var rm=document.getElementById('member-photo-remove');if(rm)rm.style.display='none';
+  var fi=document.getElementById('fphoto');if(fi)fi.value='';
+}
+// Returns a photo <img> if the member has one, otherwise the existing initials avatar markup.
+function avatarHTML(m,size){
+  size=size||28;
+  if(m&&m.photo)return '<img src="'+m.photo+'" style="width:'+size+'px;height:'+size+'px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="">';
+  var cv=avColor(m&&m.id||0);
+  return '<div class="av" style="width:'+size+'px;height:'+size+'px;background:'+cv[0]+';color:'+cv[1]+'">'+esc(m&&(m.initials||initials(m.name))||'?')+'</div>';
+}
+function addMemberModal(){window._pendingMemberPhoto=null;openModal('Add member',memberForm(null)+'<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveMember()">Add member</button></div>');}
 function saveMember(){
   var name=gv('fn').trim();if(!name){showToast('Name required','error');return;}
   var dup=members.some(function(m){return m.name.toLowerCase()===name.toLowerCase();});
   if(dup&&!confirm('A member named "'+name+'" already exists. Add anyway?'))return;
   var id=nid();
-  members.push({id:id,name:name,initials:initials(name),year:gv('fy'),major:gv('fmaj')||'—',role:gv('frole')||'Member',status:gv('fst'),gpa:parseFloat(gv('fgpa'))||null,phone:gv('fphone'),email:gv('femail'),birthday:gv('fbday'),pledgeClass:gv('fpc'),big:gv('fbig')||null,notes:gv('fnotes')});
-  save('members',members);closeModal();renderMembers();
+  members.push({id:id,name:name,initials:initials(name),year:gv('fy'),major:gv('fmaj')||'—',role:gv('frole')||'Member',status:gv('fst'),gpa:parseFloat(gv('fgpa'))||null,phone:gv('fphone'),email:gv('femail'),birthday:gv('fbday'),pledgeClass:gv('fpc'),big:gv('fbig')||null,notes:gv('fnotes'),photo:window._pendingMemberPhoto||null});
+  save('members',members);window._pendingMemberPhoto=null;closeModal();renderMembers();
 }
 function editMemberModal(id){
   var m=members.find(function(x){return x.id===id;});if(!m)return;
+  window._pendingMemberPhoto=m.photo||null;
   openModal('Edit member',memberForm(m)+'<div class="fa"><button class="btn btn-danger" onclick="deleteMember('+id+')">Remove</button><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="updateMember('+id+')">Save</button></div>');
 }
 function updateMember(id){
   var m=members.find(function(x){return x.id===id;});if(!m)return;
   var name=gv('fn').trim()||m.name;
-  m.name=name;m.initials=initials(name);m.year=gv('fy');m.major=gv('fmaj')||m.major;m.role=gv('frole');m.status=gv('fst');m.gpa=parseFloat(gv('fgpa'))||null;m.phone=gv('fphone');m.email=gv('femail');m.birthday=gv('fbday');m.pledgeClass=gv('fpc');m.big=gv('fbig')||null;m.notes=gv('fnotes');
-  save('members',members);closeModal();renderMembers();
+  m.name=name;m.initials=initials(name);m.year=gv('fy');m.major=gv('fmaj')||m.major;m.role=gv('frole');m.status=gv('fst');m.gpa=parseFloat(gv('fgpa'))||null;m.phone=gv('fphone');m.email=gv('femail');m.birthday=gv('fbday');m.pledgeClass=gv('fpc');m.big=gv('fbig')||null;m.notes=gv('fnotes');m.photo=window._pendingMemberPhoto;
+  save('members',members);window._pendingMemberPhoto=null;closeModal();renderMembers();
 }
 function deleteMember(id){
   if(!confirm('Remove this member?'))return;
@@ -1905,7 +1947,7 @@ function renderFamilyTree(){
     var isMatch=q&&m.name.toLowerCase().indexOf(q)>=0;
     var bc={Active:'b-active',Pledge:'b-pledge',Alumni:'b-alumni'}[m.status]||'b-alumni';
     return '<li><div class="fam-node'+(isMatch?' fam-match':'')+'" onclick="viewMember('+m.id+')">'+
-      '<div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+
+      avatarHTML(m,28)+
       '<div class="fam-name">'+esc(m.name)+'</div>'+
       '<span class="badge '+bc+'" style="font-size:9px">'+m.status+'</span>'+
       '</div>'+
@@ -2136,7 +2178,7 @@ function renderFinance(){
       var bc={Paid:'b-paid',Partial:'b-partial',Unpaid:'b-unpaid'}[d.status]||'b-unpaid';
       var od=isOverdue(d);
       var editBtn=canEdit()?'<td style="display:flex;gap:5px"><button class="btn btn-sm" onclick="editDuesModal('+d.id+')"><i class="ti ti-edit"></i></button><button class="btn btn-sm btn-danger" onclick="deleteDues('+d.id+')"><i class="ti ti-trash"></i></button></td>':'';
-      return '<tr'+(od?' style="background:var(--red-l)"':'')+'><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+(m?esc(m.initials||initials(m.name)):'?')+'</div>'+(m?esc(m.name):'Unknown')+'</div></td><td>$'+d.amount+'</td><td>'+(d.dueDate||'—')+(od?' <span class="badge b-unpaid" style="margin-left:4px">Overdue</span>':'')+'</td><td><span class="badge '+bc+'">'+d.status+'</span></td>'+editBtn+'</tr>';
+      return '<tr'+(od?' style="border-left:3px solid var(--red)"':'')+'><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+(m?esc(m.initials||initials(m.name)):'?')+'</div>'+(m?esc(m.name):'Unknown')+'</div></td><td>$'+d.amount+'</td><td>'+(d.dueDate||'—')+(od?' <span class="badge b-unpaid" style="margin-left:4px">Overdue</span>':'')+'</td><td><span class="badge '+bc+'">'+d.status+'</span></td>'+editBtn+'</tr>';
     }).join('')||'<tr><td colspan="5" class="empty">No dues records'+(finQ||finDuesFilter!=='All'?' match this filter':'')+'</td></tr>';
     el.innerHTML='<div class="tw"><table><thead><tr><th>Member</th><th>Amount</th><th>Due date</th><th>Status</th>'+editCol+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
   } else if(finTab==='transactions'){
@@ -2159,7 +2201,7 @@ function renderFinance(){
       var rem=b.budgeted-b.spent;var pct=b.budgeted?Math.round(b.spent/b.budgeted*100):0;
       var over=pct>100;
       var editBtn=canEdit()?'<td><button class="btn btn-sm" onclick="editBudgetModal('+b.id+')"><i class="ti ti-edit"></i></button></td>':'';
-      return '<tr'+(over?' style="background:var(--red-l)"':'')+'><td>'+esc(b.cat)+'</td><td>$'+b.budgeted.toLocaleString()+'</td><td>$'+b.spent.toLocaleString()+'</td><td style="color:'+(rem<0?'var(--red)':'inherit')+'">$'+rem.toLocaleString()+'</td><td><div style="display:flex;align-items:center;gap:6px"><div class="bar-bg" style="width:70px;display:inline-block"><div class="bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+(over?'var(--red)':'var(--purple)')+'"></div></div>'+pct+'%</div></td>'+editBtn+'</tr>';
+      return '<tr'+(over?' style="background:var(--red-l);color:#1a1112"':'')+'><td>'+esc(b.cat)+'</td><td>$'+b.budgeted.toLocaleString()+'</td><td>$'+b.spent.toLocaleString()+'</td><td style="color:'+(rem<0?'var(--red)':'inherit')+'">$'+rem.toLocaleString()+'</td><td><div style="display:flex;align-items:center;gap:6px"><div class="bar-bg" style="width:70px;display:inline-block"><div class="bar-fill" style="width:'+Math.min(pct,100)+'%;background:'+(over?'var(--red)':'var(--purple)')+'"></div></div>'+pct+'%</div></td>'+editBtn+'</tr>';
     }).join('')||'<tr><td colspan="6" class="empty">No budget categories yet</td></tr>';
     el.innerHTML='<div class="tw"><table><thead><tr><th>Category</th><th>Budgeted</th><th>Spent</th><th>Remaining</th><th>Used</th>'+editCol+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
   } else if(finTab==='fines'){
@@ -2178,7 +2220,7 @@ function renderFinance(){
     var rows=finesFiltered.map(function(f){
       var m=members.find(function(x){return x.id===f.memberId;});
       var editBtn=canEdit()?'<td style="display:flex;gap:5px"><button class="btn btn-sm" onclick="toggleFine('+f.id+')">'+(f.paid?'Unmark':'Mark paid')+'</button><button class="btn btn-sm btn-danger" onclick="deleteFine('+f.id+')"><i class="ti ti-trash"></i></button></td>':'';
-      return '<tr'+(!f.paid?' style="background:var(--red-l)"':'')+'><td>'+(m?esc(m.name):'Unknown')+'</td><td>'+esc(f.reason||'—')+'</td><td>'+(f.date||'—')+'</td><td>$'+f.amount+'</td><td><span class="badge '+(f.paid?'b-paid':'b-unpaid')+'">'+(f.paid?'Paid':'Unpaid')+'</span></td>'+editBtn+'</tr>';
+      return '<tr'+(!f.paid?' style="background:var(--red-l);color:#1a1112"':'')+'><td>'+(m?esc(m.name):'Unknown')+'</td><td>'+esc(f.reason||'—')+'</td><td>'+(f.date||'—')+'</td><td>$'+f.amount+'</td><td><span class="badge '+(f.paid?'b-paid':'b-unpaid')+'">'+(f.paid?'Paid':'Unpaid')+'</span></td>'+editBtn+'</tr>';
     }).join('')||'<tr><td colspan="6" class="empty">No fines'+(finQ||finFinesFilter!=='All'?' match this filter':'')+'</td></tr>';
     el.innerHTML='<div class="tw"><table><thead><tr><th>Member</th><th>Reason</th><th>Date</th><th>Amount</th><th>Status</th>'+editCol+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
   } else if(finTab==='receipts'){
@@ -3319,6 +3361,17 @@ function manualPoints(mid){
 function totalPoints(mid){
   return autoEventPoints(mid)+autoStudyPoints(mid)+manualPoints(mid);
 }
+// POINTS TIERS / BADGES
+var POINTS_TIERS=[
+  {min:150,name:'Gold',icon:'🥇',color:'#c9a227'},
+  {min:75,name:'Silver',icon:'🥈',color:'#93989f'},
+  {min:25,name:'Bronze',icon:'🥉',color:'#a5652f'}
+];
+function pointsTierBadge(total){
+  var tier=POINTS_TIERS.find(function(t){return total>=t.min;});
+  if(!tier)return'';
+  return '<span class="badge" style="background:'+tier.color+'22;color:'+tier.color+';margin-left:6px;font-size:10px" title="'+tier.min+'+ points">'+tier.icon+' '+tier.name+'</span>';
+}
 function renderPoints(){
   var active=members.filter(function(m){return m.status!=='Alumni';});
   var totals=active.map(function(m){return totalPoints(m.id);});
@@ -3336,7 +3389,7 @@ function renderPoints(){
   body.innerHTML=sorted.map(function(m,i){
     var cv=avColor(m.id||0);
     var medal=i===0?'👑':i===1?'🥈':i===2?'🥉':(i+1);
-    return '<tr'+(i<3?' style="background:rgba(195,162,76,0.16);border-left:3px solid var(--gold-d)"':'')+'><td style="font-weight:700">'+medal+'</td><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+'</div></td>'+
+    return '<tr'+(i<3?' style="background:rgba(195,162,76,0.16);border-left:3px solid var(--gold-d)"':'')+'><td style="font-weight:700">'+medal+'</td><td><div class="rn"><div class="av" style="background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</div>'+esc(m.name)+pointsTierBadge(totalPoints(m.id))+'</div></td>'+
       '<td>'+autoEventPoints(m.id)+'</td><td>'+autoStudyPoints(m.id)+'</td><td>'+manualPoints(m.id)+'</td>'+
       '<td><strong>'+totalPoints(m.id)+'</strong></td></tr>';
   }).join('');
@@ -3896,4 +3949,3 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGlobalS
 </script>
 </body>
 </html>
-

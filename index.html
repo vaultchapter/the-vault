@@ -485,6 +485,32 @@ textarea.inp{resize:vertical;min-height:70px}
 .help-hero{background:linear-gradient(130deg,var(--navy),var(--navy-d));border-radius:var(--rl);padding:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:16px}.help-kicker{font-size:10px;letter-spacing:.12em;color:var(--gold);font-weight:700;margin-bottom:7px}.help-hero h2{font-size:23px;margin:0 0 7px}.help-hero p{font-size:13px;line-height:1.5;color:rgba(255,255,255,.72);max-width:620px}.help-hero-icon{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:31px;color:var(--gold);flex-shrink:0}.help-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.help-card,.help-section{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rl);padding:15px}.help-card-icon{width:31px;height:31px;background:var(--purple-l);color:var(--purple);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:9px}.help-card h3{font-size:13px;margin-bottom:5px}.help-card p{font-size:12px;color:var(--text2);line-height:1.5;min-height:70px;margin-bottom:10px}.help-section{margin-bottom:14px}.help-section-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}.help-section-sub{font-size:12px;color:var(--text2);line-height:1.45;margin-bottom:13px}.help-rules{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.help-rule-group{border:.5px solid var(--border);border-radius:var(--r);overflow:hidden}.help-rule-group-title{padding:8px 10px;background:var(--bg2);font-size:11px;font-weight:700;color:var(--text2)}.help-rule{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;border-top:.5px solid var(--border);font-size:12px}.help-rule-label{color:var(--text2);line-height:1.35}.help-rule-points{font-weight:700;color:var(--navy);white-space:nowrap}.help-tasks{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.help-tasks>div{padding:10px;border-radius:var(--r);background:var(--bg2);font-size:12px}.help-tasks strong{display:block;margin-bottom:3px}.help-tasks span{display:block;color:var(--text2);line-height:1.35}.meeting-card,.notification-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rl);padding:14px;margin-bottom:10px}.meeting-card h3,.notification-card h3{font-size:14px;margin-bottom:4px}.meeting-meta,.notification-meta{font-size:11px;color:var(--text2);margin-bottom:8px}.meeting-card p,.notification-card p{font-size:12px;line-height:1.55;color:var(--text2)}
 @media (max-width:900px){.help-grid{grid-template-columns:repeat(2,1fr)}}@media (max-width:600px){.top-search-btn span,.top-search-btn kbd{display:none}.top-search-btn{padding:7px 8px}.search-bg{padding-top:8vh}.help-hero{padding:18px}.help-hero h2{font-size:19px}.help-hero-icon{display:none}.help-grid,.help-rules,.help-tasks{grid-template-columns:1fr}.help-card p{min-height:0}}
 
+/* 3D vault lockscreen */
+.v3-scene{perspective:700px;width:180px;height:180px;margin:0 auto 22px;transition:transform 1.7s cubic-bezier(.5,0,.2,1),opacity .8s ease}
+.v3-tilt{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .12s linear}
+.v3-inside{position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle,#fff4c4,#c3a24c 40%,#3f0e18 88%);transform:translateZ(-16px);box-shadow:inset 0 0 22px rgba(0,0,0,.65)}
+.v3-frame{position:absolute;inset:0;box-sizing:border-box;border:14px solid #9aa0a9;border-radius:50%;transform:translateZ(-6px);box-shadow:0 14px 34px rgba(0,0,0,.55),inset 0 0 0 3px rgba(0,0,0,.25),inset 0 4px 10px rgba(0,0,0,.4)}
+.v3-door{position:absolute;inset:14px;border-radius:50%;transform-style:preserve-3d;transform-origin:0 50%;transition:transform 1.1s cubic-bezier(.6,.05,.25,1)}
+.v3-back{position:absolute;inset:0;border-radius:50%;background:#3f0e18;transform:translateZ(-10px)}
+.v3-face{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f1f3f6,#aeb3bb 40%,#6d1a2a 125%);box-shadow:inset 0 0 0 5px rgba(255,255,255,.35),inset 0 0 16px rgba(0,0,0,.45)}
+.v3-bolt{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#7d828c);box-shadow:0 2px 3px rgba(0,0,0,.5);transform:rotate(var(--a)) translateY(-62px) translateZ(4px);transition:transform .5s ease}
+.v3-plaque{position:absolute;left:-8px;right:-8px;top:50%;height:50px;margin-top:-25px;display:flex;align-items:center;justify-content:center;background:linear-gradient(#8a2236,#6d1a2a 50%,#3f0e18);border-top:2px solid #e9ecf0;border-bottom:2px solid #5e636b;box-shadow:0 8px 16px rgba(0,0,0,.55);transform:translateZ(12px)}
+.v3-plaque b{font:800 36px/1 Georgia,'Times New Roman',serif;letter-spacing:.2em;margin-right:-.2em;color:#f1f3f6;text-shadow:0 1px 0 #cfd3da,0 2px 0 #aeb3bb,0 3px 0 #8d929b,0 4px 0 #6b707a,0 9px 10px rgba(0,0,0,.65)}
+.v3-spell{position:absolute;inset:0;z-index:3;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.1em .55em;padding:0 24px;text-align:center;pointer-events:none;perspective:700px;font:800 clamp(30px,8vw,76px)/1.1 Georgia,'Times New Roman',serif;letter-spacing:.08em;color:#f1f3f6}
+.v3-word{display:inline-flex}
+.v3-spell i{font-style:normal;display:inline-block;opacity:0;transform:translateY(34px) rotateX(-85deg) scale(.7);text-shadow:0 1px 0 #cfd3da,0 2px 0 #aeb3bb,0 3px 0 #8d929b,0 4px 0 #6b707a,0 5px 0 #4a4e57,0 14px 22px rgba(0,0,0,.7)}
+.v3-flash{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 1s ease;background:radial-gradient(circle at 50% 50%,rgba(255,236,170,.55),rgba(195,162,76,.18) 35%,transparent 65%)}
+@keyframes v3-letter{to{opacity:1;transform:none}}
+.welcome-card{transition:background .5s,border-color .5s,box-shadow .5s,backdrop-filter .5s}
+.welcome-screen.opening .welcome-card{background:transparent;border-color:transparent;box-shadow:none;backdrop-filter:none}
+.welcome-screen.opening .welcome-card>*:not(.v3-scene){opacity:0;transition:opacity .35s}
+.welcome-screen.opening .v3-scene{transform:scale(3.4)}
+.welcome-screen.opening .v3-bolt{transform:rotate(var(--a)) translateY(-46px) translateZ(4px)}
+.welcome-screen.opening .v3-door{transform:rotateY(-110deg);transition-delay:.4s}
+.welcome-screen.spelling .v3-scene{opacity:0}
+.welcome-screen.spelling .v3-flash{opacity:1}
+.welcome-screen.spelling .v3-spell i{animation:v3-letter .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*75ms)}
+@media (prefers-reduced-motion:reduce){.v3-door,.v3-bolt,.v3-tilt,.v3-scene{transition:none!important}.v3-spell i{animation-duration:.01s!important;animation-delay:0s!important}}
 /* mobile */
 .menu-btn{display:none;background:none;border:none;font-size:22px;color:var(--navy);cursor:pointer;padding:4px 6px;line-height:1}
 .sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
@@ -510,7 +536,7 @@ textarea.inp{resize:vertical;min-height:70px}
 </style>
 </head>
 <body>
-<div id="welcome-screen" class="welcome-screen"><div class="welcome-orb1"></div><div class="welcome-orb2"></div><div class="welcome-bg-mark">VAULT</div><div class="welcome-card"><div class="welcome-crest"><span>VAULT</span></div><div class="welcome-kicker">CHAPTER MANAGEMENT</div><h1 id="welcome-title">The Vault</h1><div class="welcome-date" id="welcome-date"></div><p id="welcome-subtitle">Your chapter’s home for members, events, accountability, and communication.</p><button class="welcome-enter" onclick="enterVault()"><i class="ti ti-login"></i> Enter The Vault</button><button class="welcome-officer" onclick="enterAndLogin()"><i class="ti ti-shield-lock"></i> Officer login</button><div class="welcome-note"><i class="ti ti-lock"></i> Secure chapter workspace</div></div></div>
+<div id="welcome-screen" class="welcome-screen"><div class="welcome-orb1"></div><div class="welcome-orb2"></div><div class="welcome-bg-mark">VAULT</div><div class="welcome-card"><div class="v3-scene"><div class="v3-tilt" id="v3-tilt"><div class="v3-inside"></div><div class="v3-frame"></div><div class="v3-door" id="v3-door"><div class="v3-back"></div><div class="v3-face"></div><div class="v3-plaque"><b>TKE</b></div></div></div></div><div class="welcome-kicker">CHAPTER MANAGEMENT</div><h1 id="welcome-title">The Vault</h1><div class="welcome-date" id="welcome-date"></div><p id="welcome-subtitle">Your chapter’s home for members, events, accountability, and communication.</p><button class="welcome-enter" onclick="enterVault()"><i class="ti ti-login"></i> Enter The Vault</button><button class="welcome-officer" onclick="enterAndLogin()"><i class="ti ti-shield-lock"></i> Officer login</button><div class="welcome-note"><i class="ti ti-lock"></i> Secure chapter workspace</div></div></div>
 
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
@@ -582,6 +608,7 @@ textarea.inp{resize:vertical;min-height:70px}
       <div id="auth-status" style="font-size:12px;color:rgba(255,255,255,0.7)">Viewing (not logged in)</div>
       <button class="btn btn-sm" id="logout-btn" onclick="officerLogout()" style="font-size:11px;display:none">Log out</button>
       <button class="btn btn-sm" onclick="openSettingsModal()" style="font-size:11px"><i class="ti ti-settings"></i> Settings</button>
+      <button class="btn btn-sm" onclick="lockVault()" style="font-size:11px"><i class="ti ti-lock"></i> Lock</button>
       <button class="btn btn-sm" id="theme-toggle" onclick="toggleTheme()" style="font-size:11px"><i class="ti ti-moon"></i> Dark mode</button>
       <div id="sync-status" style="font-size:11px;color:var(--green)">✓ Connected</div>
     </div>
@@ -3926,6 +3953,40 @@ function declineServiceRequest(id){
   save('serviceRequests',serviceRequests);renderServiceRequests();showToast('Request declined');
 }
 
+// ===== 3D lockscreen =====
+(function(){
+  var door=document.getElementById('v3-door'), tilt=document.getElementById('v3-tilt'), ws=document.getElementById('welcome-screen');
+  if(!door||!tilt||!ws)return;
+  for(var i=0;i<8;i++){var b=document.createElement('i');b.className='v3-bolt';b.style.setProperty('--a',(i*45)+'deg');door.appendChild(b);}
+  var flash=document.createElement('div');flash.className='v3-flash';ws.appendChild(flash);
+  var spell=document.createElement('div');spell.className='v3-spell';spell.setAttribute('aria-label','Tau Kappa Epsilon');
+  var n=0;['TAU','KAPPA','EPSILON'].forEach(function(w){
+    var ws2=document.createElement('span');ws2.className='v3-word';
+    w.split('').forEach(function(c){var l=document.createElement('i');l.textContent=c;l.style.setProperty('--i',n++);ws2.appendChild(l);});
+    spell.appendChild(ws2);
+  });
+  ws.appendChild(spell);
+  function aim(x,y){tilt.style.transform='rotateY('+(x*30)+'deg) rotateX('+(-y*30)+'deg)';}
+  ws.addEventListener('mousemove',function(e){aim(e.clientX/innerWidth-.5,e.clientY/innerHeight-.5);});
+  ws.addEventListener('touchmove',function(e){var t=e.touches[0];if(t)aim(t.clientX/innerWidth-.5,t.clientY/innerHeight-.5);},{passive:true});
+  var realEnter=window.enterVault, busy=false, timers=[], skipAfter=0;
+  function finish(){
+    timers.forEach(clearTimeout);timers=[];
+    realEnter();
+    setTimeout(function(){ws.classList.remove('opening','spelling');busy=false;},600);
+  }
+  window.enterVault=function(){
+    if(busy||ws.classList.contains('hidden'))return;
+    busy=true;skipAfter=Date.now()+600;ws.classList.add('opening');tilt.style.transform='none';
+    timers.push(setTimeout(function(){ws.classList.add('spelling');},1050));
+    timers.push(setTimeout(finish,3500));
+  };
+  // tap anywhere during the animation to skip it
+  ws.addEventListener('click',function(){if(busy&&Date.now()>skipAfter&&ws.classList.contains('opening'))finish();});
+  window.lockVault=function(){ws.classList.remove('hidden');};
+})();
+// ===== end 3D lockscreen =====
+
 // INIT
 document.getElementById('sb-chapter').textContent=settings.chapterName;
 document.getElementById('sb-sub').textContent=settings.semester;
@@ -3945,6 +4006,65 @@ function renderHelp(){var el=document.getElementById('help-points-rules');if(!el
 function helpGo(tab){dashboardGo(tab);}
 function openOfficerContacts(){var officers=members.filter(function(m){return /president|vice|treasurer|secretary|chair|officer|manager/i.test(m.role||'');});var content=officers.length?officers.map(function(m){return '<div style="padding:9px 0;border-bottom:.5px solid var(--border)"><strong>'+esc(m.name)+'</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">'+esc(m.role||'Officer')+(m.email?' · '+esc(m.email):'')+'</div></div>';}).join(''):'<div class="empty">No officer roles are listed yet. Update member roles on the Members page.</div>';openModal('Chapter Contacts',content+'<div class="fa"><button class="btn" onclick="closeModal()">Close</button></div>');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGlobalSearch();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openGlobalSearch();}});document.getElementById('search-bg').addEventListener('click',function(e){if(e.target===this)closeGlobalSearch();});
+
+</script>
+<script>
+
+// Vault additions: existing Firebase objects and permissions are preserved.
+(function(){
+const field=(id,label,value='',type='text')=>'<div class="fr"><label class="fl" for="'+id+'">'+esc(label)+'</label><input class="inp" id="'+id+'" type="'+type+'" value="'+esc(String(value))+'"></div>';
+const area=(id,label,value='')=>'<div class="fr"><label class="fl" for="'+id+'">'+esc(label)+'</label><textarea class="inp" id="'+id+'" maxlength="1200">'+esc(value)+'</textarea></div>';
+const select=(id,label,options,value)=>'<div class="fr"><label class="fl" for="'+id+'">'+label+'</label><select class="inp" id="'+id+'">'+options.map(v=>'<option'+(v===value?' selected':'')+'>'+esc(v)+'</option>').join('')+'</select></div>';
+const buttons=action=>'<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="'+action+'">Save</button></div>';
+const state=kind=>kind==='risk'?riskMgmt:kra;
+const allowed=kind=>canEditTab(kind==='risk'?'riskmgmt':'kra');
+const list=kind=>(state(kind).extraItems||[]);
+const mount=(kind)=>{let id='vault-extra-'+kind, el=document.getElementById(id);if(!el){el=document.createElement('div');el.id=id;document.getElementById('panel-'+(kind==='risk'?'riskmgmt':'kra')).appendChild(el);}return el;};
+window.vaultRenderExtra=function(kind){
+ const el=mount(kind), items=list(kind), filter=el.querySelector('select')?.value||'All';
+ const open=items.filter(x=>x.status!=='Resolved'&&x.status!=='Complete');
+ const overdue=open.filter(x=>x.due&&x.due<todayStr());
+ const visible=items.filter(x=>filter==='All'||(filter==='Outstanding'?open.includes(x):overdue.includes(x)));
+ const title=kind==='risk'?'Safety actions and follow-ups':'Additional chapter goals';
+ let html='<div class="chart-wrap" style="margin-top:18px"><h3>'+title+'</h3><p style="font-size:12px;color:var(--text2);margin:8px 0">'+(kind==='risk'?'Track safety checklists and non-sensitive incident follow-ups. These records are not confidential; do not enter medical details, allegations, or personal incident narratives.':'Custom chapter tracking — these goals are separate from the existing KRA score and are not official scoring criteria.')+'</p>';
+ html+='<div class="sg"><div class="sc"><div class="sl">Tracked</div><div class="sv">'+items.length+'</div></div><div class="sc"><div class="sl">Outstanding</div><div class="sv">'+open.length+'</div></div><div class="sc"><div class="sl">Overdue</div><div class="sv">'+overdue.length+'</div></div></div>';
+ html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><select class="inp" style="width:auto" aria-label="Filter follow-ups" onchange="vaultRenderExtra(\''+kind+'\')">'+['All','Outstanding','Overdue'].map(v=>'<option'+(filter===v?' selected':'')+'>'+v+'</option>').join('')+'</select>';
+ if(allowed(kind))html+='<button class="btn btn-primary" onclick="vaultExtraModal(\''+kind+'\',-1)">Add '+(kind==='risk'?'safety item':'goal')+'</button><button class="btn" onclick="vaultExtraTemplates(\''+kind+'\')">Add starter '+(kind==='risk'?'checklist':'goals')+'</button>';
+ html+='</div>'+visible.map(x=>{const i=items.indexOf(x), pct=x.target>0?Math.max(0,Math.min(100,Math.round(x.current/x.target*100))):0;return '<div style="padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:9px"><div style="display:flex;justify-content:space-between;gap:8px"><strong>'+esc(x.title)+'</strong><span class="badge '+(overdue.includes(x)?'b-unpaid':'b-pending')+'">'+esc(x.status)+'</span></div><p style="font-size:12px;color:var(--text2);margin:6px 0">'+esc(x.category)+' · Owner: '+esc(x.owner||'Unassigned')+' · Due: '+esc(x.due||'Not set')+'</p>'+(kind==='kra'?'<div>'+x.current+' / '+x.target+' '+esc(x.unit||'')+' ('+pct+'%)</div><div class="bar-bg" style="max-width:100%"><div class="bar-fill" style="width:'+pct+'%"></div></div>':'<div style="font-size:12px">Priority: '+esc(x.priority||'Medium')+'</div>')+'<p style="white-space:pre-wrap;font-size:12px;margin-top:6px">'+esc(x.notes||'')+'</p>'+(allowed(kind)?'<button class="btn btn-sm" style="margin-top:8px" onclick="vaultExtraModal(\''+kind+'\','+i+')">Edit / update</button>':'')+'</div>';}).join('')+(visible.length?'':'<div class="empty">No items in this view.</div>')+'</div>';
+ el.innerHTML=html;
+};
+window.vaultExtraModal=function(kind,i){if(!allowed(kind))return;const x=list(kind)[i]||{};
+ const cats=kind==='risk'?['Event planning','House safety','Transportation','Training','Incident follow-up','Other']:['Recruitment','Retention','Scholarship','Philanthropy','Alumni engagement','Leadership','Attendance','Other'];
+ openModal(kind==='risk'?'Safety item':'Chapter goal',field('vx-title','Title',x.title)+select('vx-category','Category',cats,x.category)+field('vx-owner','Assigned officer',x.owner)+field('vx-due','Follow-up / target date',x.due,'date')+select('vx-status','Status',kind==='risk'?['Open','In progress','Resolved']:['Not started','In progress','Complete'],x.status)+(kind==='risk'?select('vx-priority','Priority',['Low','Medium','High'],x.priority):field('vx-current','Current',x.current||0,'number')+field('vx-target','Target',x.target||0,'number')+field('vx-unit','Unit',x.unit))+area('vx-notes',kind==='risk'?'Action / resolution notes (non-sensitive only)':'Progress notes',x.notes)+buttons('vaultExtraSave(\''+kind+'\','+i+')'));
+};
+window.vaultExtraSave=function(kind,i){if(!allowed(kind))return;const title=gv('vx-title').trim();if(!title){showToast('Enter a title','error');return;}
+ const x={title,category:gv('vx-category'),owner:gv('vx-owner'),due:gv('vx-due'),status:gv('vx-status'),notes:gv('vx-notes'),updated:todayStr()};
+ if(kind==='risk')x.priority=gv('vx-priority');else{ x.current=Number(gv('vx-current'));x.target=Number(gv('vx-target'));x.unit=gv('vx-unit');if(!Number.isFinite(x.current)||!Number.isFinite(x.target)||x.current<0||x.target<0){showToast('Values must be non-negative numbers','error');return;} }
+ const obj=state(kind);obj.extraItems=obj.extraItems||[];if(i<0)obj.extraItems.push(x);else obj.extraItems[i]=x;save(kind==='risk'?'riskMgmt':'kra',obj);closeModal();vaultRenderExtra(kind);
+};
+window.vaultExtraTemplates=function(kind){if(!allowed(kind))return;
+ const templates=kind==='risk'?[
+ ['Emergency contacts and response plan reviewed','Event planning'],['Exit routes and fire equipment inspection','House safety'],['Sober transportation coverage confirmed','Transportation'],['Event capacity and guest check-in plan reviewed','Event planning'],['Required safety training follow-up','Training'],['Post-event safety review completed','Event planning']
+ ]:[['Recruitment conversations','Recruitment','conversations'],['New-member retention','Retention','%'],['Scholarship workshops','Scholarship','workshops'],['Philanthropy funds raised','Philanthropy','$'],['Alumni engagement events','Alumni engagement','events'],['Leadership development sessions','Leadership','sessions'],['Chapter attendance target','Attendance','%']];
+ const obj=state(kind);obj.extraItems=obj.extraItems||[];templates.forEach(t=>{if(!obj.extraItems.some(x=>x.title===t[0]))obj.extraItems.push({title:t[0],category:t[1],owner:'',due:'',status:kind==='risk'?'Open':'Not started',priority:'Medium',current:0,target:0,unit:t[2]||'',notes:''});});save(kind==='risk'?'riskMgmt':'kra',obj);vaultRenderExtra(kind);
+};
+const oldKra=renderKRA,oldRisk=renderRiskMgmt;
+renderKRA=function(){oldKra();vaultRenderExtra('kra');};
+renderRiskMgmt=function(){oldRisk();vaultRenderExtra('risk');};
+window.vaultAttSummary=function(){let present=0,excused=0,absent=0;document.querySelectorAll('#att-list .vault-att-row').forEach(row=>{if(row.querySelector('input[type=checkbox]').checked)present++;else if(row.querySelector('select').value==='Excused')excused++;else absent++;});document.getElementById('vault-att-summary').textContent='Present: '+present+' · Excused: '+excused+' · Unexcused: '+absent;};
+window.vaultAttToggle=function(box){const row=box.closest('.vault-att-row');row.querySelector('.vault-absence').hidden=box.checked;vaultAttSummary();};
+logAttModal=function(id){if(!canEditTab('events'))return;const e=events.find(x=>x.id===id);if(!e)return;
+const rows=members.filter(m=>m.status!=='Alumni').map(m=>{const present=(e.attendance||[]).includes(m.id), detail=(e.absenceDetails||{})[m.id]||{};return '<div class="vault-att-row" data-mid="'+m.id+'" style="padding:10px;border:1px solid var(--border);border-radius:8px"><label style="display:flex;gap:8px"><input type="checkbox" value="'+m.id+'"'+(present?' checked':'')+' onchange="vaultAttToggle(this)">'+esc(m.name)+'</label><div class="vault-absence"'+(present?' hidden':'')+' style="margin-top:8px"><select class="inp" aria-label="Absence status" onchange="vaultAttSummary()"><option'+(detail.status==='Excused'?'':' selected')+'>Unexcused</option><option'+(detail.status==='Excused'?' selected':'')+'>Excused</option></select><label class="fl" style="margin-top:8px">Reason for absence</label><textarea class="inp" maxlength="600" placeholder="Brief reason — avoid sensitive personal details">'+esc(detail.note||'')+'</textarea></div></div>';}).join('');
+openModal('Attendance — '+e.name,'<p style="font-size:12px;margin-bottom:10px">Check members who attended. Unchecked members can have an absence reason and excused status. Notes use the existing shared event storage and are not confidential.</p><div id="vault-att-summary" style="margin-bottom:10px"></div><div id="att-list" style="max-height:350px;overflow:auto;display:grid;gap:8px">'+rows+'</div>'+field('f-fine','Fine unexcused absences ($; 0 = none)',0,'number')+'<p style="font-size:11px;color:var(--text2)">Excused members are not fined. Existing absence fines are not automatically removed.</p>'+buttons('saveAtt('+id+')'));vaultAttSummary();
+};
+saveAtt=function(id){if(!canEditTab('events'))return;const e=events.find(x=>x.id===id);if(!e)return;const amount=Number(gv('f-fine'));if(!Number.isFinite(amount)||amount<0){showToast('Enter a valid non-negative fine','error');return;}
+const present=[],details=Object.assign({},e.absenceDetails||{}),unexcused=[];let total=0,excused=0;
+document.querySelectorAll('#att-list .vault-att-row').forEach(row=>{total++;const mid=Number(row.dataset.mid);if(row.querySelector('input[type=checkbox]').checked){present.push(mid);delete details[mid];}else{const status=row.querySelector('select').value;details[mid]={status,note:row.querySelector('textarea').value.trim()};if(status==='Excused')excused++;else unexcused.push(mid);}});
+e.attendance=present;e.attended=present.length;e.total=total;e.absenceDetails=details;e.excusedCount=excused;e.unexcusedCount=unexcused.length;e.attendanceRecordedAt=new Date().toISOString();
+if(amount>0&&e.required){unexcused.forEach(mid=>{if(!fines.some(f=>f.memberId===mid&&(f.eventId===id||f.reason==='Absent: '+e.name)))fines.push({id:nid(),eventId:id,memberId:mid,reason:'Absent: '+e.name,amount,paid:false,date:todayStr()});});save('fines',fines);}
+save('events',events);closeModal();renderEvents();
+};
+})();
 
 </script>
 </body>

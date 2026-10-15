@@ -46,7 +46,7 @@
   signInAnonymously(auth).catch(function(e) { console.error('Anonymous sign-in failed:', e); });
 
   // Keys to sync
-  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts','library','serviceRequests','kra','riskMgmt','auditLog'];
+  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','quickNotes','shoutouts','ideas','polls','quickLinks','vibes','receipts','library','serviceRequests','kra','riskMgmt','auditLog'];
 
   // Listen for changes from Firebase and update local state + re-render
   KEYS.forEach(function(k) {
@@ -77,6 +77,12 @@
       else if (k === 'nationalEvents') { window.nationalEvents = val; }
       else if (k === 'serviceHours') { window.serviceHours = val; }
       else if (k === 'goals') { window.goals = val; }
+      else if (k === 'quickNotes') { window.quickNotes = val; }
+      else if (k === 'shoutouts') { window.shoutouts = val; }
+      else if (k === 'ideas') { window.ideas = val; }
+      else if (k === 'polls') { window.polls = val; }
+      else if (k === 'quickLinks') { window.quickLinks = val; }
+      else if (k === 'vibes') { window.vibes = val; }
       else if (k === 'receipts') { window.receipts = val; }
       else if (k === 'library') { window.library = val; }
       else if (k === 'serviceRequests') { window.serviceRequests = val; }
@@ -292,6 +298,154 @@ body.dark{
 .pulse-side .pt{font-size:12.5px;font-weight:600;margin-bottom:3px}
 .pulse-side .ps{font-size:11px;color:var(--text2);line-height:1.5}
 
+
+/* ===== Success tab ===== */
+.sx-hero{position:relative;overflow:hidden;border-radius:18px;padding:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:16px;background:radial-gradient(circle at 12% 18%,rgba(195,199,207,.22),transparent 42%),radial-gradient(circle at 88% 92%,rgba(255,255,255,.12),transparent 45%),linear-gradient(135deg,#a52642,#6d1a2a 58%,#3f0e18);box-shadow:0 14px 34px rgba(109,26,42,.28)}
+.sx-hero::after{content:"SUCCESS";position:absolute;right:-14px;bottom:-34px;font:800 118px Georgia,serif;color:rgba(255,255,255,.05);letter-spacing:-5px;pointer-events:none}
+.sx-hero-kicker{font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.sx-hero h2{font:700 28px Georgia,serif;margin:0 0 6px}
+.sx-hero p{font-size:13px;line-height:1.55;color:rgba(255,255,255,.75);max-width:620px;margin:0}
+.sx-ring{position:relative;width:150px;height:150px;flex-shrink:0;display:grid;place-items:center}
+.sx-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.sx-ring-bg{fill:none;stroke:rgba(255,255,255,.16);stroke-width:12}
+.sx-ring-fill{fill:none;stroke:url(#sxGrad);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.sx-ring-val{font-size:30px;font-weight:800;line-height:1}
+.sx-ring-lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-top:4px}
+.sx-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+.sx-chip.up{background:rgba(30,107,69,.35);border-color:rgba(30,107,69,.55)}
+.sx-chip.down{background:rgba(163,45,45,.35);border-color:rgba(163,45,45,.55)}
+.sx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.sx-card{position:relative;overflow:hidden;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,border-color .18s}
+.sx-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 26px rgba(109,26,42,.14);border-color:var(--border2)}
+.sx-card-ic{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:15px;margin-bottom:10px}
+.sx-card-ic.c1{background:var(--purple-l);color:var(--purple)}.sx-card-ic.c2{background:var(--blue-l);color:var(--blue)}.sx-card-ic.c3{background:var(--green-l);color:var(--green)}.sx-card-ic.c4{background:var(--amber-l);color:var(--amber)}
+.sx-card-lbl{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.sx-card-val{font-size:25px;font-weight:800;color:var(--navy);margin:4px 0 3px}
+.sx-card-sub{font-size:11.5px;color:var(--text3)}
+.sx-meter{height:6px;border-radius:99px;background:var(--bg3);overflow:hidden;margin-top:10px}
+.sx-meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--navy));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.sx-chart-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px}
+.sx-chart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.sx-chart-head h3{font-size:16px;font-weight:800;color:var(--navy)}
+.sx-note{font-size:11.5px;color:var(--text2);margin:0 0 14px;line-height:1.5}
+.sx-chart-box{position:relative;height:330px}
+.sx-chart-sm{position:relative;height:270px}
+.sx-empty{text-align:center;padding:42px 18px;color:var(--text3);font-size:13px;background:var(--bg2);border:1.5px dashed var(--border2);border-radius:14px}
+.sx-bottom{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
+.sx-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sx-goal{display:flex;gap:11px;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:12px 14px;margin-bottom:9px;transition:transform .15s,box-shadow .15s}
+.sx-goal:hover{transform:translateX(3px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.sx-goal-ic{width:28px;height:28px;flex-shrink:0;border-radius:9px;display:grid;place-items:center;background:var(--green-l);color:var(--green)}
+.sx-goal-title{font-size:13px;font-weight:700}
+.sx-goal-sub{font-size:11.5px;color:var(--text2);margin-top:2px}
+.sx-metrics{display:grid;gap:12px}
+.sx-metric{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.sx-metric-top{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:600;margin-bottom:6px}
+.sx-metric-val{color:var(--navy);font-weight:800}
+.sx-metric-bar{height:7px;border-radius:99px;background:var(--bg3);overflow:hidden}
+.sx-metric-bar i{display:block;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.sx-badges{display:flex;gap:9px;flex-wrap:wrap}
+.sx-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:99px;border:1px solid var(--border);background:var(--bg2);font-size:12px;font-weight:600;color:var(--text2);transition:transform .15s,box-shadow .15s}
+.sx-badge:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.08)}
+.sx-badge.on{background:linear-gradient(100deg,var(--purple-l),#fff);border-color:var(--purple);color:var(--purple)}
+.sx-badge i{font-size:14px}
+.sx-timeline{position:relative;padding-left:20px}
+.sx-timeline:before{content:'';position:absolute;left:5px;top:5px;bottom:5px;width:2px;background:var(--border2);border-radius:2px}
+.sx-event{position:relative;padding:0 0 14px 12px}
+.sx-event:last-child{padding-bottom:0}
+.sx-event:before{content:'';position:absolute;left:-20px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--purple);box-shadow:0 0 0 3px var(--purple-l)}
+.sx-event-title{font-size:12.5px;font-weight:700}
+.sx-event-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.sx-insight{display:flex;gap:11px;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:12px;padding:12px 14px;margin-bottom:9px}
+.sx-insight.good{border-left-color:var(--green)}
+.sx-insight.warn{border-left-color:var(--amber)}
+.sx-insight-ic{width:28px;height:28px;flex-shrink:0;border-radius:9px;display:grid;place-items:center;background:var(--blue-l);color:var(--blue)}
+.sx-insight.good .sx-insight-ic{background:var(--green-l);color:var(--green)}
+.sx-insight.warn .sx-insight-ic{background:var(--amber-l);color:var(--amber)}
+.sx-btn-row{display:flex;gap:8px;flex-wrap:wrap}
+/* ===== Quick Notes ===== */
+.note-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.note-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:12px;padding:14px;transition:transform .15s,box-shadow .15s}
+.note-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.note-title{font-size:13px;font-weight:700;margin-bottom:5px}
+.note-body{font-size:12.5px;line-height:1.55;color:var(--text2);white-space:pre-wrap}
+.note-meta{font-size:10.5px;color:var(--text3);margin-top:9px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.note-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--purple-l);color:var(--purple)}
+/* ===== Shoutouts ===== */
+.shout-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:12px;padding:14px;margin-bottom:10px;transition:transform .15s,box-shadow .15s}
+.shout-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.shout-head{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+.shout-ic{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--amber-l);color:var(--amber);flex-shrink:0}
+.shout-name{font-size:13px;font-weight:800}
+.shout-body{font-size:12.5px;line-height:1.55;color:var(--text2)}
+.shout-meta{font-size:10.5px;color:var(--text3);margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.shout-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--amber-l);color:var(--amber)}
+/* ===== Idea Board ===== */
+.idea-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:12px;padding:14px;margin-bottom:10px;transition:transform .15s,box-shadow .15s}
+.idea-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.idea-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.idea-title{font-size:13.5px;font-weight:800}
+.idea-body{font-size:12.5px;line-height:1.55;color:var(--text2);white-space:pre-wrap}
+.idea-meta{font-size:10.5px;color:var(--text3);margin-top:9px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.idea-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--blue-l);color:var(--blue)}
+.idea-vote{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border2);background:var(--bg2);color:var(--navy);border-radius:99px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.idea-vote:hover{background:var(--purple-l);border-color:var(--purple);color:var(--purple);transform:translateY(-1px)}
+/* ===== Polls ===== */
+.poll-card{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:15px;margin-bottom:12px}
+.poll-title{font-size:14px;font-weight:800;margin-bottom:4px}
+.poll-sub{font-size:11px;color:var(--text3);margin-bottom:11px}
+.poll-option{display:flex;align-items:center;gap:9px;padding:8px 10px;border:1px solid var(--border);border-radius:9px;margin-bottom:7px;cursor:pointer;transition:all .15s;background:var(--bg)}
+.poll-option:hover{border-color:var(--green);background:var(--green-l)}
+.poll-option.selected{border-color:var(--green);background:var(--green-l)}
+.poll-radio{width:15px;height:15px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0}
+.poll-option.selected .poll-radio{border-color:var(--green);background:var(--green)}
+.poll-label{font-size:12.5px;font-weight:600;flex:1}
+.poll-count{font-size:11px;font-weight:700;color:var(--text2)}
+.poll-bar{height:6px;border-radius:99px;background:var(--bg3);overflow:hidden;margin-top:5px}
+.poll-bar i{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .5s}
+/* ===== Dashboard extras ===== */
+.pulse-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.pulse-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.pulse-score{font-size:30px;font-weight:800;color:var(--navy)}
+.pulse-bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.pulse-bar-lbl{display:flex;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:4px}
+.pulse-bar{height:7px;border-radius:99px;background:var(--bg3);overflow:hidden}
+.pulse-bar i{display:block;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.deadline-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--border)}
+.deadline-row:last-child{border-bottom:none}
+.deadline-date{min-width:64px;font-size:11px;font-weight:700;color:var(--navy)}
+.deadline-name{font-size:12.5px;font-weight:600}
+.deadline-sub{font-size:10.5px;color:var(--text3)}
+.countdown-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#a52642,#6d1a2a 60%,#3f0e18);color:#fff;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 10px 24px rgba(109,26,42,.22)}
+.countdown-card::after{content:'NEXT UP';position:absolute;right:-8px;bottom:-18px;font:800 72px Georgia,serif;color:rgba(255,255,255,.06);letter-spacing:-3px}
+.countdown-title{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+.countdown-name{font-size:19px;font-weight:800;margin-bottom:3px}
+.countdown-sub{font-size:12px;color:rgba(255,255,255,.75)}
+.countdown-timer{font:800 26px/1 monospace;letter-spacing:.04em;margin-top:10px}
+.spotlight-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;text-align:center;transition:transform .18s,box-shadow .18s}
+.spotlight-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.09)}
+.spotlight-av{width:58px;height:58px;border-radius:50%;margin:0 auto 9px;display:grid;place-items:center;font-size:19px;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--navy));color:#fff}
+.spotlight-name{font-size:15px;font-weight:800;color:var(--navy)}
+.spotlight-sub{font-size:11.5px;color:var(--text2);margin-top:2px}
+.challenge-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#185fa5,#123f6d 60%,#0d2a49);color:#fff;border-radius:14px;padding:18px;margin-bottom:14px}
+.challenge-card::after{content:'DAILY';position:absolute;right:-8px;bottom:-18px;font:800 72px Georgia,serif;color:rgba(255,255,255,.06);letter-spacing:-3px}
+.challenge-title{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#cfe4f8;margin-bottom:5px}
+.challenge-text{font-size:16px;font-weight:800;line-height:1.4}
+.challenge-sub{font-size:11.5px;color:rgba(255,255,255,.72);margin-top:6px}
+/* ===== Quick Links ===== */
+.link-card{display:flex;align-items:center;gap:12px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:9px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-color .15s}
+.link-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.09);border-color:var(--purple)}
+.link-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--purple-l);color:var(--purple);font-size:16px;flex-shrink:0}
+.link-name{font-size:13px;font-weight:700}
+.link-url{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ===== Vibe check ===== */
+.vibe-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.vibe-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.vibe-btn{font-size:20px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.vibe-btn:hover{transform:translateY(-3px) scale(1.08);box-shadow:0 8px 18px rgba(0,0,0,.10)}
+.vibe-btn.selected{border-color:var(--purple);background:var(--purple-l)}
+@media(max-width:1000px){.sx-bottom,.sx-two{grid-template-columns:1fr}.sx-hero h2{font-size:23px}.sx-chart-box,.sx-chart-sm{height:270px}}
+
 /* ===== Noir/gold dashboard theme ===== */
 .dash-noir{
   --n-bg:#121212;--n-card:#1b1b19;--n-card2:#232320;--n-border:rgba(255,255,255,0.08);
@@ -503,7 +657,7 @@ textarea.inp{resize:vertical;min-height:70px}
 .pi-scene-hint{text-align:center;font:9px monospace;letter-spacing:.15em;color:#778494;position:absolute;left:0;right:0;bottom:0;pointer-events:none}
 .pi-identity{color:#a5afbd;font:12px/1.5 Arial,sans-serif;margin:5px 0}.pi-motto{color:#d6dce5;font:15px/1.5 Arial,sans-serif;min-height:23px;margin:8px 0 14px}
 .pi-preview{max-width:430px;margin:0 auto 14px;padding:12px 15px;text-align:left;border:1px solid #ffffff12;border-left:2px solid #b32432;background:#ffffff03;border-radius:6px}.pi-preview small{font:9px/1.6 monospace;letter-spacing:.14em;color:#98a2b1;display:block}.pi-preview strong{font:600 13px/1.8 Arial,sans-serif;color:#e2e7ee;display:block}.pi-preview p{margin:3px 0 0;font:11px/1.5 Arial,sans-serif;color:#949fad}
-#welcome-screen .welcome-enter{position:relative;overflow:hidden;background:#9c2430;border:1px solid #c5515b66;border-radius:7px;box-shadow:0 6px calc(20px + var(--charge)*20px) #0004;min-width:230px;min-height:46px;touch-action:none;user-select:none;transition:background .2s,transform .2s}#welcome-screen .welcome-enter:hover{background:#b12a37;transform:translateY(-2px)}.pi-fill{position:absolute;inset:0;background:#ffffff24;transform:scaleX(var(--charge));transform-origin:left;pointer-events:none}.pi-label{position:relative;z-index:1}.pi-hint{color:#7f8b9b;font:10px/1.5 Arial,sans-serif;margin:7px 0 10px}#welcome-screen .welcome-officer{color:#a6b0be;background:transparent;border-color:#ffffff15;border-radius:7px}
+#welcome-screen .welcome-enter{position:relative;overflow:hidden;background:#9c2430;border:1px solid #c5515b66;border-radius:7px;box-shadow:0 6px calc(20px + var(--charge)*20px) #0004;min-width:230px;min-height:46px;touch-action:none;user-select:none;transition:background .2s,transform .2s}#welcome-screen .welcome-enter:hover{background:#b12a37;transform:translateY(-2px)}#welcome-screen .welcome-enter,#welcome-screen .welcome-enter .pi-label{color:#fff;text-shadow:0 1px 2px #0006}@media(min-width:1001px){body .mini-controls{top:auto!important;bottom:64px!important}}.pi-fill{position:absolute;inset:0;background:#ffffff24;transform:scaleX(var(--charge));transform-origin:left;pointer-events:none}.pi-label{position:relative;z-index:1}.pi-hint{color:#7f8b9b;font:10px/1.5 Arial,sans-serif;margin:7px 0 10px}#welcome-screen .welcome-officer{color:#a6b0be;background:transparent;border-color:#ffffff15;border-radius:7px}
 .pi-spell{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:14px;z-index:7;visibility:hidden;pointer-events:none;padding:20px}.pi-word{display:flex;gap:.025em}.pi-word i{font-size:clamp(40px,11.5vw,120px);opacity:0;display:block}.pi-fly{position:fixed;z-index:9;transform-origin:top left;pointer-events:none}
 .pi-opening .welcome-card{opacity:0;transition:opacity .3s}.pi-opening .pi-spell{visibility:visible}.pi-opening .pi-clock,.pi-opening .pi-tools{opacity:0;pointer-events:none}
 .pi-paused .pi-type,.pi-paused .pi-ring,.pi-holding .pi-type,.pi-dragging .pi-type{animation-play-state:paused}
@@ -613,6 +767,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('familytree',this)"><i class="ti ti-hierarchy-3"></i><span>Family Tree</span></div>
     <div class="nav-item" onclick="go('events',this)"><i class="ti ti-calendar-event"></i><span>Events</span></div>
     <div class="nav-item" onclick="go('goals',this)"><i class="ti ti-target-arrow"></i><span>Goals</span></div>
+    <div class="nav-item" onclick="go('success',this)"><i class="ti ti-trophy"></i><span>Success</span></div>
     <div class="nav-sec">Operations</div>
     <div class="nav-item" onclick="go('finance',this)"><i class="ti ti-cash"></i><span>Finances</span></div>
     <div class="nav-item" onclick="go('recruit',this)"><i class="ti ti-user-plus"></i><span>Recruitment</span></div>
@@ -633,6 +788,11 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('announce',this)"><i class="ti ti-speakerphone"></i><span>Announcements</span></div>
     <div class="nav-item" onclick="go('messages',this)"><i class="ti ti-message"></i><span>Messages</span></div>
     <div class="nav-item" onclick="go('blast',this)"><i class="ti ti-send"></i><span>Message Blast</span></div>
+    <div class="nav-item" onclick="go('notes',this)"><i class="ti ti-notes"></i><span>Quick Notes</span></div>
+    <div class="nav-item" onclick="go('shoutouts',this)"><i class="ti ti-megaphone"></i><span>Shoutouts</span></div>
+    <div class="nav-item" onclick="go('ideas',this)"><i class="ti ti-bulb"></i><span>Idea Board</span></div>
+    <div class="nav-item" onclick="go('polls',this)"><i class="ti ti-checkbox"></i><span>Polls & Votes</span></div>
+    <div class="nav-item" onclick="go('links',this)"><i class="ti ti-link"></i><span>Quick Links</span></div>
     <div class="nav-sec">Resources</div>
     <div class="nav-item" onclick="go('library',this)"><i class="ti ti-folders"></i><span>Library</span></div>
     <div class="nav-item" onclick="go('meetings',this)"><i class="ti ti-notebook"></i><span>Meetings</span></div>
@@ -750,7 +910,7 @@ textarea.inp{resize:vertical;min-height:70px}
                 <button class="dn-qa-btn" onclick="addEventModal()"><span class="dn-qa-ic"><i class="ti ti-calendar-plus"></i></span>Add event</button>
                 <button class="dn-qa-btn" onclick="dashboardGo('attendance')"><span class="dn-qa-ic"><i class="ti ti-clipboard-check"></i></span>Take attendance</button>
               </div>
-              <div class="dn-card" id="dn-recap"></div>
+              <div class="countdown-card" id="dash-countdown"></div><div class="challenge-card" id="dash-challenge"></div><div class="spotlight-card" id="dash-spotlight"></div><div class="vibe-card" id="dash-vibe"></div><div class="pulse-card" id="dash-pulse"></div><div class="dn-card"><div class="dn-card-hdr">Upcoming deadlines</div><div id="dash-deadlines"></div></div><div class="dn-card" id="dn-recap"></div>
               <div class="dn-card">
                 <div class="dn-card-hdr">Upcoming events</div>
                 <div id="dash-ev"></div>
@@ -764,6 +924,74 @@ textarea.inp{resize:vertical;min-height:70px}
         </div>
       </div>
 
+<div class="panel" id="panel-success">
+ <div class="sx-hero">
+  <div style="position:relative;z-index:1">
+   <div class="sx-hero-kicker">Chapter Performance</div>
+   <h2>Chapter Success</h2>
+   <p id="sx-hero-copy">Your chapter’s momentum across attendance, dues collection, academics, completed goals, and accountability.</p>
+   <div id="sx-hero-chips" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative;z-index:1"></div>
+  </div>
+  <div class="sx-ring" style="position:relative;z-index:1">
+   <svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="sxGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f4d35e"/><stop offset="55%" stop-color="#c3c7cf"/><stop offset="100%" stop-color="#a52642"/></linearGradient></defs><circle class="sx-ring-bg" cx="60" cy="60" r="50"/><circle class="sx-ring-fill" id="sx-ring-fill" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
+   <div style="text-align:center"><div class="sx-ring-val" id="sx-ring-val">—</div><div class="sx-ring-lbl">Success Score</div></div>
+  </div>
+ </div>
+ <div class="sx-grid" id="sx-stats"></div>
+ <div class="sx-chart-card">
+  <div class="sx-chart-head">
+   <h3><i class="ti ti-chart-line" style="color:var(--purple)"></i> Momentum over time</h3>
+   <div class="sx-btn-row"><select class="inp" style="width:170px" id="sx-range" aria-label="History range" onchange="renderSuccess()"><option value="all">All history</option><option value="6">Last 6 entries</option><option value="12">Last 12 entries</option></select><button class="btn btn-sm" onclick="exportSuccessCSV()"><i class="ti ti-download"></i> Export</button></div>
+  </div>
+  <p class="sx-note">Success score is the average of available metrics: attendance, dues collection, and GPA as a percentage of 4.0. It reflects recorded performance history—not a goal-completion percentage.</p>
+  <div class="sx-chart-box" id="sx-chart-box"><canvas id="sx-chart" role="img" aria-label="Chapter success performance history"></canvas></div>
+  <div class="sx-empty" id="sx-empty" style="display:none"></div>
+ </div>
+ <div class="sx-two" style="margin-bottom:16px">
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-chart-bar" style="color:var(--blue)"></i> Latest vs previous</h3></div><div class="sx-chart-sm"><canvas id="sx-compare" role="img" aria-label="Latest versus previous performance metrics"></canvas></div></div>
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-chart-pie" style="color:var(--amber)"></i> Goal status</h3></div><div class="sx-chart-sm"><canvas id="sx-goals" role="img" aria-label="Chapter goal status distribution"></canvas></div></div>
+ </div>
+ <div class="sx-two" style="margin-bottom:16px">
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-chart-radar" style="color:var(--purple)"></i> Latest balance</h3></div><div class="sx-chart-sm"><canvas id="sx-radar" role="img" aria-label="Latest chapter performance balance"></canvas></div></div>
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-chart-dots" style="color:var(--green)"></i> Metric distribution</h3></div><div class="sx-chart-sm"><canvas id="sx-dist" role="img" aria-label="Distribution of recorded metric values"></canvas></div></div>
+ </div>
+ <div class="sx-bottom" style="margin-bottom:16px">
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-bulb" style="color:var(--blue)"></i> Success insights</h3></div><div id="sx-insights"></div></div>
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-gauge" style="color:var(--purple)"></i> Latest breakdown</h3></div><div class="sx-metrics" id="sx-metrics"></div></div>
+ </div>
+ <div class="sx-bottom" style="margin-bottom:16px">
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-trophy" style="color:var(--amber)"></i> Completed wins</h3><button class="btn btn-sm" onclick="dashboardGo('goals')"><i class="ti ti-target-arrow"></i> Goals</button></div><div id="sx-wins"></div></div>
+  <div class="sx-chart-card" style="margin-bottom:0"><div class="sx-chart-head"><h3><i class="ti ti-award" style="color:var(--purple)"></i> Achievements</h3></div><div class="sx-badges" id="sx-badges"></div></div>
+ </div>
+ <div class="sx-chart-card"><div class="sx-chart-head"><h3><i class="ti ti-history" style="color:var(--blue)"></i> Performance timeline</h3></div><div class="sx-timeline" id="sx-timeline"></div></div>
+</div>
+<div class="panel" id="panel-notes">
+ <div class="help-hero"><div><div class="help-kicker">SHARED WORKSPACE</div><h2>Quick Notes</h2><p>Save chapter reminders, event plans, follow-ups, and ideas. Notes sync with the chapter workspace.</p></div><div class="help-hero-icon"><i class="ti ti-notes"></i></div></div>
+ <div class="sb"><input class="inp" style="flex:1" id="note-search" placeholder="Search notes..." oninput="renderNotes()"><select class="inp" style="width:160px" id="note-filter" onchange="renderNotes()"><option value="all">All notes</option><option value="Reminder">Reminders</option><option value="Event">Event plans</option><option value="Idea">Ideas</option><option value="Follow-up">Follow-ups</option><option value="Other">Other</option></select><button class="btn btn-primary" onclick="addNoteModal()"><i class="ti ti-plus"></i> Add note</button></div>
+ <div class="note-grid" id="notes-list"></div>
+</div>
+<div class="panel" id="panel-shoutouts">
+ <div class="help-hero"><div><div class="help-kicker">RECOGNITION</div><h2>Shoutouts</h2><p>Recognize brothers for service, academics, leadership, brotherhood, and showing up for the chapter.</p></div><div class="help-hero-icon"><i class="ti ti-megaphone"></i></div></div>
+ <div class="sb"><input class="inp" style="flex:1" id="shout-search" placeholder="Search shoutouts..." oninput="renderShoutouts()"><select class="inp" style="width:170px" id="shout-filter" onchange="renderShoutouts()"><option value="all">All shoutouts</option><option value="Brotherhood">Brotherhood</option><option value="Service">Service</option><option value="Academics">Academics</option><option value="Leadership">Leadership</option><option value="Other">Other</option></select><button class="btn btn-primary" onclick="addShoutModal()"><i class="ti ti-plus"></i> Add shoutout</button></div>
+ <div id="shout-board"></div>
+ <div id="shout-list"></div>
+</div>
+<div class="panel" id="panel-ideas">
+ <div class="help-hero"><div><div class="help-kicker">CHAPTER INPUT</div><h2>Idea Board</h2><p>Share ideas for events, fundraising, brotherhood, chapter improvements, and more. Vote on the ideas you want to pursue.</p></div><div class="help-hero-icon"><i class="ti ti-bulb"></i></div></div>
+ <div class="sg" id="idea-stats"></div>
+ <div class="sb"><input class="inp" style="flex:1" id="idea-search" placeholder="Search ideas..." oninput="renderIdeas()"><select class="inp" style="width:170px" id="idea-filter" onchange="renderIdeas()"><option value="all">All statuses</option><option value="New">New</option><option value="Considering">Considering</option><option value="Approved">Approved</option><option value="Completed">Completed</option></select><select class="inp" style="width:170px" id="idea-sort" onchange="renderIdeas()"><option value="votes">Most votes</option><option value="new">Newest</option></select><button class="btn btn-primary" onclick="addIdeaModal()"><i class="ti ti-plus"></i> Add idea</button></div>
+ <div id="idea-list"></div>
+</div>
+<div class="panel" id="panel-polls">
+ <div class="help-hero"><div><div class="help-kicker">CHAPTER DECISIONS</div><h2>Polls & Votes</h2><p>Create quick polls for event themes, meeting times, chapter decisions, and preferences. Results update live.</p></div><div class="help-hero-icon"><i class="ti ti-checkbox"></i></div></div>
+ <div class="sb"><button class="btn btn-primary" onclick="addPollModal()"><i class="ti ti-plus"></i> Create poll</button></div>
+ <div id="poll-list"></div>
+</div>
+<div class="panel" id="panel-links">
+ <div class="help-hero"><div><div class="help-kicker">CHAPTER RESOURCES</div><h2>Quick Links</h2><p>Save important chapter links—GroupMe, TKE national resources, campus portals, forms, socials, and more.</p></div><div class="help-hero-icon"><i class="ti ti-link"></i></div></div>
+ <div class="sb"><input class="inp" style="flex:1" id="link-search" placeholder="Search links..." oninput="renderLinks()"><button class="btn btn-primary" onclick="addLinkModal()"><i class="ti ti-plus"></i> Add link</button></div>
+ <div id="link-list"></div>
+</div>
       <div class="panel" id="panel-members">
         <div class="sg" id="mem-stats"></div>
         <div class="sb">
@@ -1117,7 +1345,7 @@ textarea.inp{resize:vertical;min-height:70px}
   </div>
 </div>
 
-      <div class="panel" id="panel-ai"><div class="ai-hero"><div><div class="ai-kicker"><i class="ti ti-sparkles"></i> CHAPTER COPILOT</div><h2>Vault AI</h2><p>Ask anything — chapter summaries, drafts, event ideas, general questions, or whether anything on the site is broken.</p></div><div class="ai-orb"><i class="ti ti-sparkles"></i></div></div><div class="ai-diag-card"><div class="ai-diag-head"><span><i class="ti ti-activity-heartbeat"></i> System health</span><span id="ai-diag-badge" class="ai-diag-badge">Checking…</span></div><div id="ai-diag-list" class="ai-diag-list"></div><div class="ai-diag-foot"><button class="btn btn-sm" onclick="renderDiagnostics()"><i class="ti ti-refresh"></i> Re-check</button><button class="btn btn-sm" onclick="copyDiagnosticReport()"><i class="ti ti-copy"></i> Copy report</button></div></div><div class="ai-suggestions"><button onclick="askVaultAI('Give me a chapter summary')"><i class="ti ti-chart-bar"></i> Chapter summary</button><button onclick="askVaultAI('What should we focus on next?')"><i class="ti ti-target-arrow"></i> What needs attention?</button><button onclick="askVaultAI('Draft an announcement')"><i class="ti ti-speakerphone"></i> Draft announcement</button><button onclick="askVaultAI('Give me an event idea')"><i class="ti ti-bulb"></i> Event idea</button><button onclick="askVaultAI('Is anything broken?')"><i class="ti ti-stethoscope"></i> Check for issues</button></div><div class="ai-chat-card"><div class="ai-chat-head"><span><i class="ti ti-sparkles"></i> Vault AI</span><span class="ai-status" id="ai-status-badge"><i class="ti ti-circle-filled"></i> Checking connection…</span></div><div class="ai-messages" id="ai-messages"><div class="ai-message bot">Hey — I’m Vault AI. Ask me for a chapter summary, a draft, an idea, a health check, or anything else — I'm not limited to just this site.</div></div><div class="ai-input-row"><textarea id="ai-input" class="inp" rows="2" placeholder="Ask Vault AI anything..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendVaultAI();}"></textarea><button class="btn btn-primary" onclick="sendVaultAI()"><i class="ti ti-send"></i> Ask</button></div><div class="ai-note" id="ai-note">Built-in assistant — does not send messages or change records on its own. It can catch and report errors, but can't edit or redeploy the site's code itself — copy the report to get that fixed.</div></div></div>
+      <div class="panel" id="panel-ai"><div class="ai-hero"><div><div class="ai-kicker"><i class="ti ti-sparkles"></i> CHAPTER COPILOT</div><h2>Vault AI</h2><p>Ask anything — chapter summaries, drafts, event ideas, general questions, or whether anything on the site is broken.</p></div><div class="ai-orb"><i class="ti ti-sparkles"></i></div></div><div class="ai-diag-card"><div class="ai-diag-head"><span><i class="ti ti-activity-heartbeat"></i> System health</span><span id="ai-diag-badge" class="ai-diag-badge">Checking…</span></div><div id="ai-diag-list" class="ai-diag-list"></div><div class="ai-diag-foot"><button class="btn btn-sm" onclick="renderDiagnostics()"><i class="ti ti-refresh"></i> Re-check</button><button class="btn btn-sm" onclick="copyDiagnosticReport()"><i class="ti ti-copy"></i> Copy report</button></div></div><div class="ai-suggestions"><button onclick="askVaultAI('Give me a chapter summary')"><i class="ti ti-chart-bar"></i> Chapter summary</button><button onclick="askVaultAI('What should we focus on next?')"><i class="ti ti-target-arrow"></i> What needs attention?</button><button onclick="askVaultAI('Draft an announcement')"><i class="ti ti-speakerphone"></i> Draft announcement</button><button onclick="askVaultAI('Give me an event idea')"><i class="ti ti-bulb"></i> Event idea</button><button onclick="askVaultAI('Is anything broken?')"><i class="ti ti-stethoscope"></i> Check for issues</button><button onclick="askVaultAI('How is our chapter success trending?')"><i class="ti ti-trending-up"></i> Success trends</button><button onclick="askVaultAI('Draft a recruitment message')"><i class="ti ti-user-plus"></i> Recruitment message</button><button onclick="askVaultAI('Give me fundraising ideas')"><i class="ti ti-cash"></i> Fundraising ideas</button><button onclick="askVaultAI('Create a chapter meeting agenda')"><i class="ti ti-notebook"></i> Meeting agenda</button><button onclick="askVaultAI('Who needs a dues follow-up?')"><i class="ti ti-cash"></i> Dues follow-up</button><button onclick="askVaultAI('Give me brotherhood event ideas')"><i class="ti ti-heart"></i> Brotherhood ideas</button><button onclick="askVaultAI('Write a social media caption')"><i class="ti ti-brand-instagram"></i> Social caption</button><button onclick="askVaultAI('How can we improve study hours?')"><i class="ti ti-book"></i> Study-hour plan</button><button onclick="askVaultAI('What service project should we do?')"><i class="ti ti-sparkles"></i> Service project</button><button onclick="askVaultAI('Help me plan TKE Week')"><i class="ti ti-heart"></i> Plan TKE Week</button><button onclick="askVaultAI('Give me a risk management reminder')"><i class="ti ti-shield-check"></i> Risk reminder</button><button onclick="askVaultAI('Write an alumni update')"><i class="ti ti-users"></i> Alumni update</button><button onclick="askVaultAI('Brainstorm ways to improve attendance')"><i class="ti ti-clipboard-check"></i> Attendance ideas</button><button onclick="askVaultAI('Give me a leadership development idea')"><i class="ti ti-star"></i> Leadership idea</button><button onclick="askVaultAI('Draft a thank-you message')"><i class="ti ti-mail"></i> Thank-you note</button><button onclick="askVaultAI('What should our next chapter goal be?')"><i class="ti ti-target-arrow"></i> Next goal</button><button onclick="askVaultAI('What should we celebrate this week?')"><i class="ti ti-megaphone"></i> Celebration idea</button><button onclick="askVaultAI('Give me a shoutout template')"><i class="ti ti-megaphone"></i> Shoutout template</button><button onclick="askVaultAI('Brainstorm chapter improvements')"><i class="ti ti-settings"></i> Chapter improvements</button><button onclick="askVaultAI('Give me a social event theme')"><i class="ti ti-confetti"></i> Social theme</button><button onclick="askVaultAI('Create a weekly chapter schedule')"><i class="ti ti-calendar-week"></i> Weekly schedule</button><button onclick="askVaultAI('Create a poll for the chapter')"><i class="ti ti-checkbox"></i> Poll idea</button><button onclick="askVaultAI('Who should we spotlight this week?')"><i class="ti ti-user-star"></i> Spotlight idea</button><button onclick="askVaultAI('Give me a daily chapter challenge')"><i class="ti ti-flame"></i> Daily challenge</button><button onclick="askVaultAI('How is the chapter vibe today?')"><i class="ti ti-mood-smile"></i> Vibe check</button></div><div class="ai-chat-card"><div class="ai-chat-head"><span><i class="ti ti-sparkles"></i> Vault AI</span><span class="ai-status" id="ai-status-badge"><i class="ti ti-circle-filled"></i> Checking connection…</span></div><div class="ai-messages" id="ai-messages"><div class="ai-message bot">Hey — I’m Vault AI. Ask me for a chapter summary, a draft, an idea, a health check, or anything else — I'm not limited to just this site.</div></div><div class="ai-input-row"><textarea id="ai-input" class="inp" rows="2" placeholder="Ask Vault AI anything..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendVaultAI();}"></textarea><button class="btn btn-primary" onclick="sendVaultAI()"><i class="ti ti-send"></i> Ask</button></div><div class="ai-note" id="ai-note">Built-in assistant — does not send messages or change records on its own. It can catch and report errors, but can't edit or redeploy the site's code itself — copy the report to get that fixed.</div></div></div>
 <script>
 // Vault AI — global error watcher (captures JS errors so they can be surfaced/diagnosed)
 window._vaultErrors=window._vaultErrors||[];
@@ -1214,6 +1442,12 @@ window.tkeWeek=load('tkeWeek',[]);
 window.nationalEvents=load('nationalEvents',[]);
 window.serviceHours=load('serviceHours',[]);
 window.goals=load('goals',[]);
+window.quickNotes=load('quickNotes',[]);
+window.shoutouts=load('shoutouts',[]);
+window.ideas=load('ideas',[]);
+window.polls=load('polls',[]);
+window.quickLinks=load('quickLinks',[]);
+window.vibes=load('vibes',[]);
 window.receipts=load('receipts',[]);
 window.library=load('library',[]);
 window.serviceRequests=load('serviceRequests',[]);
@@ -1243,7 +1477,7 @@ var members=window.members,events=window.events,dues=window.dues,transactions=wi
     messages=window.messages,chores=window.chores,maintenance=window.maintenance,
     settings=window.settings,perfHistory=window.perfHistory,nidVal=window.nidVal,studyHours=window.studyHours,
     points=window.points,concessions=window.concessions,volunteers=window.volunteers,soberDrivers=window.soberDrivers,
-    tkeWeek=window.tkeWeek,nationalEvents=window.nationalEvents,serviceHours=window.serviceHours,goals=window.goals,
+    tkeWeek=window.tkeWeek,nationalEvents=window.nationalEvents,serviceHours=window.serviceHours,goals=window.goals,quickNotes=window.quickNotes,shoutouts=window.shoutouts,ideas=window.ideas,polls=window.polls,quickLinks=window.quickLinks,vibes=window.vibes,
     receipts=window.receipts,library=window.library,serviceRequests=window.serviceRequests,kra=window.kra,
     riskMgmt=window.riskMgmt,auditLog=window.auditLog;
 var curTab='dashboard';
@@ -1445,7 +1679,32 @@ function vaultAIReply(question){var q=(question||'').toLowerCase(),active=member
   var list=failed.map(function(c){return '<strong>'+esc(c.label)+'</strong>: '+esc(c.detail);}).join('<br>');
   return 'I found '+failed.length+' thing'+(failed.length===1?'':'s')+' worth a look:<br><br>'+list+'<br><br>I can flag problems like this, but I can\'t rewrite or redeploy the site myself — hit <strong>Copy report</strong> above and send it to whoever built the site (or paste it to Claude) to get it actually fixed.';
 }
-if(/summary|overview|chapter/.test(q))return '<strong>'+esc(chapter)+'</strong> has '+active.length+' active members, '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s')+', '+points.length+' manual point entr'+(points.length===1?'y':'ies')+', and '+unpaid+' dues record'+(unpaid===1?'':'s')+' not marked paid.'+(rate!==null?' Average logged attendance is '+rate+'%.':' Start logging attendance at an event to build that metric.');if(/focus|attention|next|priority/.test(q)){var a=[];if(unpaid)a.push('follow up on '+unpaid+' dues record'+(unpaid===1?'':'s'));if(upcoming.length)a.push('prepare for '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s'));if(!logged.length)a.push('log attendance at the next event');return a.length?'Suggested priorities: '+a.join('; ')+'.':'Everything looks current. Consider posting a chapter update or planning the next event.';}if(/announcement|draft|message|reminder/.test(q)){var next=upcoming.slice().sort(function(a,b){return(a.date||'').localeCompare(b.date||'');})[0];return 'Here’s a draft you can copy:<br><br><strong>Chapter Update</strong><br>Brothers, please stay on top of chapter commitments and check the dashboard for the latest updates.'+(next?'<br><br>Next up: <strong>'+esc(next.name)+'</strong> on '+fmtDate(next.date).full+'.':'')+'<br><br>— '+esc(chapter);}if(/event|idea|activity/.test(q))return 'Try a <strong>Brotherhood + Service Night</strong>: a 60-minute service project followed by food and a casual social activity. Add it under Events as a Service Event, then take attendance directly from the Attendance tab.';if(/attendance/.test(q))return 'Open <strong>Attendance</strong>, select any event—TKE Week, RLC, Conclave, service, concessions, a gathering, or another event—then tap names to check members in. Every change saves to that event.';if(/point/.test(q))return 'Event-based point awards are set to zero. Manual awards and study-hour points remain available when you want to use them.';return 'I can help with a chapter summary, priorities, attendance instructions, an announcement draft, or an event idea. Try one of the buttons above.';}
+if(/summary|overview|chapter/.test(q))return '<strong>'+esc(chapter)+'</strong> has '+active.length+' active members, '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s')+', '+points.length+' manual point entr'+(points.length===1?'y':'ies')+', and '+unpaid+' dues record'+(unpaid===1?'':'s')+' not marked paid.'+(rate!==null?' Average logged attendance is '+rate+'%.':' Start logging attendance at an event to build that metric.');if(/focus|attention|next|priority/.test(q)){var a=[];if(unpaid)a.push('follow up on '+unpaid+' dues record'+(unpaid===1?'':'s'));if(upcoming.length)a.push('prepare for '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s'));if(!logged.length)a.push('log attendance at the next event');return a.length?'Suggested priorities: '+a.join('; ')+'.':'Everything looks current. Consider posting a chapter update or planning the next event.';}if(/announcement|draft|message|reminder/.test(q)){var next=upcoming.slice().sort(function(a,b){return(a.date||'').localeCompare(b.date||'');})[0];return 'Here’s a draft you can copy:<br><br><strong>Chapter Update</strong><br>Brothers, please stay on top of chapter commitments and check the dashboard for the latest updates.'+(next?'<br><br>Next up: <strong>'+esc(next.name)+'</strong> on '+fmtDate(next.date).full+'.':'')+'<br><br>— '+esc(chapter);}if(/event|idea|activity/.test(q))return 'Try a <strong>Brotherhood + Service Night</strong>: a 60-minute service project followed by food and a casual social activity. Add it under Events as a Service Event, then take attendance directly from the Attendance tab.';if(/attendance/.test(q))return 'Open <strong>Attendance</strong>, select any event—TKE Week, RLC, Conclave, service, concessions, a gathering, or another event—then tap names to check members in. Every change saves to that event.';if(/point/.test(q))return 'Event-based point awards are set to zero. Manual awards and study-hour points remain available when you want to use them.';
+if(/success|trend|performance|score/.test(q)){var h=Array.isArray(perfHistory)?perfHistory:[];if(!h.length)return 'There is no performance history yet. Add entries in the performance history data to unlock success trends, then ask me again.';var last=h[h.length-1];var parts=[];if(last.attendance!=null)parts.push('attendance '+last.attendance+'%');if(last.dues!=null)parts.push('dues '+last.dues+'%');if(last.gpa!=null)parts.push('GPA '+last.gpa);return 'Latest recorded entry: <strong>'+esc(last.label||'Unlabeled')+'</strong> — '+parts.join(', ')+'. You have '+h.length+' performance entr'+(h.length===1?'y':'ies')+'. Open the <strong>Success</strong> tab for charts, goal status, achievements, and a full timeline.';}
+if(/vibe|mood|check.?in/.test(q)){var v=(Array.isArray(vibes)?vibes:[]).find(function(x){return x.date===todayStr();});var labels=['Great','Good','Okay','Struggling','Frustrated'];if(!v)return 'No vibe check-ins have been recorded today. Use the Chapter Vibe Check card on the Dashboard to see how members are doing.';var top=Object.entries(v.counts||{}).sort(function(a,b){return b[1]-a[1];})[0];return 'Today’s chapter vibe: <strong>'+labels[Number(top[0])]+'</strong> is the most common response, with '+top[1]+' check-in'+(top[1]===1?'':'s')+'. If many members selected Struggling or Frustrated, follow up personally and consider adjusting the week’s workload or event plan.';}
+if(/daily chapter challenge|challenge/.test(q)){var cs=['Text a brother you have not talked to recently.','Invite a prospect to the next chapter event.','Complete one extra study-hour block this week.','Thank an alumni or chapter supporter.','Plan one new brotherhood idea for next month.','Check in on a brother who has been quiet lately.','Volunteer for one upcoming service opportunity.','Share one academic resource with the chapter.'];return 'Daily challenge: <strong>'+cs[Math.floor(Math.random()*cs.length)]+'</strong>';}
+if(/spotlight/.test(q)){var pool=members.filter(function(m){return m.status==='Active';});if(!pool.length)return 'There are no active members to spotlight yet.';var m=pool[Math.floor(Math.random()*pool.length)];return 'Spotlight idea: <strong>'+esc(m.name)+'</strong>. Recognize them for their involvement, leadership, academics, service, or brotherhood. Add a shoutout in the Shoutouts tab and include a specific example of how they contributed.';}
+if(/create a poll|poll idea/.test(q))return 'Poll idea:<br><br><strong>Which brotherhood event should we do next?</strong><br>1. Game tournament<br>2. Brotherhood dinner<br>3. Outdoor day<br>4. Movie night<br><br>Create it in the <strong>Polls & Votes</strong> tab so members can vote and see live results.';
+if(/celebrate|recognition|shoutout/.test(q)){var recent=(Array.isArray(shoutouts)?shoutouts:[]).slice(-3).reverse();return 'Celebration idea: recognize members who hit study-hour minimums, paid dues, volunteered, or showed strong attendance this month.<br><br>Shoutout template:<br><br><strong>Shoutout to [Name]</strong> for [specific action]. Their effort helped the chapter by [impact]. Keep leading, brother!<br><br>'+(recent.length?'Recent shoutouts: '+recent.map(function(x){return esc(x.name);}).join(', ')+'.':'No shoutouts have been added yet—use the Shoutouts tab to recognize someone.');}
+if(/chapter improvement|improve the chapter|operations/.test(q))return 'Chapter improvement ideas:<br><br>1. Create a weekly 10-minute officer check-in.<br>2. Use the Idea Board to collect and vote on member suggestions.<br>3. Send a Sunday night chapter update with deadlines and events.<br>4. Pair new members with an accountability partner.<br>5. Review one metric each chapter meeting—attendance, dues, study hours, or service.<br>6. Recognize wins publicly in the Shoutouts tab.';
+if(/social event|theme|party/.test(q))return 'Social event themes:<br><br>• <strong>Decades Night</strong> — each group dresses from a different decade<br>• <strong>Country Club</strong> — golf attire, lawn games, and mocktails<br>• <strong>Neon Night</strong> — blacklights, glow paint, and music<br>• <strong>Around the World</strong> — food, music, and decorations from different countries<br>• <strong>Sports Jersey Night</strong> — games and team competitions<br>• <strong>Masquerade</strong> — formal attire with masks and a photo wall';
+if(/weekly schedule|schedule|routine/.test(q))return '<strong>Weekly chapter schedule</strong><br><br><strong>Sunday:</strong> Post weekly update and deadlines<br><strong>Monday:</strong> Officer check-in<br><strong>Tuesday:</strong> Study hours<br><strong>Wednesday:</strong> Chapter meeting<br><strong>Thursday:</strong> Brotherhood or recruitment activity<br><strong>Friday/Saturday:</strong> Event, service, or rest<br><br>Adjust the schedule around academics, work, and chapter priorities.';
+if(/recruit|rush|prospect/.test(q)){var hot=Array.isArray(prospects)?prospects.filter(function(p){return p.status==='Hot';}).length:0;return 'Here’s a recruitment message you can copy:<br><br><strong>Subject: Interested in '+(settings&&settings.chapterName||'our chapter')+'?</strong><br>Hey [Name], thanks for your interest in '+(settings&&settings.chapterName||'our chapter')+'. We’d love to get to know you better and tell you more about our brotherhood, leadership opportunities, service, and upcoming events. Are you free this week for a quick call or to stop by an event?<br><br>You currently have '+hot+' prospect'+(hot===1?'':'s')+' marked Hot in Recruitment.';}
+if(/fundrais|fund raising|money|revenue/.test(q))return 'Fundraising ideas:<br><br>1. <strong>Chapter cookout or tailgate</strong> — charge for food and promote it through announcements and social media.<br>2. <strong>Local business partnership night</strong> — ask a restaurant to donate a percentage of sales.<br>3. <strong>Talent show or gaming tournament</strong> — collect entry fees and offer small prizes.<br>4. <strong>Custom merch pre-sale</strong> — only order after collecting payments.<br>5. <strong>Service-based fundraiser</strong> — offer yard work, moving help, or car washes for donations.<br><br>Track shifts and sales in the Fundraising tab.';
+if(/agenda|meeting/.test(q)){var next=upcoming.slice().sort(function(a,b){return(a.date||'').localeCompare(b.date||'');})[0];return '<strong>Chapter Meeting Agenda</strong><br>1. Call to order and roll call<br>2. Approval of previous minutes<br>3. Officer reports<br>4. Finances: '+unpaid+' dues record'+(unpaid===1?'':'s')+' still need follow-up<br>5. Events: '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s')+(next?'—next is '+esc(next.name):'')+'<br>6. Recruitment and service updates<br>7. Accountability, study hours, and fines<br>8. New business and announcements<br>9. Adjournment';}
+if(/dues|payment|unpaid|follow.?up/.test(q)){var dueList=dues.filter(function(d){return d.status!=='Paid';}).slice(0,8);return dueList.length?'Dues follow-up list:<br><br>'+dueList.map(function(d){var m=members.find(function(x){return x.id===d.memberId;});return '• '+esc(m?m.name:'Member')+' — '+esc(d.status||'Unpaid')+(d.dueDate?' — due '+esc(d.dueDate):'');}).join('<br>')+'<br><br>Send a polite reminder, offer a payment plan if needed, and update the status once resolved.':'No dues records are currently marked unpaid.';}
+if(/brotherhood|bonding|social/.test(q))return 'Brotherhood ideas:<br><br>• <strong>Brotherhood dinner night</strong> with a rotating cook or potluck<br>• <strong>Game tournament</strong> — FIFA, Madden, poker, bowling, or trivia<br>• <strong>Outdoor day</strong> — pickup sports, hiking, fishing, or a park cookout<br>• <strong>Alumni panel and dinner</strong><br>• <strong>Movie and accountability check-in night</strong><br>• <strong>Service + social combo</strong> — volunteer together, then get food afterward';
+if(/social media|caption|instagram|post/.test(q)){var next=upcoming.slice().sort(function(a,b){return(a.date||'').localeCompare(b.date||'');})[0];return 'Caption idea:<br><br>“Built by brotherhood. Driven by purpose. '+(next?'Next up: '+esc(next.name)+' — come see what our chapter is about.':'Proud of the men who show up, serve, and lead every week.')+'”<br><br><strong>Hashtags:</strong> #Brotherhood #Leadership #Service #ChapterLife';}
+if(/study|gpa|academic|homework/.test(q))return 'Study-hour improvement plan:<br><br>1. Set a weekly minimum and publish it in Announcements.<br>2. Create two recurring library or campus study blocks.<br>3. Pair members by major or class for accountability.<br>4. Recognize members who meet the minimum in the Points tab.<br>5. Review progress at chapter meeting and follow up early with anyone falling behind.';
+if(/service|volunteer|community/.test(q))return 'Service project ideas:<br><br>• Campus or neighborhood cleanup<br>• Food bank sorting and delivery support<br>• Yard work or moving help for elderly residents<br>• Animal shelter volunteer day<br>• School supply drive<br>• St. Jude fundraising or awareness event<br><br>Log the hours afterward in the Service Hours tab.';
+if(/tke ?week|tke week/.test(q))return 'TKE Week outline:<br><br><strong>Day 1:</strong> Chapter kickoff and brotherhood dinner<br><strong>Day 2:</strong> Service project<br><strong>Day 3:</strong> Campus engagement or recruitment event<br><strong>Day 4:</strong> Alumni and networking night<br><strong>Day 5:</strong> Fundraiser or philanthropy event<br><strong>Day 6:</strong> Social or game tournament<br><strong>Day 7:</strong> Recognition, awards, and chapter reflection<br><br>Add each activity under TKE Week and track attendance and participation.';
+if(/risk|safety|alcohol|policy/.test(q))return 'Risk-management reminder:<br><br>• Follow all national, university, local, and chapter policies.<br>• Plan transportation in advance and use sober drivers.<br>• Know emergency contacts and event supervision expectations.<br>• Never pressure anyone to drink, and look out for brothers and guests.<br>• Document training completions in Risk Management.<br><br>When in doubt, pause the event and contact the appropriate officer or advisor.';
+if(/alumni|newsletter|update/.test(q))return '<strong>Alumni Update Draft</strong><br>Brothers,<br><br>'+(settings&&settings.chapterName||'Our chapter')+' is continuing to grow, serve, and build leadership on campus. We currently have '+active.length+' active members and '+upcoming.length+' upcoming event'+(upcoming.length===1?'':'s')+'. We’d love to see you at an upcoming event, hear your career advice, or connect you with current members.<br><br>If you’d like to support a service project, speak at a chapter meeting, or attend an event, reply to this message.<br><br>— The Active Chapter';
+if(/attendance|show up|turnout/.test(q))return 'Ways to improve attendance:<br><br>1. Post event details at least one week ahead.<br>2. Send a reminder the day before and morning of.<br>3. Make attendance part of point or accountability expectations.<br>4. Offer carpool coordination for off-campus events.<br>5. Recognize strong attendance in chapter meeting.<br>6. Follow up personally with members who miss required events.';
+if(/leadership|develop|officer|train/.test(q))return 'Leadership development idea:<br><br>Host a monthly <strong>Officer Shadow Night</strong>: each member pairs with an officer, observes their role, and completes one small responsibility. Rotate pairs monthly. Follow it with a 15-minute discussion on communication, delegation, and chapter goals. This builds future officer candidates without adding a heavy time commitment.';
+if(/thank|appreciation/.test(q))return '<strong>Thank-you message draft</strong><br><br>Thank you for supporting '+(settings&&settings.chapterName||'our chapter')+' and our brothers. Your time, guidance, and encouragement make a real difference. We appreciate you being part of our chapter community and hope to see you at a future event.';
+if(/goal|objective|target/.test(q)){var incomplete=Array.isArray(goals)?goals.filter(function(g){return g.status!=='Complete';}).length:0;return 'Suggested next chapter goal: <strong>Raise average logged attendance to 85% by the end of the semester.</strong><br><br>Make it measurable by tracking required-event attendance, posting reminders early, and recognizing members with strong attendance. You currently have '+incomplete+' goal'+(incomplete===1?'':'s')+' not marked Complete.';}
+return 'I can help with a chapter summary, priorities, attendance instructions, an announcement draft, an event idea, success trends, recruitment, fundraising, meeting agendas, dues follow-up, brotherhood ideas, social captions, study plans, service projects, TKE Week, risk reminders, alumni updates, leadership ideas, thank-you notes, chapter goals, celebrations, shoutout templates, chapter improvements, social themes, weekly schedules, poll ideas, member spotlights, daily challenges, or chapter vibe check-ins. Try one of the buttons above.';}
 function appendVaultAIMessage(html,who){var box=document.getElementById('ai-messages');if(!box)return;var el=document.createElement('div');el.className='ai-message '+who;el.innerHTML=html;box.appendChild(el);box.scrollTop=box.scrollHeight;return el;}
 function askVaultAI(question){var input=document.getElementById('ai-input');if(input)input.value=question;sendVaultAI();}
 var vaultAIHistory=[];
@@ -1505,7 +1764,7 @@ function gv(id){var el=document.getElementById(id);return el?el.value:'';}
 function gc(id){var el=document.getElementById(id);return el?el.checked:false;}
 
 // NAV
-var pageTitles={dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Fundraising',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',kra:'KRA Scorecard',riskmgmt:'Risk Management',auditlog:'Audit Log',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
+var pageTitles={success:'Chapter Success',notes:'Quick Notes',shoutouts:'Shoutouts',ideas:'Idea Board',polls:'Polls & Votes',links:'Quick Links',dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Fundraising',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',kra:'KRA Scorecard',riskmgmt:'Risk Management',auditlog:'Audit Log',blast:'Message Blast',library:'Library',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
 var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document',kra:'Update Scorecard',riskmgmt:'Add Training'};
 function go(tab,el){
   curTab=tab;
@@ -1543,6 +1802,12 @@ function renderAll(){
   else if(curTab==='familytree')renderFamilyTree();
   else if(curTab==='events')renderEvents();
   else if(curTab==='goals')renderGoals();
+  else if(curTab==='success')renderSuccess();
+  else if(curTab==='notes')renderNotes();
+  else if(curTab==='shoutouts')renderShoutouts();
+  else if(curTab==='ideas')renderIdeas();
+  else if(curTab==='polls')renderPolls();
+  else if(curTab==='links')renderLinks();
   else if(curTab==='finance')renderFinance();
   else if(curTab==='recruit')renderRecruit();
   else if(curTab==='house')renderHouse();
@@ -1568,6 +1833,198 @@ function renderAll(){
   else if(curTab==='ai')renderVaultAI();
 }
 window.renderAll = renderAll;
+
+
+var sxCharts={};
+function sxMetric(v,max){if(v===null||v===undefined||v==='')return null;var n=Number(v);return Number.isFinite(n)&&n>=0&&n<=max?n:null;}
+function sxChip(delta,unit,invert){if(delta===null||delta===undefined||delta===0)return '<span class="sx-chip">No change</span>';var up=delta>0;var good=invert?!up:up;return '<span class="sx-chip '+(good?'up':'down')+'"><i class="ti '+(up?'ti-trending-up':'ti-trending-down')+'"></i> '+(up?'+':'')+delta+(unit||'')+'</span>';}
+function sxHistory(){return (Array.isArray(perfHistory)?perfHistory:[]).map(function(p){var a=sxMetric(p.attendance,100),d=sxMetric(p.dues,100),g=sxMetric(p.gpa,4);var parts=[a,d,g===null?null:g/4*100].filter(function(v){return v!==null;});return {label:String(p.label||'Unlabeled entry'),attendance:a,dues:d,gpa:g===null?null:g/4*100,score:parts.length?Math.round(parts.reduce(function(a,b){return a+b;},0)/parts.length):null};});}
+function sxDestroyCharts(){Object.keys(sxCharts).forEach(function(k){if(sxCharts[k]){sxCharts[k].destroy();sxCharts[k]=null;}});}
+function sxChartAvailable(){return typeof Chart!=='undefined';}
+function exportSuccessCSV(){var rows=sxHistory();if(!rows.length){showToast('No performance history to export');return;}var csv='Label,Success score,Attendance %,Dues %,GPA % of 4.0\n'+rows.map(function(r){return [r.label,r.score===null?'':r.score,r.attendance===null?'':r.attendance,r.dues===null?'':r.dues,r.gpa===null?'':r.gpa.toFixed(1)].join(',');}).join('\n');downloadFile('chapter-success-history.csv',csv,'text/csv');showToast('Success history exported');}
+function renderSuccess(){
+ var history=sxHistory(),goalsArr=Array.isArray(goals)?goals:[],completed=goalsArr.filter(function(g){return g.status==='Complete';});
+ var latest=history.length?history[history.length-1]:null,prev=history.length>1?history[history.length-2]:null;
+ var score=latest?latest.score:null,delta=latest&&prev&&latest.score!==null&&prev.score!==null?latest.score-prev.score:null;
+ var scored=history.filter(function(p){return p.score!==null;});
+ var best=scored.length?scored.reduce(function(a,b){return b.score>a.score?b:a;}):null;
+ var ring=document.getElementById('sx-ring-fill'),circ=2*Math.PI*50;
+ if(ring){ring.setAttribute('stroke-dasharray',circ.toFixed(2));ring.setAttribute('stroke-dashoffset',(score===null?circ:circ*(1-score/100)).toFixed(2));}
+ document.getElementById('sx-ring-val').textContent=score===null?'—':score+'%';
+ var copy=document.getElementById('sx-hero-copy');
+ if(copy){copy.textContent=score===null?'Add performance history to unlock your chapter’s success score, trends, achievements, and completed wins.':(score>=85?'Outstanding momentum—the chapter is performing at a high level.':score>=70?'Strong progress. Keep attendance, dues, and academics moving upward.':'Momentum is building. Focus on the lowest metric to lift the overall score.');}
+ var chips=document.getElementById('sx-hero-chips');
+ if(chips){chips.innerHTML=(delta!==null?sxChip(delta,' pts',false):'<span class="sx-chip"><i class="ti ti-history"></i> '+history.length+' entr'+(history.length===1?'y':'ies')+'</span>')+(latest&&latest.attendance!==null?sxChip(prev&&prev.attendance!==null?latest.attendance-prev.attendance:null,' att',false):'')+(latest&&latest.dues!==null?sxChip(prev&&prev.dues!==null?latest.dues-prev.dues:null,' dues',false):'')+(latest&&latest.gpa!==null?sxChip(prev&&prev.gpa!==null?+(latest.gpa-prev.gpa).toFixed(1):null,' GPA',false):'')+(best?'<span class="sx-chip"><i class="ti ti-crown"></i> Best: '+best.score+'%</span>':'');}
+ function stat(icon,cls,label,val,sub,pct){return '<div class="sx-card"><div class="sx-card-ic '+cls+'"><i class="ti '+icon+'"></i></div><div class="sx-card-lbl">'+label+'</div><div class="sx-card-val">'+val+'</div><div class="sx-card-sub">'+sub+'</div>'+(pct===null?'':'<div class="sx-meter"><i style="width:'+Math.max(0,Math.min(100,pct))+'%"></i></div>')+'</div>';}
+ document.getElementById('sx-stats').innerHTML=stat('ti-trophy','c1','Latest score',score===null?'—':score+'%',latest?esc(latest.label):'No history yet',score)+stat('ti-chart-arrows','c2','Change',delta===null?'—':(delta>0?'+':'')+delta+' pts','Versus previous entry',delta===null?null:50+delta)+stat('ti-circle-check','c3','Goals completed',completed.length,'Of '+goalsArr.length+' chapter goals',goalsArr.length?completed.length/goalsArr.length*100:0)+stat('ti-crown','c4','Best score',best?best.score+'%':'—',best?esc(best.label):'No scored entries',best?best.score:null);
+ var metricDefs=[['Attendance','attendance','#185fa5'],['Dues collection','dues','#854f0b'],['GPA / 4.0','gpa','#1e6b45']];
+ document.getElementById('sx-metrics').innerHTML=metricDefs.map(function(m){var v=latest?latest[m[1]]:null;return '<div class="sx-metric"><div class="sx-metric-top"><span>'+m[0]+'</span><span class="sx-metric-val">'+(v===null?'No data':v.toFixed(1)+'%')+'</span></div><div class="sx-metric-bar"><i style="width:'+(v===null?0:Math.max(0,Math.min(100,v)))+'%;background:'+m[2]+'"></i></div></div>';}).join('');
+ var badges=[['ti-trophy','First score recorded',scored.length>=1],['ti-flame','3 scored entries',scored.length>=3],['ti-chart-line','6 scored entries',scored.length>=6],['ti-crown','Score of 80%+',scored.some(function(p){return p.score>=80;})],['ti-circle-check','Goal completed',completed.length>=1],['ti-target-arrow','5 goals completed',completed.length>=5],['ti-trending-up','Score improved',delta!==null&&delta>0]];
+ document.getElementById('sx-badges').innerHTML=badges.map(function(b){return '<span class="sx-badge '+(b[2]?'on':'')+'"><i class="ti '+b[0]+'"></i> '+b[1]+'</span>';}).join('');
+ var insights=[];
+ if(latest){var low=metricDefs.filter(function(m){return latest[m[1]]!==null;}).sort(function(a,b){return latest[a[1]]-latest[b[1]];})[0];if(low&&latest[low[1]]<70)insights.push(['warn','ti-alert-triangle','Focus on '+low[0].toLowerCase()+'—it is currently the lowest recorded metric at '+latest[low[1]].toFixed(1)+'%.']);if(delta!==null&&delta>0)insights.push(['good','ti-trending-up','Success score improved by '+delta+' points versus the previous entry.']);if(delta!==null&&delta<0)insights.push(['warn','ti-trending-down','Success score fell by '+Math.abs(delta)+' points versus the previous entry.']);if(latest.attendance!==null&&latest.attendance>=80)insights.push(['good','ti-users','Attendance is strong at '+latest.attendance+'%.']);if(latest.dues!==null&&latest.dues>=80)insights.push(['good','ti-cash','Dues collection is strong at '+latest.dues+'%.']);if(latest.gpa!==null&&latest.gpa>=75)insights.push(['good','ti-book','GPA performance is strong at '+latest.gpa.toFixed(1)+'% of 4.0.']);}
+ if(completed.length)insights.push(['good','ti-trophy',completed.length+' chapter goal'+(completed.length===1?' has':'s have')+' been completed.']);
+ if(!insights.length)insights.push(['','ti-info-circle','Add performance history and chapter goals to generate success insights.']);
+ document.getElementById('sx-insights').innerHTML=insights.map(function(i){return '<div class="sx-insight '+(i[0]||'')+'"><div class="sx-insight-ic"><i class="ti '+i[1]+'"></i></div><div style="font-size:12.5px;line-height:1.5">'+esc(i[2])+'</div></div>';}).join('');
+ document.getElementById('sx-wins').innerHTML=completed.length?completed.slice().reverse().map(function(g){return '<div class="sx-goal"><div class="sx-goal-ic"><i class="ti ti-trophy"></i></div><div><div class="sx-goal-title">'+esc(g.title||'Untitled goal')+'</div>'+(g.description?'<div class="sx-goal-sub">'+esc(g.description)+'</div>':'')+(g.targetDate?'<div class="sx-goal-sub">Target: '+esc(g.targetDate)+'</div>':'')+'</div></div>';}).join(''):'<div class="sx-empty" style="margin-bottom:12px">No completed goals yet. Mark a goal Complete in the Goals tab and it will appear here.</div>';
+ document.getElementById('sx-timeline').innerHTML=history.length?history.slice().reverse().map(function(p){var color=p.score===null?'var(--text3)':p.score>=80?'var(--green)':p.score>=70?'var(--amber)':'var(--red)';return '<div class="sx-event"><div class="sx-event-title" style="color:'+color+'">'+esc(p.label)+' — '+(p.score===null?'No score':p.score+'%')+'</div><div class="sx-event-sub">'+[p.attendance===null?'Attendance: no data':'Attendance: '+p.attendance+'%',p.dues===null?'Dues: no data':'Dues: '+p.dues+'%',p.gpa===null?'GPA: no data':'GPA: '+(p.gpa/4*100).toFixed(1)+'%'].join(' · ')+'</div></div>';}).join(''):'<div class="sx-empty">No performance history recorded yet.</div>';
+ sxDestroyCharts();
+ var range=document.getElementById('sx-range').value,rows=range==='all'?history:history.slice(-Number(range));
+ var usable=rows.some(function(p){return p.score!==null;}),available=sxChartAvailable();
+ var box=document.getElementById('sx-chart-box');if(box)box.style.display=usable&&available?'block':'none';
+ var empty=document.getElementById('sx-empty');empty.style.display=usable&&available?'none':'block';
+ empty.textContent=!usable?'No recorded performance data yet. These charts use saved performance history, not sample values.':'The chart library could not load. Refresh when connected to the internet.';
+ if(!usable||!available)return;
+ var tick=getComputedStyle(document.body).getPropertyValue('--text2').trim(),grid='rgba(90,74,77,.12)';
+ sxCharts.line=new Chart(document.getElementById('sx-chart'),{type:'line',data:{labels:rows.map(function(p){return p.label;}),datasets:[['Success score','score','#a52642',true],['Attendance','attendance','#185fa5',false],['Dues','dues','#854f0b',false],['GPA / 4.0','gpa','#1e6b45',false]].map(function(d){return {label:d[0],data:rows.map(function(p){return p[d[1]];}),borderColor:d[2],backgroundColor:d[3]?'rgba(165,38,66,.12)':d[2],fill:d[3],borderWidth:d[3]?3:2,pointRadius:3,pointHoverRadius:5,tension:.3,spanGaps:false};})},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:tick,usePointStyle:true,boxWidth:8}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+(c.parsed.y===null?'No data':c.parsed.y.toFixed(1)+'%');}}}},scales:{x:{ticks:{color:tick,maxRotation:0,autoSkip:true},grid:{display:false}},y:{min:0,max:100,ticks:{color:tick,callback:function(v){return v+'%';}},grid:{color:grid}}}}});
+ if(latest){var labels=['Attendance','Dues','GPA / 4.0'],vals=[latest.attendance,latest.dues,latest.gpa].map(function(v){return v===null?0:v;});
+ sxCharts.compare=new Chart(document.getElementById('sx-compare'),{type:'bar',data:{labels:labels,datasets:[{label:'Latest',data:vals,backgroundColor:['#185fa5','#854f0b','#1e6b45'],borderRadius:6},{label:'Previous',data:prev?[prev.attendance,prev.dues,prev.gpa].map(function(v){return v===null?0:v;}):[0,0,0],backgroundColor:'rgba(90,74,77,.28)',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:tick,usePointStyle:true,boxWidth:8}}},scales:{x:{ticks:{color:tick},grid:{display:false}},y:{min:0,max:100,ticks:{color:tick,callback:function(v){return v+'%';}},grid:{color:grid}}}}});
+ sxCharts.goals=new Chart(document.getElementById('sx-goals'),{type:'doughnut',data:{labels:['Complete','In Progress','Not Started'],datasets:[{data:[completed.length,goalsArr.filter(function(g){return g.status==='In Progress';}).length,goalsArr.filter(function(g){return g.status==='Not Started';}).length],backgroundColor:['#1e6b45','#854f0b','#185fa5'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{color:tick,usePointStyle:true,boxWidth:8}}}}});
+ sxCharts.radar=new Chart(document.getElementById('sx-radar'),{type:'radar',data:{labels:labels,datasets:[{label:'Latest entry',data:vals,borderColor:'#a52642',backgroundColor:'rgba(165,38,66,.16)',borderWidth:2,pointBackgroundColor:'#a52642'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{color:tick,backdropColor:'transparent',callback:function(v){return v+'%';}},pointLabels:{color:tick},grid:{color:grid}}}}});
+ var allVals=[].concat(history.map(function(p){return p.attendance;}),history.map(function(p){return p.dues;}),history.map(function(p){return p.gpa;})).filter(function(v){return v!==null;});
+ var buckets=[0,0,0,0];allVals.forEach(function(v){buckets[v<50?0:v<70?1:v<85?2:3]++;});
+ sxCharts.dist=new Chart(document.getElementById('sx-dist'),{type:'bar',data:{labels:['Below 50%','50–69%','70–84%','85%+'],datasets:[{label:'Metric records',data:buckets,backgroundColor:['#a32d2d','#854f0b','#185fa5','#1e6b45'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tick},grid:{display:false}},y:{beginAtZero:true,ticks:{color:tick,precision:0},grid:{color:grid}}}}});
+ }
+}
+// ===== Quick Notes =====
+function renderNotes(){
+ var q=(document.getElementById('note-search').value||'').toLowerCase(),f=document.getElementById('note-filter').value;
+ var notes=(Array.isArray(quickNotes)?quickNotes:[]).filter(function(n){return (f==='all'||n.tag===f)&&(!q||(n.title||'').toLowerCase().includes(q)||(n.body||'').toLowerCase().includes(q));});
+ document.getElementById('notes-list').innerHTML=notes.length?notes.slice().reverse().map(function(n){var btns=canEdit()?'<span><button class="btn btn-sm" onclick="editNoteModal('+n.id+')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteNote('+n.id+')"><i class="ti ti-trash"></i></button></span>':'';return '<div class="note-card"><div class="note-title">'+esc(n.title||'Untitled note')+'</div>'+(n.body?'<div class="note-body">'+esc(n.body)+'</div>':'')+'<div class="note-meta"><span class="note-tag">'+esc(n.tag||'Other')+'</span>'+btns+'</div></div>';}).join(''):'<div class="empty" style="grid-column:1/-1">No notes yet. Add a reminder, event plan, idea, or follow-up.</div>';
+}
+function addNoteModal(){openModal('Add quick note','<div class="fr"><label class="fl">Title</label><input class="inp" id="nt" placeholder="e.g. Follow up with alumni speaker"></div><div class="fr"><label class="fl">Note</label><textarea class="inp" id="nb" rows="4"></textarea></div><div class="fr"><label class="fl">Category</label><select class="inp" id="ng"><option>Reminder</option><option>Event</option><option>Idea</option><option>Follow-up</option><option>Other</option></select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveNote()">Add note</button></div>');}
+function saveNote(){var t=gv('nt').trim();if(!t){showToast('Enter a note title','error');return;}quickNotes=(Array.isArray(quickNotes)?quickNotes:[]).concat([{id:nid(),title:t,body:gv('nb').trim(),tag:gv('ng'),created:todayStr()}]);save('quickNotes',quickNotes);closeModal();showToast('Note added','success');}
+function editNoteModal(id){var n=(quickNotes||[]).find(function(x){return x.id===id;});if(!n)return;openModal('Edit note','<div class="fr"><label class="fl">Title</label><input class="inp" id="nt" value="'+esc(n.title||'')+'"></div><div class="fr"><label class="fl">Note</label><textarea class="inp" id="nb" rows="4">'+esc(n.body||'')+'</textarea></div><div class="fr"><label class="fl">Category</label><select class="inp" id="ng">'+['Reminder','Event','Idea','Follow-up','Other'].map(function(t){return '<option'+(n.tag===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveNoteEdit('+id+')">Save</button></div>');}
+function saveNoteEdit(id){var n=(quickNotes||[]).find(function(x){return x.id===id;});if(!n)return;n.title=gv('nt').trim();n.body=gv('nb').trim();n.tag=gv('ng');save('quickNotes',quickNotes);closeModal();showToast('Note updated','success');}
+function deleteNote(id){if(!confirm('Delete this note?'))return;quickNotes=(quickNotes||[]).filter(function(n){return n.id!==id;});save('quickNotes',quickNotes);showToast('Note deleted','success');}
+// ===== Shoutouts =====
+function renderShoutouts(){
+ renderShoutBoard();
+ var q=(document.getElementById('shout-search').value||'').toLowerCase(),f=document.getElementById('shout-filter').value;
+ var rows=(Array.isArray(shoutouts)?shoutouts:[]).filter(function(x){return (f==='all'||x.tag===f)&&(!q||(x.name||'').toLowerCase().includes(q)||(x.message||'').toLowerCase().includes(q));});
+ document.getElementById('shout-list').innerHTML=rows.length?rows.slice().reverse().map(function(x){var btns=canEdit()?'<span><button class="btn btn-sm" onclick="editShoutModal('+x.id+')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteShout('+x.id+')"><i class="ti ti-trash"></i></button></span>':'';return '<div class="shout-card"><div class="shout-head"><div class="shout-ic"><i class="ti ti-megaphone"></i></div><div><div class="shout-name">'+esc(x.name||'Chapter member')+'</div><div class="deadline-sub">Recognized by '+esc(x.by||'The Vault')+'</div></div></div>'+(x.message?'<div class="shout-body">'+esc(x.message)+'</div>':'')+'<div class="shout-meta"><span class="shout-tag">'+esc(x.tag||'Other')+'</span>'+btns+'</div></div>';}).join(''):'<div class="empty">No shoutouts yet. Recognize a brother for something great.</div>';
+}
+function renderShoutBoard(){
+ var el=document.getElementById('shout-board');if(!el)return;
+ var cut=new Date();cut.setDate(cut.getDate()-30);
+ var recent=(Array.isArray(shoutouts)?shoutouts:[]).filter(function(x){return x.created&&new Date(x.created+'T00:00:00')>=cut;});
+ var counts={};recent.forEach(function(x){var k=x.memberId||x.name;counts[k]=counts[k]||{name:x.name||'Member',n:0};counts[k].n++;});
+ var top=Object.keys(counts).map(function(k){return counts[k];}).sort(function(a,b){return b.n-a.n;}).slice(0,5);
+ var got={};recent.forEach(function(x){if(x.memberId)got[x.memberId]=1;});
+ var due=(members||[]).filter(function(m){return m.status==='Active'&&!got[m.id];});
+ var medals=['🥇','🥈','🥉','4.','5.'];
+ var topHtml=top.length?top.map(function(t,i){return '<div style="display:flex;gap:8px;padding:3px 0"><span style="min-width:24px">'+medals[i]+'</span><span style="flex:1">'+esc(t.name)+'</span><b>'+t.n+'</b></div>';}).join(''):'<div class="empty">No shoutouts in the last 30 days.</div>';
+ var dueHtml=due.length?due.slice(0,12).map(function(m){return '<span class="shout-tag" style="display:inline-block;margin:2px">'+esc(m.name)+'</span>';}).join('')+(due.length>12?' <span class="deadline-sub">+'+(due.length-12)+' more</span>':''):'<div class="empty">Every active brother was recognized this month. 🔥</div>';
+ el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:14px"><div class="shout-card"><div class="shout-name" style="margin-bottom:6px">🏆 Most recognized (30 days)</div>'+topHtml+'</div><div class="shout-card"><div class="shout-name" style="margin-bottom:6px">👋 Due for a shoutout</div><div class="deadline-sub" style="margin-bottom:6px">Active brothers with no shoutout in 30 days</div>'+dueHtml+'</div></div>';
+}
+function memberOptions(selected){return '<option value="">Select member</option>'+members.filter(function(m){return m.status!=='Alumni';}).map(function(m){return '<option value="'+m.id+'"'+(selected===m.id?' selected':'')+'>'+esc(m.name)+'</option>';}).join('');}
+function addShoutModal(){openModal('Add shoutout','<div class="fr"><label class="fl">Member</label><select class="inp" id="sm">'+memberOptions()+'</select></div><div class="fr"><label class="fl">Shoutout</label><textarea class="inp" id="sb2" rows="3" placeholder="e.g. Great job leading the service project!"></textarea></div><div class="fr"><label class="fl">Category</label><select class="inp" id="sg"><option>Brotherhood</option><option>Service</option><option>Academics</option><option>Leadership</option><option>Other</option></select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveShout()">Add shoutout</button></div>');}
+function saveShout(){var mid=Number(gv('sm'));var m=members.find(function(x){return x.id===mid;});var msg=gv('sb2').trim();if(!m||!msg){showToast('Select a member and write a shoutout','error');return;}shoutouts=(Array.isArray(shoutouts)?shoutouts:[]).concat([{id:nid(),memberId:mid,name:m.name,by:(settings&&settings.chapterName)||'The Vault',message:msg,tag:gv('sg'),created:todayStr()}]);save('shoutouts',shoutouts);closeModal();showToast('Shoutout added','success');}
+function editShoutModal(id){var x=(shoutouts||[]).find(function(y){return y.id===id;});if(!x)return;openModal('Edit shoutout','<div class="fr"><label class="fl">Member</label><select class="inp" id="sm">'+memberOptions(x.memberId)+'</select></div><div class="fr"><label class="fl">Shoutout</label><textarea class="inp" id="sb2" rows="3">'+esc(x.message||'')+'</textarea></div><div class="fr"><label class="fl">Category</label><select class="inp" id="sg">'+['Brotherhood','Service','Academics','Leadership','Other'].map(function(t){return '<option'+(x.tag===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveShoutEdit('+id+')">Save</button></div>');}
+function saveShoutEdit(id){var x=(shoutouts||[]).find(function(y){return y.id===id;});if(!x)return;var mid=Number(gv('sm')),m=members.find(function(y){return y.id===mid;});x.memberId=mid;x.name=m?m.name:x.name;x.message=gv('sb2').trim();x.tag=gv('sg');save('shoutouts',shoutouts);closeModal();showToast('Shoutout updated','success');}
+function deleteShout(id){if(!confirm('Delete this shoutout?'))return;shoutouts=(shoutouts||[]).filter(function(x){return x.id!==id;});save('shoutouts',shoutouts);showToast('Shoutout deleted','success');}
+// ===== Idea Board =====
+function renderIdeas(){
+ var q=(document.getElementById('idea-search').value||'').toLowerCase(),f=document.getElementById('idea-filter').value,sort=document.getElementById('idea-sort').value;
+ var rows=(Array.isArray(ideas)?ideas:[]).filter(function(x){return (f==='all'||x.status===f)&&(!q||(x.title||'').toLowerCase().includes(q)||(x.body||'').toLowerCase().includes(q));});
+ rows.sort(function(a,b){return sort==='votes'?((b.votes||0)-(a.votes||0)):((b.id||0)-(a.id||0));});
+ var total=ideas.length||0,approved=(ideas||[]).filter(function(x){return x.status==='Approved';}).length,votes=(ideas||[]).reduce(function(a,x){return a+(x.votes||0);},0);
+ document.getElementById('idea-stats').innerHTML='<div class="sc"><div class="sl">Total ideas</div><div class="sv">'+total+'</div></div><div class="sc"><div class="sl">Approved</div><div class="sv" style="color:var(--green)">'+approved+'</div></div><div class="sc"><div class="sl">Total votes</div><div class="sv">'+votes+'</div></div><div class="sc"><div class="sl">Top idea</div><div class="sv" style="font-size:16px">'+esc(rows.length?rows[0].title||'Untitled':'—')+'</div></div>';
+ document.getElementById('idea-list').innerHTML=rows.length?rows.map(function(x){var btns=canOfficer()?'<span><button class="btn btn-sm" onclick="editIdeaModal('+x.id+')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteIdea('+x.id+')"><i class="ti ti-trash"></i></button></span>':'';return '<div class="idea-card"><div class="idea-head"><div><div class="idea-title">'+esc(x.title||'Untitled idea')+'</div>'+(x.body?'<div class="idea-body">'+esc(x.body)+'</div>':'')+'</div><button class="idea-vote" onclick="voteIdea('+x.id+')"><i class="ti ti-arrow-big-up"></i> '+(x.votes||0)+'</button></div><div class="idea-meta"><span class="idea-tag">'+esc(x.status||'New')+' · '+esc(x.tag||'Other')+'</span>'+btns+'</div></div>';}).join(''):'<div class="empty">No ideas yet. Add an event, fundraiser, brotherhood, or chapter-improvement idea.</div>';
+}
+function addIdeaModal(){openModal('Add idea','<div class="fr"><label class="fl">Idea title</label><input class="inp" id="it" placeholder="e.g. Chapter Olympics"></div><div class="fr"><label class="fl">Details</label><textarea class="inp" id="ib" rows="4"></textarea></div><div class="fr2"><div class="fr"><label class="fl">Category</label><select class="inp" id="ig"><option>Event</option><option>Fundraising</option><option>Brotherhood</option><option>Service</option><option>Chapter improvement</option><option>Other</option></select></div><div class="fr"><label class="fl">Status</label><select class="inp" id="is"><option>New</option><option>Considering</option><option>Approved</option><option>Completed</option></select></div></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveIdea()">Add idea</button></div>');}
+function saveIdea(){var t=gv('it').trim();if(!t){showToast('Enter an idea title','error');return;}ideas=(Array.isArray(ideas)?ideas:[]).concat([{id:nid(),title:t,body:gv('ib').trim(),tag:gv('ig'),status:gv('is'),votes:0,created:todayStr()}]);save('ideas',ideas);closeModal();showToast('Idea added','success');}
+function editIdeaModal(id){var x=(ideas||[]).find(function(y){return y.id===id;});if(!x)return;openModal('Edit idea','<div class="fr"><label class="fl">Idea title</label><input class="inp" id="it" value="'+esc(x.title||'')+'"></div><div class="fr"><label class="fl">Details</label><textarea class="inp" id="ib" rows="4">'+esc(x.body||'')+'</textarea></div><div class="fr2"><div class="fr"><label class="fl">Category</label><select class="inp" id="ig">'+['Event','Fundraising','Brotherhood','Service','Chapter improvement','Other'].map(function(t){return '<option'+(x.tag===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div><div class="fr"><label class="fl">Status</label><select class="inp" id="is">'+['New','Considering','Approved','Completed'].map(function(t){return '<option'+(x.status===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select></div></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveIdeaEdit('+id+')">Save</button></div>');}
+function saveIdeaEdit(id){var x=(ideas||[]).find(function(y){return y.id===id;});if(!x)return;x.title=gv('it').trim();x.body=gv('ib').trim();x.tag=gv('ig');x.status=gv('is');save('ideas',ideas);closeModal();showToast('Idea updated','success');}
+function voteIdea(id){var x=(ideas||[]).find(function(y){return y.id===id;});if(!x)return;x.votes=(x.votes||0)+1;save('ideas',ideas);showToast('Vote added','success');}
+function deleteIdea(id){if(!confirm('Delete this idea?'))return;ideas=(ideas||[]).filter(function(x){return x.id!==id;});save('ideas',ideas);showToast('Idea deleted','success');}
+// ===== Polls =====
+function renderPolls(){
+ var rows=(Array.isArray(polls)?polls:[]).slice().reverse();
+ document.getElementById('poll-list').innerHTML=rows.length?rows.map(function(p){
+  var total=(p.options||[]).reduce(function(a,o){return a+(o.votes||0);},0);
+  return '<div class="poll-card"><div class="poll-title">'+esc(p.question||'Untitled poll')+'</div><div class="poll-sub">'+total+' vote'+(total===1?'':'s')+' · Created '+esc(p.created||'')+'</div>'+(p.options||[]).map(function(o,i){var pct=total?Math.round((o.votes||0)/total*100):0;return '<div class="poll-option'+(p.myVote===i?' selected':'')+'" onclick="votePoll('+p.id+','+i+')"><div class="poll-radio"></div><div style="flex:1"><div style="display:flex;justify-content:space-between;gap:8px"><span class="poll-label">'+esc(o.label)+'</span><span class="poll-count">'+(o.votes||0)+' · '+pct+'%</span></div><div class="poll-bar"><i style="width:'+pct+'%"></i></div></div></div>';}).join('')+(canOfficer()?'<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:9px"><button class="btn btn-sm btn-danger" onclick="deletePoll('+p.id+')"><i class="ti ti-trash"></i> Delete</button></div>':'')+'</div>';
+ }).join(''):'<div class="empty">No polls yet. Create one to gather chapter input.</div>';
+}
+function addPollModal(){openModal('Create poll','<div class="fr"><label class="fl">Question</label><input class="inp" id="pq" placeholder="e.g. Which social theme should we use?"></div><div class="fr"><label class="fl">Option 1</label><input class="inp" id="po1"></div><div class="fr"><label class="fl">Option 2</label><input class="inp" id="po2"></div><div class="fr"><label class="fl">Option 3 (optional)</label><input class="inp" id="po3"></div><div class="fr"><label class="fl">Option 4 (optional)</label><input class="inp" id="po4"></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="savePoll()">Create poll</button></div>');}
+function savePoll(){var q=gv('pq').trim();var opts=[gv('po1'),gv('po2'),gv('po3'),gv('po4')].map(function(x){return x.trim();}).filter(Boolean);if(!q||opts.length<2){showToast('Enter a question and at least two options','error');return;}polls=(Array.isArray(polls)?polls:[]).concat([{id:nid(),question:q,options:opts.map(function(x){return {label:x,votes:0};}),myVote:-1,created:todayStr()}]);save('polls',polls);closeModal();showToast('Poll created','success');}
+function votePoll(pid,idx){var p=(polls||[]).find(function(x){return x.id===pid;});if(!p)return;if(p.myVote===idx){showToast('You already selected this option');return;}if(p.myVote>=0)p.options[p.myVote].votes=Math.max(0,(p.options[p.myVote].votes||0)-1);p.options[idx].votes=(p.options[idx].votes||0)+1;p.myVote=idx;save('polls',polls);showToast('Vote recorded','success');}
+function deletePoll(id){if(!confirm('Delete this poll?'))return;polls=(polls||[]).filter(function(x){return x.id!==id;});save('polls',polls);showToast('Poll deleted','success');}
+// ===== Quick Links =====
+function renderLinks(){
+ var q=(document.getElementById('link-search').value||'').toLowerCase();
+ var rows=(Array.isArray(quickLinks)?quickLinks:[]).filter(function(x){return !q||(x.name||'').toLowerCase().includes(q)||(x.url||'').toLowerCase().includes(q);});
+ document.getElementById('link-list').innerHTML=rows.length?rows.slice().reverse().map(function(x){var btns=canEdit()?'<span style="margin-left:auto"><button class="btn btn-sm" onclick="editLinkModal('+x.id+')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="deleteLink('+x.id+')"><i class="ti ti-trash"></i></button></span>':'';return '<a class="link-card" href="'+esc(x.url||'#')+'" target="_blank" rel="noopener"><div class="link-ic"><i class="ti '+esc(x.icon||'ti-link')+'"></i></div><div style="min-width:0"><div class="link-name">'+esc(x.name||'Untitled link')+'</div><div class="link-url">'+esc(x.url||'')+'</div></div>'+btns+'</a>';}).join(''):'<div class="empty">No links yet. Add your GroupMe, national resources, campus portal, or social pages.</div>';
+}
+function addLinkModal(){openModal('Add quick link','<div class="fr"><label class="fl">Name</label><input class="inp" id="ln" placeholder="e.g. Chapter GroupMe"></div><div class="fr"><label class="fl">URL</label><input class="inp" id="lu" placeholder="https://..."></div><div class="fr"><label class="fl">Icon</label><select class="inp" id="li"><option value="ti-link">Link</option><option value="ti-brand-discord">Discord</option><option value="ti-brand-instagram">Instagram</option><option value="ti-brand-twitch">Twitch</option><option value="ti-school">Campus</option><option value="ti-file-text">Form</option><option value="ti-users">Group</option></select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLink()">Add link</button></div>');}
+function saveLink(){var n=gv('ln').trim(),u=gv('lu').trim();if(!n||!u){showToast('Enter a name and URL','error');return;}if(!/^https?:\/\//i.test(u))u='https://'+u;quickLinks=(Array.isArray(quickLinks)?quickLinks:[]).concat([{id:nid(),name:n,url:u,icon:gv('li'),created:todayStr()}]);save('quickLinks',quickLinks);closeModal();showToast('Link added','success');}
+function editLinkModal(id){var x=(quickLinks||[]).find(function(y){return y.id===id;});if(!x)return;openModal('Edit link','<div class="fr"><label class="fl">Name</label><input class="inp" id="ln" value="'+esc(x.name||'')+'"></div><div class="fr"><label class="fl">URL</label><input class="inp" id="lu" value="'+esc(x.url||'')+'"></div><div class="fr"><label class="fl">Icon</label><select class="inp" id="li">'+['ti-link','ti-brand-discord','ti-brand-instagram','ti-brand-twitch','ti-school','ti-file-text','ti-users'].map(function(t){return '<option value="'+t+'"'+(x.icon===t?' selected':'')+'>'+t.replace('ti-','')+'</option>';}).join('')+'</select></div><div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLinkEdit('+id+')">Save</button></div>');}
+function saveLinkEdit(id){var x=(quickLinks||[]).find(function(y){return y.id===id;});if(!x)return;x.name=gv('ln').trim();x.url=gv('lu').trim();x.icon=gv('li');save('quickLinks',quickLinks);closeModal();showToast('Link updated','success');}
+function deleteLink(id){if(!confirm('Delete this link?'))return;quickLinks=(quickLinks||[]).filter(function(x){return x.id!==id;});save('quickLinks',quickLinks);showToast('Link deleted','success');}
+// ===== Vibe Check =====
+var VIBES=[['😄','Great'],['🙂','Good'],['😐','Okay'],['😕','Struggling'],['😡','Frustrated']];
+function todayVibe(){return (Array.isArray(vibes)?vibes:[]).find(function(v){return v.date===todayStr();});}
+function renderVibe(){
+ var el=document.getElementById('dash-vibe');if(!el)return;
+ var v=todayVibe();var total=v?Object.values(v.counts||{}).reduce(function(a,b){return a+b;},0):0;
+ el.innerHTML='<div style="font-size:13px;font-weight:700;color:var(--navy)"><i class="ti ti-mood-smile" style="color:var(--purple)"></i> Chapter vibe check</div><div style="font-size:11.5px;color:var(--text2);margin-top:3px">'+(total?total+' check-in'+(total===1?'':'s')+' today. Tap how you’re doing—results help officers check in with the chapter.':'How is the chapter doing today? Tap an emoji to check in.')+'</div><div class="vibe-row">'+VIBES.map(function(x,i){return '<button class="vibe-btn'+(v&&v.myVibe===i?' selected':'')+'" title="'+x[1]+'" onclick="voteVibe('+i+')">'+x[0]+'</button>';}).join('')+'</div>'+(v?'<div style="font-size:11px;color:var(--text3);margin-top:8px">Your check-in today: '+esc(VIBES[v.myVibe][1])+'</div>':'');
+}
+function voteVibe(i){
+ var d=todayStr();var arr=Array.isArray(vibes)?vibes.slice():[];var v=arr.find(function(x){return x.date===d;});
+ if(!v){v={date:d,counts:{},myVibe:-1};arr.push(v);}
+ if(v.myVibe===i){showToast('You already checked in today');return;}
+ if(v.myVibe>=0)v.counts[v.myVibe]=Math.max(0,(v.counts[v.myVibe]||0)-1);
+ v.counts[i]=(v.counts[i]||0)+1;v.myVibe=i;
+ vibes=arr;save('vibes',vibes);renderVibe();showToast('Vibe check-in saved','success');
+}
+// ===== Chapter Pulse =====
+function renderPulse(){
+ var el=document.getElementById('dash-pulse');if(!el)return;
+ var active=members.filter(function(m){return m.status!=='Alumni';});
+ var paid=dues.filter(function(d){return d.status==='Paid';}).reduce(function(a,d){return a+d.amount;},0),tot=dues.reduce(function(a,d){return a+d.amount;},0);
+ var duesPct=tot?Math.round(paid/tot*100):null;
+ var logged=events.filter(function(e){return Array.isArray(e.attendance)&&e.total>0;});
+ var attPct=logged.length?Math.round(logged.reduce(function(a,e){return a+((e.attendance||[]).length/(e.total||1));},0)/logged.length*100):null;
+ var studyMin=numOr(settings.studyMin,10);var ok=members.filter(function(m){if(m.status==='Alumni')return false;var h=studyHours.filter(function(x){return x.memberId===m.id;}).reduce(function(a,x){return a+x.hours;},0);return h>=studyMin;}).length;
+ var studyPct=active.length?Math.round(ok/active.length*100):null;
+ var unpaidFines=fines.filter(function(f){return !f.paid;}).length;var finePct=active.length?Math.round((active.length-unpaidFines)/active.length*100):null;
+ var vals=[['Dues',duesPct,'#1e6b45'],['Attendance',attPct,'#185fa5'],['Study compliance',studyPct,'#854f0b'],['Fine clearance',finePct,'#a52642']].filter(function(x){return x[1]!==null;});
+ var health=vals.length?Math.round(vals.reduce(function(a,x){return a+x[1];},0)/vals.length):null;
+ el.innerHTML='<div class="pulse-top"><div><div style="font-size:13px;font-weight:700;color:var(--navy)"><i class="ti ti-activity-heartbeat" style="color:var(--purple)"></i> Chapter pulse</div><div style="font-size:11.5px;color:var(--text2)">'+(health===null?'Add dues, attendance, study hours, or fines data to calculate chapter health.':'Overall chapter health based on available operational metrics.')+'</div></div><div class="pulse-score">'+(health===null?'—':health+'%')+'</div></div><div class="pulse-bars">'+vals.map(function(v){return '<div><div class="pulse-bar-lbl"><span>'+v[0]+'</span><span>'+v[1]+'%</span></div><div class="pulse-bar"><i style="width:'+v[1]+'%;background:'+v[2]+'"></i></div></div>';}).join('')+'</div>';
+}
+// ===== Deadlines =====
+function renderDeadlines(){
+ var el=document.getElementById('dash-deadlines');if(!el)return;
+ var rows=[];
+ events.filter(function(e){return isUpcoming(e.date);}).forEach(function(e){rows.push({date:e.date,name:e.name,sub:'Event'});});
+ dues.filter(function(d){return d.status!=='Paid'&&d.dueDate&&d.dueDate>=todayStr();}).forEach(function(d){var m=members.find(function(x){return x.id===d.memberId;});rows.push({date:d.dueDate,name:(m?m.name:'Member')+' — dues',sub:'Payment due'});});
+ rows.sort(function(a,b){return (a.date||'').localeCompare(b.date||'');});
+ el.innerHTML=rows.length?rows.slice(0,6).map(function(r){return '<div class="deadline-row"><div class="deadline-date">'+fmtDate(r.date).short+'</div><div><div class="deadline-name">'+esc(r.name)+'</div><div class="deadline-sub">'+esc(r.sub)+'</div></div></div>';}).join(''):'<div class="empty">No upcoming deadlines found.</div>';
+}
+// ===== Countdown + Spotlight + Challenge =====
+var spotlightIndex=0;
+var CHALLENGES=['Text a brother you have not talked to recently.','Invite a prospect to the next chapter event.','Complete one extra study-hour block this week.','Post a positive chapter recap on social media.','Thank an alumni or chapter supporter.','Plan one new brotherhood idea for next month.','Check in on a brother who has been quiet lately.','Volunteer for one upcoming service opportunity.','Reach out to a local business about a possible partnership.','Share one academic resource with the chapter.','Write a shoutout for someone who helped you recently.','Review your dues, fines, or attendance status today.'];
+function todayChallenge(){var d=new Date();var seed=d.getFullYear()*372+d.getMonth()*31+d.getDate();return CHALLENGES[seed%CHALLENGES.length];}
+function renderChallenge(){var el=document.getElementById('dash-challenge');if(el)el.innerHTML='<div class="challenge-title">Daily chapter challenge</div><div class="challenge-text">'+esc(todayChallenge())+'</div><div class="challenge-sub">Complete it, then recognize someone in Shoutouts.</div>';}
+function renderCountdown(){
+ var el=document.getElementById('dash-countdown');if(!el)return;
+ var next=events.filter(function(e){return isUpcoming(e.date);}).sort(function(a,b){return (a.date||'').localeCompare(b.date||'');})[0];
+ if(!next){el.innerHTML='<div class="countdown-title">Next event</div><div class="countdown-name">No upcoming event</div><div class="countdown-sub">Add an event to start a live countdown.</div>';return;}
+ var target=new Date((next.date||'')+'T'+(next.time||'19:00')+':00');
+ var diff=target-new Date();
+ if(diff<=0){el.innerHTML='<div class="countdown-title">Happening now</div><div class="countdown-name">'+esc(next.name)+'</div><div class="countdown-sub">'+fmtDate(next.date).full+'</div>';return;}
+ var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000),sec=Math.floor(diff%60000/1000);
+ el.innerHTML='<div class="countdown-title">Next event</div><div class="countdown-name">'+esc(next.name)+'</div><div class="countdown-sub">'+fmtDate(next.date).full+(next.location?' · '+esc(next.location):'')+'</div><div class="countdown-timer">'+d+'d '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')+'</div>';
+}
+function renderSpotlight(){
+ var el=document.getElementById('dash-spotlight');if(!el)return;
+ var pool=members.filter(function(m){return m.status==='Active';});
+ if(!pool.length){el.innerHTML='<div class="spotlight-sub">No active members available for a spotlight.</div>';return;}
+ var m=pool[spotlightIndex%pool.length];
+ el.innerHTML='<div class="spotlight-av">'+esc(initials(m.name))+'</div><div class="spotlight-name">'+esc(m.name)+'</div><div class="spotlight-sub">'+esc(m.year||'Member')+(m.major?' · '+esc(m.major):'')+'</div><div style="margin-top:10px"><button class="btn btn-sm" onclick="nextSpotlight()"><i class="ti ti-refresh"></i> Spotlight someone else</button></div>';
+}
+function nextSpotlight(){spotlightIndex++;renderSpotlight();}
+setInterval(function(){if(curTab==='dashboard')renderCountdown();},1000);
 
 // DASHBOARD
 var DASH_TAGLINES=["Let's make today legendary 🚀","The chapter's looking sharp today ✨","Big brotherhood energy today 🤝","Ready to run the day? 💪","Keep that streak alive 🔥","Let's get after it, brothers 🎯","Onward and upward 📈"];
@@ -1604,7 +2061,7 @@ function launchConfetti(){
     })();
   }
 }
-function renderDashboard(){
+function renderDashboard(){renderPulse();renderDeadlines();renderCountdown();renderSpotlight();renderChallenge();renderVibe();
   var active=members.filter(function(m){return m.status==='Active';}).length;
   var pledge=members.filter(function(m){return m.status==='Pledge';}).length;
   var upEv=events.filter(function(e){return isUpcoming(e.date);}).length;
@@ -1796,10 +2253,10 @@ function getFoundingCountdown(){
 var perfCharts={};
 function renderPerfChart(){
   var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var labels=perfHistory.length?perfHistory.map(function(p){return p.label;}):months.slice(0,6);
-  var att=perfHistory.length?perfHistory.map(function(p){return p.attendance;}): [72,75,78,80,81,83];
-  var du=perfHistory.length?perfHistory.map(function(p){return p.dues;}):[60,65,70,72,76,80];
-  var gpa=perfHistory.length?perfHistory.map(function(p){return p.gpa;}):[3.1,3.2,3.2,3.3,3.4,3.4];
+  var labels=perfHistory.length?perfHistory.map(function(p){return p.label;}):[];
+  var att=perfHistory.length?perfHistory.map(function(p){return p.attendance;}): [];
+  var du=perfHistory.length?perfHistory.map(function(p){return p.dues;}):[];
+  var gpa=perfHistory.length?perfHistory.map(function(p){return p.gpa;}):[];
   var ov=att.map(function(a,i){return Math.round((a+du[i]+(gpa[i]/4*100))/3);});
 
   function miniChart(id,data,color,max,valSuffix,valId,valFmt){
@@ -1809,7 +2266,7 @@ function renderPerfChart(){
     perfCharts[id]=new Chart(el.getContext('2d'),{type:'line',data:{labels:labels,datasets:[{data:data,borderColor:color,backgroundColor:color+'22',borderWidth:1.5,tension:.35,fill:true,pointRadius:0,pointHoverRadius:0}]},options:{responsive:true,maintainAspectRatio:false,animation:false,devicePixelRatio:1,events:[],plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{y:{min:0,max:max,display:false},x:{display:false}}}});
     var lastVal=data[data.length-1];
     var valEl=document.getElementById(valId);
-    if(valEl)valEl.textContent=(valFmt?valFmt(lastVal):lastVal)+(valSuffix||'');
+    if(valEl)valEl.textContent=(lastVal===undefined||lastVal===null)?'—':(valFmt?valFmt(lastVal):lastVal)+(valSuffix||'');
   }
   miniChart('chart-attendance',att,'#60a5fa',100,'%','pm-val-attendance');
   miniChart('chart-dues',du,'#f2c94c',100,'%','pm-val-dues');
@@ -4020,10 +4477,10 @@ function finish(){if(!busy)return;var login=officer;cleanup();real();later(funct
 var finalePending=false,finaleArmed=false;
 function enter(login){if(busy||ws.classList.contains('hidden'))return;if(!reduced.matches&&!paused&&!finaleArmed){if(finalePending)return;finalePending=true;label.textContent='Activating the Vault…';button.setAttribute('aria-busy','true');window.dispatchEvent(new CustomEvent('vault-scene-activate'));later(function(){finalePending=false;finaleArmed=true;button.removeAttribute('aria-busy');enter(login);finaleArmed=false;},1200);return;}cancelHold();busy=true;officer=login;started=Date.now();var from=Array.from(ws.querySelectorAll('.pi-letter')).map(function(e){return {r:e.getBoundingClientRect(),size:parseFloat(getComputedStyle(e).fontSize),text:e.textContent};});ws.classList.add('pi-opening');scene.style.visibility='hidden';nextPanel.hidden=false;nextButton.disabled=true;if(reduced.matches||paused){spell.querySelectorAll('i').forEach(function(e){e.style.opacity='1';});readyTitle();return;}
 pulses.push({x:w/2,y:h/2,start:performance.now(),entry:true});Array.from(spell.children).forEach(function(row,i){var initial=row.firstChild,r=initial.getBoundingClientRect(),f=from[i],clone=document.createElement('span');clone.className='pi-fly';clone.textContent=f.text;clone.style.cssText='left:'+f.r.left+'px;top:'+f.r.top+'px;font-size:'+f.size+'px';ws.appendChild(clone);clones.push(clone);var x=r.left-f.r.left,y=r.top-f.r.top,scale=parseFloat(getComputedStyle(initial).fontSize)/f.size;var a=animate(clone,[{transform:'translate(0,0) scale(1)'},{transform:'translate('+x*.35+'px,'+y*.35+'px) scale(1.55)',offset:.4},{transform:'translate('+x+'px,'+y+'px) scale('+scale+')'}],{duration:1900,easing:'cubic-bezier(.2,.7,.2,1)',fill:'forwards'});if(a)a.onfinish=function(){initial.style.opacity='1';clone.remove();};else{initial.style.opacity='1';clone.remove();}Array.from(row.children).slice(1).forEach(function(e,j){var a=animate(e,[{opacity:0,transform:'translateX(-35px) rotateY(-70deg) scale(.4)'},{opacity:1,transform:'none'}],{duration:1100,delay:1500+i*400+j*150,easing:'cubic-bezier(.16,1,.3,1)',fill:'forwards'});if(!a)e.style.opacity='1';});});later(readyTitle,4700);}
-function tick(now){frame=0;if(ws.classList.contains('hidden')||document.hidden){cancelHold();return;}var sec=Math.floor(now/1000);if(sec!==lastSecond){lastSecond=sec;var d=new Date();time.textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});time.dateTime=d.toISOString();date.textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});var chapter=cfg.chapter||(typeof settings!=='undefined'&&settings.chapterName)||'Tau Kappa Epsilon',school=cfg.school||(typeof settings!=='undefined'&&(settings.schoolName||settings.school||settings.university))||'';document.getElementById('pi-identity').textContent=chapter+(school?' / '+school:'');}
+function tick(now){frame=0;if(ws.classList.contains('hidden')||document.hidden){cancelHold();return;}var sec=Math.floor(now/1000);if(sec!==lastSecond){lastSecond=sec;var d=new Date();time.textContent=d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'});time.dateTime=d.toISOString();date.textContent=d.toLocaleDateString([],{weekday:'short',month:'short',day:'numeric'});var chapter=cfg.chapter||(typeof settings!=='undefined'&&settings.chapterName)||'Tau Kappa Epsilon',school=cfg.school||(typeof settings!=='undefined'&&(settings.schoolName||settings.school||settings.university))||'';var _id=document.getElementById('pi-identity'),_t=chapter+(school?' / '+school:'');_id.textContent=_t;var _h=document.getElementById('welcome-title');_id.style.display=(_t.trim()===((_h&&_h.textContent)||'').trim())?'none':'';}
 var messages=cfg.messages.length?cfg.messages:['One Brotherhood. One Vault.'],mi=Math.floor(now/6000)%messages.length;if(mi!==lastMotto){lastMotto=mi;document.getElementById('pi-motto').textContent=messages[mi];}
 if(ctx){ctx.clearRect(0,0,w,h);var still=paused||reduced.matches,dots=points.map(function(p){return {x:p.x*w+(still?0:Math.sin(now/9000+p.phase)*8),y:p.y*h+(still?0:Math.cos(now/11000+p.phase)*8)};});dots.forEach(function(p,i){ctx.globalAlpha=.3;ctx.fillStyle='#acb7c6';ctx.beginPath();ctx.arc(p.x,p.y,1.2,0,Math.PI*2);ctx.fill();for(var j=i+1;j<dots.length;j++){var q=dots[j],dist=Math.hypot(p.x-q.x,p.y-q.y);if(dist<105){ctx.globalAlpha=(1-dist/105)*.09;ctx.strokeStyle='#94a0b1';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}}var dist=Math.hypot(p.x-cursor.x,p.y-cursor.y);if(!still&&dist<170){ctx.globalAlpha=(1-dist/170)*.3;ctx.strokeStyle='#b7323f';ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(cursor.x,cursor.y);ctx.stroke();}});
-pulses=pulses.filter(function(p){var age=(now-p.start)/1000;if(age>1.1||still)return false;ctx.globalAlpha=(1-age/1.1)*.35;ctx.strokeStyle='#bc3442';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,age*(p.entry?Math.max(w,h):210),0,Math.PI*2);ctx.stroke();return true;});ctx.globalAlpha=1;}
+pulses=pulses.filter(function(p){var age=Math.max(0,(now-p.start)/1000);if(age>1.1||still)return false;ctx.globalAlpha=(1-age/1.1)*.35;ctx.strokeStyle='#bc3442';ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,age*(p.entry?Math.max(w,h):210),0,Math.PI*2);ctx.stroke();return true;});ctx.globalAlpha=1;}
 if(holding){charge=Math.min(1,(now-holdStart)/1000);ws.style.setProperty('--charge',charge);label.textContent='Charging '+Math.round(charge*100)+'%';if(charge>=1)enter(false);}frame=requestAnimationFrame(tick);}
 function resume(){if(!frame&&!ws.classList.contains('hidden')&&!document.hidden)frame=requestAnimationFrame(tick);}new MutationObserver(resume).observe(ws,{attributes:true,attributeFilter:['class']});document.addEventListener('visibilitychange',resume);resume();
 button.addEventListener('click',function(e){e.stopPropagation();enter(false);});button.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!e.repeat)enter(false);}});

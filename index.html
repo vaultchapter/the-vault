@@ -3085,7 +3085,8 @@ function renderRecruit(){
       var bs=p.stage==='Bid Extended'?'<span class="badge '+(p.bidStatus==='Accepted'?'b-accepted':p.bidStatus==='Declined'?'b-declined':'b-pending')+'">'+(p.bidStatus||'Pending')+'</span>':'<span class="badge '+ic+'">'+p.interest+'</span>';
       var editIcon=canOfficer()?'<i class="ti ti-edit" style="font-size:12px;color:var(--text2)"></i>':'';
       var onclick=canOfficer()?'onclick="editProspectModal('+p.id+')"':'';
-      return '<div class="rcard" '+onclick+'><div class="rc-name">'+esc(p.name)+'</div><div class="rc-meta">'+esc(p.year||'—')+' &middot; '+esc(p.major||'—')+'</div>'+(p.contact?'<div class="rc-meta">Contact: '+esc(p.contact)+'</div>':'')+'<div class="rc-bot">'+bs+editIcon+'</div>'+(p.notes?'<div class="rc-notes">'+esc(p.notes)+'</div>':'')+'</div>';
+      var ph=p.photo?'<img src="'+esc(p.photo)+'" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid var(--border)">':'';
+      return '<div class="rcard" '+onclick+'><div style="display:flex;gap:10px;align-items:center">'+ph+'<div style="min-width:0;flex:1"><div class="rc-name">'+esc(p.name)+'</div><div class="rc-meta">'+esc(p.year||'—')+' &middot; '+esc(p.major||'—')+'</div></div></div>'+(p.contact?'<div class="rc-meta">Contact: '+esc(p.contact)+'</div>':'')+'<div class="rc-bot">'+bs+editIcon+'</div>'+(p.notes?'<div class="rc-notes">'+esc(p.notes)+'</div>':'')+'</div>';
     }).join('')||'<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px">Empty</div>';
     return '<div class="pipe-col"><div class="pipe-hdr"><span class="pipe-title">'+stage+'</span><span style="font-size:11px;color:var(--text2)">'+list.length+'</span></div><div class="pipe-body">'+cards+'</div></div>';
   }).join('');
@@ -3094,6 +3095,48 @@ function renderRecruit(){
     var f=fmtDate(e.date);var up=isUpcoming(e.date);
     return '<div class="ev-card"><div class="ev-date"><div class="ev-month">'+f.month+'</div><div class="ev-day">'+f.day+'</div></div><div class="ev-info"><div class="ev-name">'+esc(e.name)+'</div><div class="ev-meta"><span>'+esc(e.time)+'</span><span>'+esc(e.location)+'</span><span>'+(e.rsvps||[]).length+' RSVPs</span></div></div><span class="badge '+(up?'b-upcoming':'b-past')+'">'+(up?'Upcoming':'Past')+'</span></div>';
   }).join(''):'<div class="empty">No rush events — add events with type "Rush"</div>';
+}
+var pendingPhoto=undefined; // undefined = unchanged, '' = removed, 'data:...' = new
+function photoFieldHtml(cur){
+  pendingPhoto=undefined;
+  return '<div class="fr"><label class="fl">Photo (optional)</label>'+
+    '<div style="display:flex;align-items:center;gap:12px">'+
+    '<div id="fpph-prev" style="width:64px;height:64px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text3);font-size:22px">'+(cur?'<img src="'+esc(cur)+'" style="width:100%;height:100%;object-fit:cover">':'<i class="ti ti-camera"></i>')+'</div>'+
+    '<div style="flex:1;min-width:0"><input type="file" id="fpph" accept="image/*" onchange="onProspectPhoto(this)" style="font-size:12px;max-width:100%">'+
+    (cur?'<div style="margin-top:6px"><label style="font-size:12px;color:var(--text2);cursor:pointer"><input type="checkbox" id="fpph-rm" onchange="onProspectPhotoRemove(this)"> Remove photo</label></div>':'')+
+    '<div style="font-size:11px;color:var(--text3);margin-top:4px">Only add a photo if they said it&rsquo;s OK. Shrunk automatically.</div></div></div></div>';
+}
+function resizePhoto(file,cb){
+  var fr=new FileReader();
+  fr.onerror=function(){cb(null);};
+  fr.onload=function(){
+    var img=new Image();
+    img.onerror=function(){cb(null);};
+    img.onload=function(){
+      var S=240,c=document.createElement('canvas');c.width=S;c.height=S;
+      var side=Math.min(img.width,img.height),sx=(img.width-side)/2,sy=(img.height-side)/2;
+      var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,S,S);
+      x.drawImage(img,sx,sy,side,side,0,0,S,S);
+      cb(c.toDataURL('image/jpeg',0.78));
+    };
+    img.src=fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+function onProspectPhoto(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  resizePhoto(f,function(d){
+    if(!d){showToast('Could not read that photo — try a JPG or PNG','error');return;}
+    pendingPhoto=d;
+    var pv=document.getElementById('fpph-prev');
+    if(pv)pv.innerHTML='<img src="'+d+'" style="width:100%;height:100%;object-fit:cover">';
+    var rm=document.getElementById('fpph-rm');if(rm)rm.checked=false;
+  });
+}
+function onProspectPhotoRemove(cb){
+  var pv=document.getElementById('fpph-prev');
+  if(cb.checked){pendingPhoto='';if(pv)pv.innerHTML='<i class="ti ti-camera"></i>';}
+  else{pendingPhoto=undefined;}
 }
 function addProspectModal(){
   var officers=members.filter(function(m){return m.status==='Active';});
@@ -3105,6 +3148,7 @@ function addProspectModal(){
     '<div class="fr2"><div class="fr"><label class="fl">Stage</label><select class="inp" id="fps"><option>Contacted</option><option>Rush Events</option><option>Bid Extended</option></select></div>'+
     '<div class="fr"><label class="fl">Interest</label><select class="inp" id="fpi"><option>Hot</option><option>Warm</option><option>Cold</option></select></div></div>'+
     '<div class="fr"><label class="fl">Point of contact (brother)</label><select class="inp" id="fppoc"><option value="">— None —</option>'+officers.map(function(m){return '<option>'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
+    photoFieldHtml('')+
     '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="fpnotes" rows="2"></textarea></div>'+
     '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveProspect()">Add</button></div>'
   );
@@ -3112,7 +3156,8 @@ function addProspectModal(){
 function saveProspect(){
   var name=gv('fpn').trim();if(!name)return;
   var stage=gv('fps');
-  prospects.push({id:nid(),name:name,year:gv('fpy'),major:gv('fpm')||'—',contactInfo:gv('fpci'),stage:stage,interest:gv('fpi'),contact:gv('fppoc'),notes:gv('fpnotes'),bidStatus:stage==='Bid Extended'?'Pending':null});
+  prospects.push({id:nid(),name:name,year:gv('fpy'),major:gv('fpm')||'—',contactInfo:gv('fpci'),stage:stage,interest:gv('fpi'),contact:gv('fppoc'),notes:gv('fpnotes'),bidStatus:stage==='Bid Extended'?'Pending':null,photo:pendingPhoto||''});
+  pendingPhoto=undefined;
   save('prospects',prospects);closeModal();renderRecruit();
 }
 function editProspectModal(id){
@@ -3128,6 +3173,7 @@ function editProspectModal(id){
     '<div class="fr"><label class="fl">Interest</label><select class="inp" id="fpi">'+['Hot','Warm','Cold'].map(function(s){return '<option'+(s===p.interest?' selected':'')+'>'+s+'</option>';}).join('')+'</select></div></div>'+
     bidRow+
     '<div class="fr"><label class="fl">Point of contact</label><select class="inp" id="fppoc"><option value="">— None —</option>'+officers.map(function(m){return '<option'+(m.name===p.contact?' selected':'')+'>'+esc(m.name)+'</option>';}).join('')+'</select></div>'+
+    photoFieldHtml(p.photo||'')+
     '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="fpnotes" rows="2">'+esc(p.notes||'')+'</textarea></div>'+
     '<div class="fa"><button class="btn btn-danger" onclick="deleteProspect('+id+')">Remove</button><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="updateProspect('+id+')">Save</button></div>'
   );
@@ -3135,6 +3181,8 @@ function editProspectModal(id){
 function updateProspect(id){
   var p=prospects.find(function(x){return x.id===id;});if(!p)return;
   p.name=gv('fpn').trim()||p.name;p.year=gv('fpy');p.major=gv('fpm');p.contactInfo=gv('fpci');p.stage=gv('fps');p.interest=gv('fpi');p.contact=gv('fppoc');p.notes=gv('fpnotes');
+  if(pendingPhoto!==undefined)p.photo=pendingPhoto;
+  pendingPhoto=undefined;
   var bsEl=document.getElementById('fpbs');p.bidStatus=p.stage==='Bid Extended'?(bsEl?bsEl.value:'Pending'):null;
   save('prospects',prospects);closeModal();renderRecruit();
 }

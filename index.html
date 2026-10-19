@@ -46,7 +46,7 @@
   signInAnonymously(auth).catch(function(e) { console.error('Anonymous sign-in failed:', e); });
 
   // Keys to sync
-  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','quickNotes','shoutouts','ideas','polls','quickLinks','vibes','receipts','library','serviceRequests','kra','riskMgmt','auditLog','internships','internshipPrefs'];
+  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','quickNotes','shoutouts','ideas','polls','quickLinks','vibes','receipts','library','serviceRequests','kra','riskMgmt','auditLog','internships','internshipPrefs','opportunities','oppPrefs'];
 
   // Listen for changes from Firebase and update local state + re-render
   KEYS.forEach(function(k) {
@@ -91,6 +91,8 @@
       else if (k === 'auditLog') { window.auditLog = val; }
       else if (k === 'internships') { window.internships = val; }
       else if (k === 'internshipPrefs') { window.internshipPrefs = val; }
+      else if (k === 'opportunities') { window.opportunities = val; }
+      else if (k === 'oppPrefs') { window.oppPrefs = val; }
       // Re-render current tab
       if (window.renderAll) window.renderAll();
       if (k === 'settings' && window.settings) {
@@ -818,6 +820,7 @@ textarea.inp{resize:vertical;min-height:70px}
     <div class="nav-item" onclick="go('polls',this)"><i class="ti ti-checkbox"></i><span>Polls & Votes</span></div>
     <div class="nav-item" onclick="go('links',this)"><i class="ti ti-link"></i><span>Quick Links</span></div>
     <div class="nav-sec">Resources</div>
+    <div class="nav-item" onclick="go('opportunities',this)"><i class="ti ti-heart-handshake"></i><span>Alumni Opportunities</span></div>
     <div class="nav-item" onclick="go('internships',this)"><i class="ti ti-briefcase"></i><span>Internships</span></div>
     <div class="nav-item" onclick="go('library',this)"><i class="ti ti-folders"></i><span>Library</span></div>
     <div class="nav-item" onclick="go('meetings',this)"><i class="ti ti-notebook"></i><span>Meetings</span></div>
@@ -1367,6 +1370,22 @@ textarea.inp{resize:vertical;min-height:70px}
         <div class="help-section"><div class="help-section-title">Common Tasks</div><div class="help-tasks"><div><strong>Events & attendance</strong><span>Use Events for dates, required events, and RSVPs.</span></div><div><strong>Assignments</strong><span>Review House, Concessions, Volunteers, and Brotherhood.</span></div><div><strong>Study & service</strong><span>Log hours promptly so chapter records stay accurate.</span></div><div><strong>Resources</strong><span>Use Library for documents, forms, and chapter policies.</span></div></div></div>
       </div>
 
+      <div class="panel" id="panel-opportunities">
+        <div class="dash-panel" style="margin-bottom:16px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:6px"><i class="ti ti-heart-handshake"></i> Got a job for the chapter?</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:12px">Alumni, parents and friends of the chapter: if you have a project at home or work, a fundraiser idea, or an event that needs staffing, our brothers want to help. Yard work, painting and moving, concession stands, event security, volunteer days, paid or unpaid, big or small. Any money earned goes to the chapter.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-primary" onclick="oppSubmitEmail()"><i class="ti ti-mail"></i> Send us an opportunity</button>
+            <button class="btn" onclick="copyOppBlurb()"><i class="ti ti-copy"></i> Copy message for alumni newsletter</button>
+            <button class="btn" id="opp-set-email" onclick="setOppEmail()"><i class="ti ti-settings"></i> Set contact email</button>
+          </div>
+          <div style="font-size:12px;color:var(--text2);margin-top:10px" id="opp-email-line"></div>
+        </div>
+        <div class="sg" id="opp-stats"></div>
+        <div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:14px"><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">Money for the chapter, by type of opportunity</div><div style="position:relative;height:150px"><canvas id="opp-chart"></canvas></div></div>
+        <div id="opp-list"></div>
+      </div>
+
       <div class="panel" id="panel-internships">
         <div id="int-banner"></div>
         <div class="dash-panel" style="margin-bottom:16px">
@@ -1537,6 +1556,8 @@ window.riskMgmt=load('riskMgmt',{
 window.auditLog=load('auditLog',[]);
 window.internships=load('internships',[]);
 window.internshipPrefs=load('internshipPrefs',{});
+window.opportunities=load('opportunities',[]);
+window.oppPrefs=load('oppPrefs',{});
 // Shorthand references (these point to window.X)
 var members=window.members,events=window.events,dues=window.dues,transactions=window.transactions,
     budget=window.budget,fines=window.fines,prospects=window.prospects,announcements=window.announcements,
@@ -1831,8 +1852,8 @@ function gv(id){var el=document.getElementById(id);return el?el.value:'';}
 function gc(id){var el=document.getElementById(id);return el?el.checked:false;}
 
 // NAV
-var pageTitles={success:'Chapter Success',notes:'Quick Notes',shoutouts:'Shoutouts',ideas:'Idea Board',polls:'Polls & Votes',links:'Quick Links',dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Fundraising',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',kra:'KRA Scorecard',riskmgmt:'Risk Management',auditlog:'Audit Log',blast:'Message Blast',library:'Library',internships:'Internships',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
-var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document',kra:'Update Scorecard',riskmgmt:'Add Training',internships:'Add Internship'};
+var pageTitles={success:'Chapter Success',notes:'Quick Notes',shoutouts:'Shoutouts',ideas:'Idea Board',polls:'Polls & Votes',links:'Quick Links',dashboard:'Dashboard',members:'Members',familytree:'Family Tree',events:'Events',goals:'Chapter Goals',finance:'Finances',recruit:'Recruitment',house:'Chapter House',concessions:'Fundraising',volunteers:'Volunteer Board',sober:'Brotherhood',tkeweek:'TKE Week',natevents:'National Events',announce:'Announcements',messages:'Messages',study:'Study Hours',service:'Service Hours',attendance:'Attendance Tracker',points:'Points',kra:'KRA Scorecard',riskmgmt:'Risk Management',auditlog:'Audit Log',blast:'Message Blast',library:'Library',internships:'Internships',opportunities:'Alumni Opportunities',meetings:'Meetings',notifications:'Notifications',help:'Help & Rules',ai:'Vault AI'};
+var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:'Add Record',recruit:'Add Prospect',house:'Add Item',concessions:'Add Shift',volunteers:'Add Opportunity',sober:'Add Driver Slot',tkeweek:'Add Activity',natevents:'Add Event',announce:'Post Announcement',study:'Log Hours',service:'Log Hours',points:'Award Points',library:'Add Document',kra:'Update Scorecard',riskmgmt:'Add Training',internships:'Add Internship',opportunities:'Add Opportunity'};
 function go(tab,el){
   curTab=tab;
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
@@ -1855,12 +1876,12 @@ function closeSidebar(){
   if(bd)bd.classList.remove('open');
 }
 function updateAddBtn(){
-  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),kra:canOfficer(),riskmgmt:canOfficer(),auditlog:false,blast:false,library:canEdit(),internships:canOfficer()};
+  var show={members:canEdit(),events:canOfficer(),goals:canOfficer(),finance:canEdit(),recruit:canOfficer(),house:canOfficer(),concessions:canOfficer(),volunteers:canOfficer(),sober:canOfficer(),tkeweek:canOfficer(),natevents:canOfficer(),announce:canOfficer(),study:true,service:canOfficer(),attendance:false,points:canOfficer(),kra:canOfficer(),riskmgmt:canOfficer(),auditlog:false,blast:false,library:canEdit(),internships:canOfficer(),opportunities:canOfficer()};
   document.getElementById('add-btn').style.display=(show[curTab])?'inline-flex':'none';
   document.getElementById('add-lbl').textContent=addLabels[curTab]||'Add';
 }
 function handleAdd(){
-  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal,library:addLibraryModal,kra:editKraModal,riskmgmt:addTrainingModal,internships:addInternshipModal};
+  var h={members:addMemberModal,events:addEventModal,goals:addGoalModal,finance:addFinMenu,recruit:addProspectModal,house:addHouseMenu,concessions:addShiftModal,volunteers:addVolunteerModal,sober:addSoberModal,tkeweek:addTkeWeekModal,natevents:addNatEventModal,announce:addAnnModal,study:addStudyModal,service:addServiceModal,points:awardPointsModal,library:addLibraryModal,kra:editKraModal,riskmgmt:addTrainingModal,internships:addInternshipModal,opportunities:addOpportunityModal};
   if(h[curTab])h[curTab]();
 }
 function normalizeState(){
@@ -1903,6 +1924,7 @@ function renderAll(){normalizeState();
   else if(curTab==='blast')renderBlastPreview();
   else if(curTab==='library')renderLibrary();
   else if(curTab==='internships')renderInternships();
+  else if(curTab==='opportunities')renderOpportunities();
   else if(curTab==='meetings')renderMeetings();
   else if(curTab==='notifications')renderNotifications();
   else if(curTab==='help')renderHelp();
@@ -3703,6 +3725,112 @@ function toggleAttendanceFor(mid){
 }
 
 
+
+// ALUMNI OPPORTUNITIES
+var OPP_TYPES=['Paid work','Volunteer','Fundraiser','Event staffing','Other'];
+var OPP_STATUSES=['New','Contacted','Scheduled','Done','Declined'];
+var OPP_COLORS={New:'#60a5fa',Contacted:'#a78bfa',Scheduled:'#f2c94c',Done:'#4ade80',Declined:'#a89ba0'};
+var oppChart=null;
+function oppList(){if(!Array.isArray(window.opportunities))window.opportunities=[];return window.opportunities;}
+function oppPrefsObj(){if(!window.oppPrefs||typeof window.oppPrefs!=='object')window.oppPrefs={};return window.oppPrefs;}
+function oppEmail(){return (oppPrefsObj().email||'').trim();}
+function oppTemplate(){
+  return 'Hi! I have an opportunity for the chapter.\n\nYour name:\nWhat is the opportunity (yard work, painting, moving, concession stand, event staffing, volunteer day, other):\nWhere:\nWhen (date and time, or flexible):\nHow many brothers are needed:\nPay or donation to the chapter, if any:\nBest way to reach you (phone or email):\n';
+}
+function oppSubmitEmail(){
+  var em=oppEmail();
+  if(!em){showToast(canManageSettings()?'Set the chapter contact email first':'The chapter has not posted a contact email yet','error');return;}
+  window.location.href='mailto:'+em+'?subject='+encodeURIComponent('Opportunity for the chapter')+'&body='+encodeURIComponent(oppTemplate());
+}
+function copyOppBlurb(){
+  var em=oppEmail();
+  var chapter=(window.settings&&window.settings.chapterName)||'our chapter';
+  var txt='Looking for help with a project? '+chapter+' is taking on jobs and fundraisers. Yard work, painting, moving, concession stands, event staffing, volunteer days: paid or unpaid, big or small, and any money earned goes to the chapter. Alumni, if you have something at home or at work that a few eager brothers could help with, email us at '+(em||'[chapter email]')+' with what you need, where, when, and how many people.';
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){showToast('Copied','success');},function(){prompt('Copy this:',txt);});}
+  else{prompt('Copy this:',txt);}
+}
+function setOppEmail(){
+  if(!canManageSettings()){showToast('Only officers can change this','error');return;}
+  var v=prompt('Email address alumni should send opportunities to:',oppEmail());
+  if(v===null)return;
+  v=v.trim();
+  if(v&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){showToast('That does not look like an email address','error');return;}
+  var pr=oppPrefsObj();pr.email=v;save('oppPrefs',pr);renderOpportunities();
+}
+function renderOpportunities(){
+  var list=oppList(),em=oppEmail();
+  var line=document.getElementById('opp-email-line');
+  if(line)line.innerHTML=em?'Opportunities go to <strong>'+esc(em)+'</strong>':'No contact email set yet.'+(canManageSettings()?' Use &ldquo;Set contact email&rdquo; above.':'');
+  var setBtn=document.getElementById('opp-set-email');if(setBtn)setBtn.style.display=canManageSettings()?'':'none';
+  var num=function(v){var n=parseFloat(v);return isNaN(n)?0:n;};
+  var open=list.filter(function(o){return o.status==='New'||o.status==='Contacted'||o.status==='Scheduled';});
+  var earned=list.filter(function(o){return o.status==='Done';}).reduce(function(a,o){return a+num(o.pay);},0);
+  var pipe=open.reduce(function(a,o){return a+num(o.pay);},0);
+  document.getElementById('opp-stats').innerHTML=
+    '<div class="sc"><div class="sl">Open opportunities</div><div class="sv">'+open.length+'</div></div>'+
+    '<div class="sc"><div class="sl">Waiting on us (new)</div><div class="sv">'+list.filter(function(o){return o.status==='New';}).length+'</div></div>'+
+    '<div class="sc"><div class="sl">Possible $ (open)</div><div class="sv">$'+pipe.toLocaleString()+'</div></div>'+
+    '<div class="sc"><div class="sl">Earned $ (done)</div><div class="sv">$'+earned.toLocaleString()+'</div></div>';
+  var el=document.getElementById('opp-chart');
+  if(el&&typeof Chart!=='undefined'){
+    if(oppChart)oppChart.destroy();
+    var sum=function(types,f){return OPP_TYPES.map(function(t){return list.filter(function(o){return (o.type||'Other')===t&&f(o);}).reduce(function(a,o){return a+num(o.pay);},0);});};
+    oppChart=new Chart(el.getContext('2d'),{type:'bar',data:{labels:OPP_TYPES,datasets:[
+      {label:'Earned (done)',data:sum(OPP_TYPES,function(o){return o.status==='Done';}),backgroundColor:'#4ade80',borderRadius:4},
+      {label:'Possible (open)',data:sum(OPP_TYPES,function(o){return o.status==='New'||o.status==='Contacted'||o.status==='Scheduled';}),backgroundColor:'#f2c94c',borderRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},scales:{y:{beginAtZero:true,ticks:{callback:function(v){return '$'+v;}}},x:{grid:{display:false}}}}});
+  }
+  var box=document.getElementById('opp-list');
+  if(!list.length){box.innerHTML='<div class="empty">No opportunities logged yet'+(canOfficer()?'. When an alumnus emails you one, add it here with the Add Opportunity button.':'.')+'</div>';return;}
+  var sorted=list.slice().sort(function(a,b){return OPP_STATUSES.indexOf(a.status)-OPP_STATUSES.indexOf(b.status)||(a.when||'9999').localeCompare(b.when||'9999');});
+  box.innerHTML=sorted.map(function(o){
+    var meta=[];
+    if(o.type)meta.push(esc(o.type));
+    if(o.when)meta.push(esc(o.when));
+    if(o.place)meta.push(esc(o.place));
+    if(o.people)meta.push(esc(o.people)+' brothers');
+    if(num(o.pay))meta.push('$'+num(o.pay).toLocaleString()+' to chapter');
+    return '<div class="ev-card" '+(canOfficer()?'onclick="editOpportunityModal('+o.id+')" style="cursor:pointer"':'')+'><div class="ev-info"><div class="ev-name">'+esc(o.title||'Opportunity')+(o.from?' &middot; '+esc(o.from):'')+'</div><div class="ev-meta">'+meta.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div>'+(canOfficer()&&o.contact?'<div class="rc-meta">Contact: '+esc(o.contact)+'</div>':'')+(o.notes?'<div class="rc-notes">'+esc(o.notes)+'</div>':'')+'</div><span class="badge" style="background:'+OPP_COLORS[o.status]+'33;color:var(--text)">'+esc(o.status)+'</span></div>';
+  }).join('');
+}
+function oppForm(o){
+  o=o||{};
+  var sel=function(id,arr,cur){return '<select class="inp" id="'+id+'">'+arr.map(function(x){return '<option'+(x===cur?' selected':'')+'>'+x+'</option>';}).join('')+'</select>';};
+  return '<div class="fr"><label class="fl">What is it? *</label><input class="inp" id="fot" placeholder="e.g. Stain backyard fence" value="'+esc(o.title||'')+'"></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">From (alumnus / company)</label><input class="inp" id="fof" value="'+esc(o.from||'')+'"></div>'+
+    '<div class="fr"><label class="fl">Their contact</label><input class="inp" id="foc" placeholder="phone or email" value="'+esc(o.contact||'')+'"></div></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Type</label>'+sel('foty',OPP_TYPES,o.type||'Paid work')+'</div>'+
+    '<div class="fr"><label class="fl">Status</label>'+sel('fos',OPP_STATUSES,o.status||'New')+'</div></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">When</label><input class="inp" id="fow" placeholder="Sat Nov 8, 9am" value="'+esc(o.when||'')+'"></div>'+
+    '<div class="fr"><label class="fl">Where</label><input class="inp" id="fop" value="'+esc(o.place||'')+'"></div></div>'+
+    '<div class="fr2"><div class="fr"><label class="fl">Brothers needed</label><input class="inp" type="number" min="0" id="fon" value="'+esc(o.people||'')+'"></div>'+
+    '<div class="fr"><label class="fl">$ to the chapter</label><input class="inp" type="number" min="0" step="0.01" id="fom" value="'+esc(o.pay||'')+'"></div></div>'+
+    '<div class="fr"><label class="fl">Notes</label><textarea class="inp" id="fono" rows="2">'+esc(o.notes||'')+'</textarea></div>';
+}
+function readOppForm(o){
+  o.title=gv('fot').trim();o.from=gv('fof').trim();o.contact=gv('foc').trim();o.type=gv('foty');o.status=gv('fos');o.when=gv('fow').trim();o.place=gv('fop').trim();o.people=gv('fon');o.pay=gv('fom');o.notes=gv('fono').trim();
+  return o;
+}
+function addOpportunityModal(){
+  openModal('Add opportunity',oppForm()+'<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveOpportunity()">Add</button></div>');
+}
+function saveOpportunity(){
+  var o=readOppForm({id:nid()});
+  if(!o.title){showToast('Give it a short title','error');return;}
+  oppList().push(o);save('opportunities',window.opportunities);closeModal();renderOpportunities();
+}
+function editOpportunityModal(id){
+  var o=oppList().find(function(x){return x.id===id;});if(!o)return;
+  openModal('Edit opportunity',oppForm(o)+'<div class="fa"><button class="btn btn-danger" onclick="deleteOpportunity('+id+')">Remove</button><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="updateOpportunity('+id+')">Save</button></div>');
+}
+function updateOpportunity(id){
+  var o=oppList().find(function(x){return x.id===id;});if(!o)return;
+  var n=readOppForm({});
+  if(!n.title){showToast('Give it a short title','error');return;}
+  Object.assign(o,n);save('opportunities',window.opportunities);closeModal();renderOpportunities();
+}
+function deleteOpportunity(id){if(!confirm('Remove this opportunity?'))return;window.opportunities=oppList().filter(function(x){return x.id!==id;});save('opportunities',window.opportunities);closeModal();renderOpportunities();}
+
 // INTERNSHIPS
 var INT_STATUSES=['Saved','Applied','Interview','Offer','Rejected'];
 var INT_COLORS={Saved:'#60a5fa',Applied:'#a78bfa',Interview:'#f2c94c',Offer:'#4ade80',Rejected:'#a89ba0'};
@@ -4576,7 +4704,7 @@ function downloadFile(filename,content,mime){
   URL.revokeObjectURL(url);
 }
 function exportBackupJSON(){
-  var data={members:members,events:events,dues:dues,transactions:transactions,budget:budget,fines:fines,prospects:prospects,announcements:announcements,chores:chores,maintenance:maintenance,studyHours:studyHours,points:points,concessions:concessions,volunteers:volunteers,soberDrivers:soberDrivers,tkeWeek:tkeWeek,nationalEvents:nationalEvents,serviceHours:serviceHours,goals:goals,receipts:receipts,library:library,serviceRequests:serviceRequests,kra:kra,riskMgmt:riskMgmt,auditLog:auditLog,internships:window.internships||[],perfHistory:perfHistory,quickNotes:quickNotes,shoutouts:shoutouts,ideas:ideas,polls:polls,quickLinks:quickLinks,vibes:vibes,messages:messages,settings:settings};
+  var data={members:members,events:events,dues:dues,transactions:transactions,budget:budget,fines:fines,prospects:prospects,announcements:announcements,chores:chores,maintenance:maintenance,studyHours:studyHours,points:points,concessions:concessions,volunteers:volunteers,soberDrivers:soberDrivers,tkeWeek:tkeWeek,nationalEvents:nationalEvents,serviceHours:serviceHours,goals:goals,receipts:receipts,library:library,serviceRequests:serviceRequests,kra:kra,riskMgmt:riskMgmt,auditLog:auditLog,internships:window.internships||[],opportunities:window.opportunities||[],perfHistory:perfHistory,quickNotes:quickNotes,shoutouts:shoutouts,ideas:ideas,polls:polls,quickLinks:quickLinks,vibes:vibes,messages:messages,settings:settings};
   downloadFile((settings.chapterName||'chapter').replace(/[^a-z0-9]/gi,'-')+'-backup-'+todayStr()+'.json',JSON.stringify(data,null,2),'application/json');
   settings.lastBackupDate=todayStr();
   save('settings',settings);

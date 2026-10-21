@@ -3561,6 +3561,33 @@ function renderAttendanceOverview(){
   }).join('');
 }
 function setAttFilter(s){attStatusFilter=s;renderAttendanceOverview();}
+function absenceSectionHtml(ev,visible){
+  if(!ev)return '';
+  var ab=ev.absences&&typeof ev.absences==='object'?ev.absences:{};
+  var absent=visible.filter(function(m){return (ev.attendance||[]).indexOf(m.id)<0;});
+  if(!absent.length)return '<div style="margin-top:16px;font-size:12px;color:var(--text2)">Everyone shown is marked present.</div>';
+  var rows=absent.map(function(m){
+    var a=ab[m.id]||{};
+    var cv=avColor(m.id||0);
+    return '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;border-bottom:0.5px solid var(--border)">'+
+      '<div style="display:flex;align-items:center;gap:8px;min-width:150px;flex:0 0 auto"><span class="av" style="width:22px;height:22px;font-size:9px;background:'+cv[0]+';color:'+cv[1]+'">'+esc(m.initials||initials(m.name))+'</span><span style="font-size:13px">'+esc(m.name)+'</span></div>'+
+      '<select class="inp" style="width:120px;flex:0 0 auto" onchange="setAbsence('+m.id+',\'excused\',this.value)"><option'+(a.excused!=='Excused'?' selected':'')+'>Unexcused</option><option'+(a.excused==='Excused'?' selected':'')+'>Excused</option></select>'+
+      '<input class="inp" style="flex:1;min-width:180px" type="text" placeholder="Why did they miss? (class, work, sick, no answer...)" value="'+esc(a.reason||'')+'" onchange="setAbsence('+m.id+',\'reason\',this.value)">'+
+      '</div>';
+  }).join('');
+  return '<div style="margin-top:18px"><div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:2px">Absences &amp; reasons ('+absent.length+')</div>'+
+    '<div style="font-size:11px;color:var(--text3);margin-bottom:6px">Write why each brother missed. Saves when you tap out of the box.'+(canOfficer()?'':' Officers only.')+'</div>'+rows+'</div>';
+}
+function setAbsence(mid,field,val){
+  if(!canOfficer())return;
+  var ev=events.find(function(e){return e.id===attTakeEventId;});
+  if(!ev)return;
+  if(!ev.absences||typeof ev.absences!=='object'||Array.isArray(ev.absences))ev.absences={};
+  var a=ev.absences[mid]||(ev.absences[mid]={excused:'Unexcused',reason:''});
+  a[field]=String(val).trim();
+  save('events',events);
+  showToast('Saved','success');
+}
 function renderAttendanceTakeList(){
   var el=document.getElementById('att-take-list');
   if(!el)return;
@@ -3605,7 +3632,8 @@ function renderAttendanceTakeList(){
       '<button class="btn btn-sm" onclick="markAllAttendance(false)"><i class="ti ti-x"></i> Clear all</button>'+
     '</div>'+
     '<input class="inp" style="max-width:240px;margin-bottom:10px" type="text" id="att-take-search" placeholder="Search a name..." value="'+esc(takeQ)+'" oninput="renderAttendanceTakeList()">'+
-    '<div style="display:flex;flex-wrap:wrap;gap:8px">'+(chips||'<div class="empty">No members match that search</div>')+'</div>';
+    '<div style="display:flex;flex-wrap:wrap;gap:8px">'+(chips||'<div class="empty">No members match that search</div>')+'</div>'+
+    absenceSectionHtml(ev,visible);
   if(hadFocus){
     var newSearchEl=document.getElementById('att-take-search');
     if(newSearchEl){newSearchEl.focus();if(caretPos!==null)newSearchEl.setSelectionRange(caretPos,caretPos);}

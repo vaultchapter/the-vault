@@ -749,7 +749,124 @@ textarea.inp{resize:vertical;min-height:70px}
 @media(min-width:1101px) and (max-width:1280px){.dn-stats-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1100px){.dn-qa-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
 @media(max-width:700px){.dn-pair-row,.dn-qa-col{grid-template-columns:1fr}.dash-noir{padding:14px}}
+.dn-card{min-width:0}
+.dn-perf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dn-perf-mini{min-width:0;overflow:hidden}
+.dn-perf-cv canvas{max-width:100%}
+.dn-chart-row{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+@media(max-width:1100px){.dn-chart-row{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.dn-perf-grid{grid-template-columns:minmax(0,1fr)}}
+.dn-person-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-noir .dn-card:hover{transform:none}
+.dn-perf-empty{padding:0;text-align:left}
+.dn-chart-row>.dn-card:first-child{align-self:start}
 /* ===== end dashboard layout fixes ===== */
+/* ===== Professional dashboard polish ===== */
+.dash-noir{padding:24px 26px;border-radius:16px}
+.dn-topbar{align-items:center;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--n-border)}
+.dn-title{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.dn-sub{font-size:12.5px;margin-top:4px}
+.dn-qa-row{display:flex;gap:8px;flex-wrap:wrap}
+.dn-qa-btn{width:auto;margin:0;padding:8px 13px;border-radius:9px;gap:7px;font-size:12.5px}
+.dn-qa-btn i{color:var(--n-yellow);font-size:14px}
+.dn-qa-btn:hover{transform:none}
+.dn-section-lbl{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--n-text3);margin:2px 0 -4px}
+.dn-outer{grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+.dn-main{gap:16px}.dn-qa-col{gap:14px}
+.dn-card,.dn-stat,.dash-noir .pulse-card{border-radius:12px;padding:18px}
+.dn-stat{padding:16px 18px}
+.dn-stat:hover{transform:none;box-shadow:none;border-color:var(--n-border)}
+.dn-card-hdr{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--n-text2);margin-bottom:14px}
+.dn-card-hdr .dn-link{font-size:11px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--n-yellow);cursor:pointer}
+.dn-stat-lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.dn-stat-val{font-size:28px;margin:6px 0 8px}
+.dn-chart-row{grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:stretch}
+.dn-chart-row>.dn-card:first-child{align-self:stretch}
+.dn-dues-card{display:flex;flex-direction:column}
+.dn-dues-card .dn-donut-wrap{margin:8px auto 18px}
+.dn-dues-card #dn-donut-legend{margin-top:auto}
+.dn-perf-empty{padding:0;text-align:left}
+.dn-bottom-row{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+.dn-empty{padding:26px 10px}
+.countdown-card::after,.challenge-card::after{display:none}
+.dash-noir .countdown-card{background:linear-gradient(135deg,#2b1219,#1b1b19 70%);border:1px solid rgba(242,201,76,.28);box-shadow:none;border-radius:12px;padding:18px}
+.dash-noir .challenge-card{background:var(--n-card);border:1px solid var(--n-border);border-left:3px solid var(--n-yellow);border-radius:12px;padding:18px;color:var(--n-text)}
+.dash-noir .challenge-title,.dash-noir .countdown-title{font-size:10.5px;letter-spacing:.12em;color:var(--n-yellow)}
+.dash-noir .challenge-text{font-size:14px;font-weight:600;line-height:1.45}
+.dash-noir .challenge-sub{color:var(--n-text3)}
+.dash-noir .countdown-name{font-size:18px}
+.dn-bday-ic{width:30px;height:30px;border-radius:8px;background:rgba(242,201,76,.12);color:var(--n-yellow);display:grid;place-items:center;font-size:15px;flex-shrink:0}
+.dash-noir #dash-alert .alert-banner{border-radius:10px;font-size:12.5px;padding:10px 14px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+@media(max-width:1100px){.dn-outer{grid-template-columns:minmax(0,1fr)}.dn-bottom-row{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.dn-qa-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.dn-qa-col .dn-section-lbl{grid-column:1/-1}}
+@media(max-width:700px){.dash-noir{padding:16px}.dn-qa-col{grid-template-columns:1fr}.dn-qa-row{width:100%}.dn-qa-btn{flex:1 1 calc(50% - 8px);justify-content:center}}
+.dn-stat-lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.04em;font-size:10.5px}
+.dn-stat-top{align-items:center;min-height:22px}
+.dn-dues-card{justify-content:flex-start}
+.dn-dues-card #dn-donut-legend{margin-top:0}
+.dn-dues-card .dn-donut-wrap{margin:18px auto 22px}
+@media(max-width:1100px){.dn-chart-row{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:700px){.dn-stat-lbl{white-space:normal;overflow:visible}.dn-stats-row{gap:10px}}
+.dash-noir #dash-alert .alert-banner{display:block;line-height:1.5}
+.dash-noir #dash-alert .alert-banner i{margin-right:4px;vertical-align:-1px}
+/* ===== layout v2 ===== */
+.pts-chart{display:flex;align-items:flex-end;gap:5px;height:60px;border-bottom:1px solid var(--n-border)}
+.pts-col{flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.pts-bar{width:100%;max-width:18px;border-radius:3px 3px 0 0;background:var(--n-yellow);opacity:.9}
+.pts-bar.neg{background:var(--n-red)}
+.dn-card:hover,.dash-noir .dn-card:hover{border-color:var(--n-border);box-shadow:none;transform:none}
+.dn-bottom-row>.dn-card{display:flex;flex-direction:column}
+.dn-qa-col{position:sticky;top:12px}
+@media(max-width:1100px){.dn-qa-col{position:static}}
+/* ===== end professional polish ===== */
+
+
+/* ===== Sidebar v2 ===== */
+.nav-scroll{padding:4px 0 12px}
+.nav-search{display:flex;align-items:center;gap:9px;margin:12px 12px 10px;padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);font-size:12.5px;cursor:pointer;transition:background .15s}
+.nav-search:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-search span{flex:1}.nav-search kbd{font-size:10px;font-family:inherit;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.6)}
+.nav-home{padding:0 8px 6px}
+.nav-home .nav-item{border-radius:8px;border-left:0;padding:9px 12px;font-weight:600}
+.nav-home .nav-item.active{background:rgba(201,168,76,.18)}
+.nav-lbl{padding:12px 20px 6px;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.nav-grp{margin:0 8px 2px;border-radius:9px}
+.nav-grp .nav-sec{display:flex;align-items:center;gap:10px;padding:9px 12px;font-size:12.5px;font-weight:600;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.72);cursor:pointer;user-select:none;border-radius:9px;transition:background .15s,color .15s}
+.nav-grp .nav-sec:hover,.nav-grp .nav-sec:focus-visible{background:rgba(255,255,255,.07);color:#fff;outline:none}
+.nav-gic{font-size:16px;opacity:.85}
+.nav-gname{flex:1}
+.nav-gcount{font-size:10px;font-weight:600;min-width:18px;text-align:center;padding:1px 6px;border-radius:99px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.nav-chev{font-size:13px;opacity:.6;transition:transform .2s}
+.nav-grp:not(.open) .nav-chev{transform:rotate(-90deg)}
+.nav-grp:not(.open) .nav-items{display:none}
+.nav-grp.open{background:rgba(0,0,0,.14)}
+.nav-grp.open .nav-sec{color:#fff}
+.nav-grp.open .nav-gcount{background:rgba(201,168,76,.25);color:var(--gold)}
+.nav-grp .nav-items{margin:0 0 6px 21px;padding:2px 0 2px 0;border-left:1px solid rgba(255,255,255,.12)}
+.nav-grp .nav-item{padding:7px 12px 7px 14px;border-left:0;border-radius:0 8px 8px 0;font-size:12.5px}
+.nav-grp .nav-item.active{background:rgba(201,168,76,.16);color:var(--gold);box-shadow:inset 2px 0 0 var(--gold)}
+.sb-foot{flex-direction:column;align-items:stretch;gap:10px;padding:12px 14px}
+.sb-status{display:flex;flex-direction:column;gap:2px;font-size:11px;color:rgba(255,255,255,.6)}
+#sync-status{font-size:10.5px}
+.sb-tools{display:flex;gap:6px}
+.sb-tool{flex:1;display:flex;align-items:center;justify-content:center;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);font-size:15px;cursor:pointer;transition:background .15s}
+.sb-tool:hover{background:rgba(255,255,255,.16);color:#fff}
+/* ===== end sidebar v2 ===== */
+/* ===== Stat cards v2 ===== */
+.dn-stat{position:relative;overflow:hidden;--acc:#f2c94c;padding:16px 18px 14px;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,0) 55%),var(--n-card);transition:border-color .2s,box-shadow .2s}
+.dn-stat::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--acc),transparent 85%);opacity:.9}
+.dn-stat::after{content:"";position:absolute;right:-40px;top:-50px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,var(--acc) 0,transparent 68%);opacity:.10;pointer-events:none;transition:opacity .25s}
+.dn-stat:hover{border-color:color-mix(in srgb,var(--acc) 45%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 0 1px color-mix(in srgb,var(--acc) 18%,transparent)}
+.dn-stat:hover::after{opacity:.2}
+.dn-stat-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.dn-stat-ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:14px;flex-shrink:0;color:var(--acc);background:color-mix(in srgb,var(--acc) 16%,transparent)}
+.dn-stat-top .dn-stat-lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-stat-body{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dn-stat-main{min-width:0}
+.dn-stat-body .dn-stat-val{font-size:28px;line-height:1.05;margin:0 0 5px;font-variant-numeric:tabular-nums}
+.dn-ring{flex-shrink:0;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--acc) 35%,transparent))}
+.dn-ring-fg{transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)}
+.dn-stat .dn-spark{display:block;width:100%;height:30px;margin-top:10px}
+/* ===== end stat cards v2 ===== */
 </style>
 </head>
 <body>
@@ -787,55 +904,71 @@ textarea.inp{resize:vertical;min-height:70px}
       </div>
     </div>
     <div class="nav-scroll">
-    <div class="nav-sec">Overview</div>
+    <div class="nav-search" role="button" tabindex="0" onclick="openGlobalSearch()"><i class="ti ti-search"></i><span>Search</span><kbd>⌘K</kbd></div>
+    <div class="nav-home">
     <div class="nav-item active" onclick="go('dashboard',this)"><i class="ti ti-dashboard"></i><span>Dashboard</span></div>
+    </div>
+    <div class="nav-lbl">Browse</div>
+    <div class="nav-grp" data-grp="chapter"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-users-group nav-gic"></i><span class="nav-gname">Chapter</span><span class="nav-gcount">6</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
     <div class="nav-item" onclick="go('members',this)"><i class="ti ti-users"></i><span>Members</span></div>
     <div class="nav-item" onclick="go('familytree',this)"><i class="ti ti-hierarchy-3"></i><span>Family Tree</span></div>
     <div class="nav-item" onclick="go('events',this)"><i class="ti ti-calendar-event"></i><span>Events</span></div>
+    <div class="nav-item" onclick="go('attendance',this)"><i class="ti ti-clipboard-check"></i><span>Attendance</span></div>
+    <div class="nav-item" onclick="go('meetings',this)"><i class="ti ti-notebook"></i><span>Meetings</span></div>
     <div class="nav-item" onclick="go('goals',this)"><i class="ti ti-target-arrow"></i><span>Goals</span></div>
-    <div class="nav-item" onclick="go('success',this)"><i class="ti ti-trophy"></i><span>Success</span></div>
-    <div class="nav-sec">Operations</div>
-    <div class="nav-item" onclick="go('finance',this)"><i class="ti ti-cash"></i><span>Finances</span></div>
-    <div class="nav-item" onclick="go('recruit',this)"><i class="ti ti-user-plus"></i><span>Recruitment</span></div>
-    <div class="nav-item" onclick="go('house',this)"><i class="ti ti-home"></i><span>House</span></div>
-    <div class="nav-item" onclick="go('concessions',this)"><i class="ti ti-shopping-cart"></i><span>Fundraising</span></div>
-    <div class="nav-item" onclick="go('volunteers',this)"><i class="ti ti-hand-stop"></i><span>Volunteers</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="brotherhood"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-heart nav-gic"></i><span class="nav-gname">Brotherhood</span><span class="nav-gcount">4</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
     <div class="nav-item" onclick="go('sober',this)"><i class="ti ti-car"></i><span>Brotherhood</span></div>
     <div class="nav-item" onclick="go('tkeweek',this)"><i class="ti ti-heart"></i><span>TKE Week</span></div>
     <div class="nav-item" onclick="go('natevents',this)"><i class="ti ti-plane"></i><span>National Events</span></div>
-    <div class="nav-sec">Accountability</div>
-    <div class="nav-item" onclick="go('study',this)"><i class="ti ti-book"></i><span>Study Hours</span></div>
-    <div class="nav-item" onclick="go('service',this)"><span class="service-hours-icon" aria-hidden="true"><i class="ti ti-sparkles"></i></span><span>Service Hours</span></div>
-    <div class="nav-item" onclick="go('attendance',this)"><i class="ti ti-clipboard-check"></i><span>Attendance</span></div>
+    <div class="nav-item" onclick="go('volunteers',this)"><i class="ti ti-hand-stop"></i><span>Volunteers</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="growth"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-trending-up nav-gic"></i><span class="nav-gname">Growth</span><span class="nav-gcount">3</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
+    <div class="nav-item" onclick="go('recruit',this)"><i class="ti ti-user-plus"></i><span>Recruitment</span></div>
+    <div class="nav-item" onclick="go('internships',this)"><i class="ti ti-briefcase"></i><span>Internships</span></div>
+    <div class="nav-item" onclick="go('opportunities',this)"><i class="ti ti-heart-handshake"></i><span>Alumni Opportunities</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="finance"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-cash nav-gic"></i><span class="nav-gname">Finance &amp; House</span><span class="nav-gcount">3</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
+    <div class="nav-item" onclick="go('finance',this)"><i class="ti ti-cash"></i><span>Finances</span></div>
+    <div class="nav-item" onclick="go('concessions',this)"><i class="ti ti-shopping-cart"></i><span>Fundraising</span></div>
+    <div class="nav-item" onclick="go('house',this)"><i class="ti ti-home"></i><span>House</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="performance"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-chart-bar nav-gic"></i><span class="nav-gname">Performance</span><span class="nav-gcount">6</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
     <div class="nav-item" onclick="go('points',this)"><i class="ti ti-star"></i><span>Points</span></div>
+    <div class="nav-item" onclick="go('study',this)"><i class="ti ti-book"></i><span>Study Hours</span></div>
+    <div class="nav-item" onclick="go('service',this)"><i class="ti ti-clock-hour-4"></i><span>Service Hours</span></div>
     <div class="nav-item" onclick="go('kra',this)"><i class="ti ti-chart-arrows"></i><span>KRA Scorecard</span></div>
+    <div class="nav-item" onclick="go('success',this)"><i class="ti ti-trophy"></i><span>Success</span></div>
     <div class="nav-item" onclick="go('riskmgmt',this)"><i class="ti ti-shield-check"></i><span>Risk Management</span></div>
-    <div class="nav-sec">Communication</div>
+    </div></div>
+    <div class="nav-grp" data-grp="comm"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-message-circle nav-gic"></i><span class="nav-gname">Communication</span><span class="nav-gcount">4</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
     <div class="nav-item" onclick="go('announce',this)"><i class="ti ti-speakerphone"></i><span>Announcements</span></div>
     <div class="nav-item" onclick="go('messages',this)"><i class="ti ti-message"></i><span>Messages</span></div>
     <div class="nav-item" onclick="go('blast',this)"><i class="ti ti-send"></i><span>Message Blast</span></div>
-    <div class="nav-item" onclick="go('notes',this)"><i class="ti ti-notes"></i><span>Quick Notes</span></div>
-    <div class="nav-item" onclick="go('shoutouts',this)"><i class="ti ti-megaphone"></i><span>Shoutouts</span></div>
-    <div class="nav-item" onclick="go('ideas',this)"><i class="ti ti-bulb"></i><span>Idea Board</span></div>
-    <div class="nav-item" onclick="go('polls',this)"><i class="ti ti-checkbox"></i><span>Polls & Votes</span></div>
-    <div class="nav-item" onclick="go('links',this)"><i class="ti ti-link"></i><span>Quick Links</span></div>
-    <div class="nav-sec">Resources</div>
-    <div class="nav-item" onclick="go('opportunities',this)"><i class="ti ti-heart-handshake"></i><span>Alumni Opportunities</span></div>
-    <div class="nav-item" onclick="go('internships',this)"><i class="ti ti-briefcase"></i><span>Internships</span></div>
-    <div class="nav-item" onclick="go('library',this)"><i class="ti ti-folders"></i><span>Library</span></div>
-    <div class="nav-item" onclick="go('meetings',this)"><i class="ti ti-notebook"></i><span>Meetings</span></div>
     <div class="nav-item" onclick="go('notifications',this)"><i class="ti ti-bell"></i><span>Notifications</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="community"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-bulb nav-gic"></i><span class="nav-gname">Community</span><span class="nav-gcount">5</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
+    <div class="nav-item" onclick="go('shoutouts',this)"><i class="ti"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block"><path d="M3 21v-3.5c0-1.6.8-2.8 1.8-3.8C4 11.5 4.2 8 6.5 5.8 9 3.5 13 3.7 14.8 6.3c.7 1 1 2.2 1 3.2l1.4 2.2-1.6.8v1.7c0 .9-.7 1.5-1.6 1.5H11V21"/><circle cx="12.6" cy="8.6" r=".6" fill="currentColor"/><path d="M19 8.5c.9.9 1.4 2 1.4 3.2s-.5 2.3-1.4 3.2M21.5 6c1.6 1.6 2.5 3.6 2.5 5.7s-.9 4.1-2.5 5.7"/></svg></i><span>Shoutouts</span></div>
+    <div class="nav-item" onclick="go('polls',this)"><i class="ti ti-checkbox"></i><span>Polls & Votes</span></div>
+    <div class="nav-item" onclick="go('ideas',this)"><i class="ti ti-bulb"></i><span>Idea Board</span></div>
+    <div class="nav-item" onclick="go('notes',this)"><i class="ti ti-notes"></i><span>Quick Notes</span></div>
+    <div class="nav-item" onclick="go('links',this)"><i class="ti ti-link"></i><span>Quick Links</span></div>
+    </div></div>
+    <div class="nav-grp" data-grp="library"><div class="nav-sec" role="button" tabindex="0" aria-expanded="false" onclick="toggleNavGrp(this.parentNode)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNavGrp(this.parentNode)}"><i class="ti ti-books nav-gic"></i><span class="nav-gname">Library &amp; Help</span><span class="nav-gcount">4</span><i class="ti ti-chevron-down nav-chev"></i></div><div class="nav-items">
+    <div class="nav-item" onclick="go('library',this)"><i class="ti ti-folders"></i><span>Library</span></div>
+    <div class="nav-item" onclick="go('ai',this)"><i class="ti ti-sparkles"></i><span>Vault AI</span></div>
     <div class="nav-item" onclick="go('help',this)"><i class="ti ti-help-circle"></i><span>Help & Rules</span></div>
     <div class="nav-item" onclick="go('auditlog',this)"><i class="ti ti-history"></i><span>Audit Log</span></div>
-    <div class="nav-item" onclick="go('ai',this)"><span class="ai-nav-icon"><i class="ti ti-sparkles"></i></span><span>Vault AI</span></div>
+    </div></div>
     </div>
-    <div class="sb-foot" style="flex-direction:column;align-items:flex-start;gap:6px">
-      <div id="auth-status" style="font-size:12px;color:rgba(255,255,255,0.7)">Viewing (not logged in)</div>
-      <button class="btn btn-sm" id="logout-btn" onclick="officerLogout()" style="font-size:11px;display:none">Log out</button>
-      <button class="btn btn-sm" onclick="openSettingsModal()" style="font-size:11px"><i class="ti ti-settings"></i> Settings</button>
-      <button class="btn btn-sm" onclick="lockVault()" style="font-size:11px"><i class="ti ti-lock"></i> Lock</button>
-      <button class="btn btn-sm" id="theme-toggle" onclick="toggleTheme()" style="font-size:11px"><i class="ti ti-moon"></i> Dark mode</button>
-      <div id="sync-status" style="font-size:11px;color:var(--green)">✓ Connected</div>
+    <div class="sb-foot">
+      <div class="sb-status"><div id="auth-status">Viewing (not logged in)</div><div id="sync-status">✓ Connected</div></div>
+      <div class="sb-tools">
+        <button class="sb-tool" onclick="openSettingsModal()" title="Settings" aria-label="Settings"><i class="ti ti-settings"></i></button>
+        <button class="sb-tool" onclick="lockVault()" title="Lock" aria-label="Lock"><i class="ti ti-lock"></i></button>
+        <button class="sb-tool" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" aria-label="Toggle dark mode"><i class="ti ti-moon"></i></button>
+        <button class="sb-tool" id="logout-btn" onclick="officerLogout()" title="Log out" aria-label="Log out" style="display:none"><i class="ti ti-logout"></i></button>
+      </div>
     </div>
   </div>
 
@@ -856,14 +989,21 @@ textarea.inp{resize:vertical;min-height:70px}
         <div class="dash-noir">
           <div class="dn-topbar">
             <div>
-              <div class="dn-title" id="dn-title">Dashboard</div>
-              <div class="dn-sub" id="dn-sub">Chapter overview</div>
+              <div class="dn-title" id="dn-title">Chapter overview</div>
+              <div class="dn-sub" id="dn-sub"></div>
+            </div>
+            <div class="dn-qa-row" id="dn-quick-actions">
+              <button class="dn-qa-btn" onclick="addAnnModal()"><i class="ti ti-speakerphone"></i>Announcement</button>
+              <button class="dn-qa-btn" onclick="awardPointsModal()"><i class="ti ti-star"></i>Award points</button>
+              <button class="dn-qa-btn" onclick="addEventModal()"><i class="ti ti-calendar-plus"></i>Add event</button>
+              <button class="dn-qa-btn" onclick="dashboardGo('attendance')"><i class="ti ti-clipboard-check"></i>Attendance</button>
             </div>
           </div>
           <div id="dash-alert"></div>
 
           <div class="dn-outer">
             <div class="dn-main">
+              <div class="dn-section-lbl">Key metrics</div>
               <div class="dn-stats-row">
                 <div class="dn-stat" id="dn-stat-dues"></div>
                 <div class="dn-stat" id="dn-stat-att"></div>
@@ -871,15 +1011,11 @@ textarea.inp{resize:vertical;min-height:70px}
                 <div class="dn-stat" id="dn-stat-fines"></div>
               </div>
 
-              <div class="dn-pair-row">
-                <div class="countdown-card" id="dash-countdown"></div>
-                <div class="challenge-card" id="dash-challenge"></div>
-              </div>
-
+              <div class="dn-section-lbl">Performance</div>
               <div class="dn-chart-row">
                 <div class="dn-card">
                   <div class="dn-card-hdr">Chapter performance</div>
-                  <div class="dn-perf-empty" id="perf-empty" style="display:none">No performance history yet. Add a data point in Settings → Performance.</div>
+                  <div class="dn-perf-empty" id="perf-empty" style="display:none"></div>
                   <div class="dn-perf-grid" id="perf-grid">
                     <div class="dn-perf-mini">
                       <div class="dn-perf-mini-hdr"><span>Attendance</span><span class="dn-perf-mini-val" id="pm-val-attendance"></span></div>
@@ -898,8 +1034,9 @@ textarea.inp{resize:vertical;min-height:70px}
                       <div class="dn-perf-cv"><canvas id="chart-overall"></canvas></div><div class="dn-perf-sub" id="pm-sub-overall"></div>
                     </div>
                   </div>
+                  <div id="perf-trend"></div>
                 </div>
-                <div class="dn-card">
+                <div class="dn-card dn-dues-card">
                   <div class="dn-card-hdr">Dues status</div>
                   <div class="dn-donut-wrap">
                     <canvas id="dues-donut" width="130" height="130"></canvas>
@@ -909,9 +1046,10 @@ textarea.inp{resize:vertical;min-height:70px}
                 </div>
               </div>
 
+              <div class="dn-section-lbl">Activity</div>
               <div class="dn-bottom-row">
                 <div class="dn-card">
-                  <div class="dn-card-hdr"><span><i class="ti ti-star" style="color:var(--n-yellow)"></i> Leaderboard</span><span style="font-size:11px;color:var(--n-text3);cursor:pointer" onclick="dashboardGo('points')">View all</span></div>
+                  <div class="dn-card-hdr"><span>Leaderboard</span><span class="dn-link" onclick="dashboardGo('points')">View all</span></div>
                   <div id="dn-leaderboard"></div>
                 </div>
                 <div class="dn-card">
@@ -924,40 +1062,26 @@ textarea.inp{resize:vertical;min-height:70px}
                 </div>
               </div>
 
-              <div class="dn-pair-row">
-                <div class="spotlight-card" id="dash-spotlight"></div>
-                <div class="vibe-card" id="dash-vibe"></div>
-              </div>
-
-              <div class="dn-chart-row">
+              <div class="dn-section-lbl">Calendar &amp; points</div>
+              <div class="dn-bottom-row">
                 <div class="dn-card">
-                  <div class="dn-card-hdr"><span>KRA scorecard</span><span style="font-size:11px;color:var(--n-text3);cursor:pointer" onclick="dashboardGo('kra')">View all</span></div>
-                  <canvas id="dash-kra-radar" height="210"></canvas>
+                  <div class="dn-card-hdr">Upcoming events</div>
+                  <div id="dash-ev"></div>
                 </div>
                 <div class="dn-card">
-                  <div class="dn-card-hdr">KRA score</div>
-                  <div id="dash-kra-summary"></div>
+                  <div class="dn-card-hdr">Upcoming birthdays</div>
+                  <div id="dash-bday"></div>
                 </div>
+                <div class="dn-card" id="dn-recap"></div>
               </div>
             </div>
 
             <div class="dn-qa-col">
-              <div class="dn-card" id="dn-quick-actions">
-                <div class="dn-card-hdr">Quick actions</div>
-                <button class="dn-qa-btn" onclick="addAnnModal()"><span class="dn-qa-ic"><i class="ti ti-speakerphone"></i></span>Post announcement</button>
-                <button class="dn-qa-btn" onclick="awardPointsModal()"><span class="dn-qa-ic"><i class="ti ti-star"></i></span>Award points</button>
-                <button class="dn-qa-btn" onclick="addEventModal()"><span class="dn-qa-ic"><i class="ti ti-calendar-plus"></i></span>Add event</button>
-                <button class="dn-qa-btn" onclick="dashboardGo('attendance')"><span class="dn-qa-ic"><i class="ti ti-clipboard-check"></i></span>Take attendance</button>
-              </div>
-              <div class="pulse-card" id="dash-pulse"></div><div class="dn-card"><div class="dn-card-hdr">Upcoming deadlines</div><div id="dash-deadlines"></div></div><div class="dn-card" id="dn-recap"></div>
-              <div class="dn-card">
-                <div class="dn-card-hdr">Upcoming events</div>
-                <div id="dash-ev"></div>
-              </div>
-              <div class="dn-card">
-                <div class="dn-card-hdr">Upcoming birthdays</div>
-                <div id="dash-bday"></div>
-              </div>
+              <div class="dn-section-lbl">Upcoming</div>
+              <div class="countdown-card" id="dash-countdown"></div>
+              <div class="pulse-card" id="dash-pulse"></div>
+              <div class="dn-card"><div class="dn-card-hdr">Upcoming deadlines</div><div id="dash-deadlines"></div></div>
+              <div class="challenge-card" id="dash-challenge"></div>
             </div>
           </div>
         </div>
@@ -1486,7 +1610,7 @@ function toggleTheme(){
   var isDark=document.body.classList.toggle('dark');
   localStorage.setItem('fm_theme',isDark?'dark':'light');
   var btn=document.getElementById('theme-toggle');
-  if(btn)btn.innerHTML=isDark?'<i class="ti ti-sun"></i> Light mode':'<i class="ti ti-moon"></i> Dark mode';
+  if(btn)btn.innerHTML=isDark?'<i class="ti ti-sun"></i>':'<i class="ti ti-moon"></i>';
 }
 
 // STATE
@@ -1857,7 +1981,7 @@ var addLabels={members:'Add Member',events:'Add Event',goals:'Add Goal',finance:
 function go(tab,el){
   curTab=tab;
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  if(el)el.classList.add('active');
+  if(el){el.classList.add('active');openNavGrpOf(el);}
   document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
   document.getElementById('panel-'+tab).classList.add('active');
   document.getElementById('pg-title').textContent=pageTitles[tab]||tab;
@@ -1865,6 +1989,13 @@ function go(tab,el){
   renderAll();
   closeSidebar();
 }
+var NAV_KEY='vault_nav_open';
+function navSaved(){try{var v=localStorage.getItem(NAV_KEY);return v?String(v):null;}catch(e){return null;}}
+function navPersist(){try{var g=document.querySelector('.nav-grp.open');localStorage.setItem(NAV_KEY,g?g.getAttribute('data-grp'):'');}catch(e){}}
+function setNavGrp(g,open){g.classList.toggle('open',open);var h=g.querySelector('.nav-sec');if(h)h.setAttribute('aria-expanded',open?'true':'false');}
+function toggleNavGrp(g){var willOpen=!g.classList.contains('open');document.querySelectorAll('.nav-grp').forEach(function(x){setNavGrp(x,false);});if(willOpen)setNavGrp(g,true);navPersist();}
+function openNavGrpOf(el){var g=el&&el.closest?el.closest('.nav-grp'):null;if(g&&!g.classList.contains('open')){document.querySelectorAll('.nav-grp').forEach(function(x){setNavGrp(x,false);});setNavGrp(g,true);navPersist();}}
+(function(){var saved=navSaved();document.querySelectorAll('.nav-grp').forEach(function(g){setNavGrp(g,saved!==null?g.getAttribute('data-grp')===saved:g.getAttribute('data-grp')==='chapter');});var act=document.querySelector('.nav-item.active');if(act)openNavGrpOf(act);})();
 function openSidebar(){
   var sb=document.getElementById('sidebar');var bd=document.getElementById('sb-backdrop');
   if(sb)sb.classList.add('open');
@@ -2185,25 +2316,25 @@ function renderDashboard(){var qa=document.getElementById('dn-quick-actions');if
   var daysSinceBackup=settings.lastBackupDate?Math.floor((new Date(today+'T00:00:00')-new Date(settings.lastBackupDate+'T00:00:00'))/86400000):null;
   if(daysSinceBackup===null||daysSinceBackup>30)issues.push('backup overdue — <a href="#" onclick="event.preventDefault();exportBackupJSON()" style="color:inherit;text-decoration:underline">download one now</a>');
   var alertEl=document.getElementById('dash-alert');
-  if(alertEl)alertEl.innerHTML=issues.length?'<div class="alert-banner">⚠ '+issues.join(' · ')+'</div>':'';
+  if(alertEl)alertEl.innerHTML=issues.length?'<div class="alert-banner"><i class="ti ti-alert-triangle"></i> '+issues.join(' · ')+'</div>':'';
 
   var subEl=document.getElementById('dn-sub');
   if(subEl){
     var fc=getFoundingCountdown();
-    subEl.textContent=active+' active · '+pledge+' pledges · '+upEv+' upcoming event'+(upEv===1?'':'s')+(fc?' · 🎉 '+fc.diffDays+'d to founding anniversary':'');
+    subEl.textContent=active+' active · '+pledge+' pledges · '+upEv+' upcoming event'+(upEv===1?'':'s')+(fc?' · '+fc.diffDays+'d to founding anniversary':'');
   }
 
   var duesPct=totD?Math.round(paidD/totD*100):0;
   var haveHist=perfHistory.length>=2;
   var lastP=perfHistory[perfHistory.length-1],prevP=perfHistory[perfHistory.length-2];
-  var duesDelta=haveHist?Math.round(lastP.dues-prevP.dues):null;
-  var attDelta=haveHist?Math.round(lastP.attendance-prevP.attendance):null;
-  var gpaDelta=haveHist?+(lastP.gpa-prevP.gpa).toFixed(1):null;
-  var duesSpark=perfHistory.length?perfHistory.map(function(p){return p.dues;}):null;
-  var attSpark=perfHistory.length?perfHistory.map(function(p){return p.attendance;}):null;
-  var gpaSpark=perfHistory.length?perfHistory.map(function(p){return p.gpa;}):null;
-  var latestAtt=perfHistory.length?perfHistory[perfHistory.length-1].attendance:null;
-  var latestGpa=perfHistory.length?perfHistory[perfHistory.length-1].gpa:null;
+  var duesDelta=haveHist?Math.round((+lastP.dues||0)-(+prevP.dues||0)):null;
+  var attDelta=haveHist?Math.round((+lastP.attendance||0)-(+prevP.attendance||0)):null;
+  var gpaDelta=haveHist?+((+lastP.gpa||0)-(+prevP.gpa||0)).toFixed(1):null;
+  var duesSpark=perfHistory.length?perfHistory.map(function(p){return +p.dues||0;}):null;
+  var attSpark=perfHistory.length?perfHistory.map(function(p){return +p.attendance||0;}):null;
+  var gpaSpark=perfHistory.length?perfHistory.map(function(p){return +p.gpa||0;}):null;
+  var latestAtt=perfHistory.length?(+perfHistory[perfHistory.length-1].attendance||0):null;
+  var latestGpa=perfHistory.length?(+perfHistory[perfHistory.length-1].gpa||0):null;
 
   var finesByMonth={};
   fines.forEach(function(f){if(!f.date)return;var k=f.date.slice(0,7);finesByMonth[k]=(finesByMonth[k]||0)+f.amount;});
@@ -2218,28 +2349,30 @@ function renderDashboard(){var qa=document.getElementById('dn-quick-actions');if
     return '<span class="dn-chip '+(good?'up':'down')+'">'+(up?'▲':'▼')+' '+Math.abs(delta)+(unit||'')+'</span>';
   }
 
-  document.getElementById('dn-stat-dues').innerHTML=
-    '<div class="dn-stat-top"><div class="dn-stat-lbl">Dues collected</div>'+chip(duesDelta,'%')+'</div>'+
-    '<div class="dn-stat-val">'+duesPct+'%</div>'+(duesSpark?buildSparkline(duesSpark,'#f2c94c'):'<div class="dn-stat-ctx">$'+paidD.toLocaleString()+' of $'+totD.toLocaleString()+'</div>');
-  document.getElementById('dn-stat-att').innerHTML=
-    '<div class="dn-stat-top"><div class="dn-stat-lbl">Attendance</div>'+chip(attDelta,'%')+'</div>'+
-    '<div class="dn-stat-val">'+(latestAtt!==null?latestAtt+'%':'—')+'</div>'+(attSpark?buildSparkline(attSpark,'#60a5fa'):'<div class="dn-stat-ctx">No history logged</div>');
-  document.getElementById('dn-stat-gpa').innerHTML=
-    '<div class="dn-stat-top"><div class="dn-stat-lbl">Chapter GPA</div>'+chip(gpaDelta,'')+'</div>'+
-    '<div class="dn-stat-val">'+(latestGpa!==null?latestGpa.toFixed(2):'—')+'</div>'+(gpaSpark?buildSparkline(gpaSpark,'#4ade80'):'<div class="dn-stat-ctx">No history logged</div>');
-  document.getElementById('dn-stat-fines').innerHTML=
-    '<div class="dn-stat-top"><div class="dn-stat-lbl">Open fines</div>'+chip(finesDelta,'',true)+'</div>'+
-    '<div class="dn-stat-val" style="color:'+(unpaidFines.length?'var(--n-red)':'var(--n-text)')+'">$'+unpaidFinesAmt.toLocaleString()+'</div>'+
-    (finesSpark?buildSparkline(finesSpark,'#f87171'):'<div class="dn-stat-ctx">'+unpaidFines.length+' unpaid'+(unpaidFines.length===0?' 🎉':'')+'</div>')+
-    (finesSpark?'<div class="dn-stat-ctx">'+unpaidFines.length+' unpaid'+(unpaidFines.length===0?' 🎉':'')+'</div>':'');
+  var snap=perfSnapshot();
+  var attVal=latestAtt!==null?latestAtt:snap.attendance;
+  var gpaVal=latestGpa!==null?latestGpa:snap.gpa;
+  var totFines=fines.reduce(function(a,f){return a+(+f.amount||0);},0);
+  var finePaidPct=totFines?Math.round((totFines-unpaidFinesAmt)/totFines*100):100;
+  function statRing(pct,color){
+    var r=22,c=2*Math.PI*r,v=pct===null?0:Math.max(0,Math.min(100,pct));
+    return '<svg class="dn-ring" viewBox="0 0 56 56" width="48" height="48"><circle cx="28" cy="28" r="'+r+'" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/><circle class="dn-ring-fg" cx="28" cy="28" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+(c*v/100).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 28 28)"/></svg>';
+  }
+  function statCard(id,o){
+    var el=document.getElementById(id);if(!el)return;
+    el.style.setProperty('--acc',o.color);
+    el.innerHTML='<div class="dn-stat-top"><div class="dn-stat-ic"><i class="ti '+o.icon+'"></i></div><div class="dn-stat-lbl">'+o.label+'</div></div>'+
+      '<div class="dn-stat-body"><div class="dn-stat-main"><div class="dn-stat-val" id="'+id+'-v"'+(o.valStyle?' style="'+o.valStyle+'"':'')+'>'+o.val+'</div><div class="dn-stat-ctx">'+o.ctx+'</div>'+(o.chip?'<div style="margin-top:6px">'+o.chip+'</div>':'')+'</div>'+statRing(o.ring,o.color)+'</div>'+(o.spark||'');
+  }
+  statCard('dn-stat-dues',{color:'#f2c94c',icon:'ti-cash',label:'Dues paid',chip:chip(duesDelta,'%'),val:duesPct+'%',ctx:'$'+paidD.toLocaleString()+' of $'+totD.toLocaleString(),ring:totD?duesPct:null,spark:duesSpark?buildSparkline(duesSpark,'#f2c94c'):''});
+  statCard('dn-stat-att',{color:'#60a5fa',icon:'ti-clipboard-check',label:'Attendance',chip:chip(attDelta,'%'),val:attVal!==null?attVal+'%':'—',ctx:latestAtt!==null?'Latest logged':(attVal!==null?'Live from events':'No data yet'),ring:attVal,spark:attSpark?buildSparkline(attSpark,'#60a5fa'):''});
+  statCard('dn-stat-gpa',{color:'#4ade80',icon:'ti-school',label:'Chapter GPA',chip:chip(gpaDelta,''),val:gpaVal!==null?(+gpaVal).toFixed(2):'—',ctx:latestGpa!==null?'Latest logged':(gpaVal!==null?'Live from members':'No data yet'),ring:gpaVal!==null?gpaVal/4*100:null,spark:gpaSpark?buildSparkline(gpaSpark,'#4ade80'):''});
+  statCard('dn-stat-fines',{color:unpaidFines.length?'#f87171':'#4ade80',icon:'ti-receipt-2',label:'Open fines',chip:chip(finesDelta,'',true),val:'$'+unpaidFinesAmt.toLocaleString(),valStyle:unpaidFines.length?'color:var(--n-red)':'',ctx:unpaidFines.length+' unpaid'+(totFines?' · $'+totFines.toLocaleString()+' total':''),ring:100-finePaidPct,spark:finesSpark?buildSparkline(finesSpark,'#f87171'):''});
+  if(!window._statAnimated){window._statAnimated=true;[['dn-stat-dues-v',duesPct,'%'],['dn-stat-att-v',attVal,'%']].forEach(function(x){if(x[1]!==null&&x[1]!==undefined)animateCount(document.getElementById(x[0]),+x[1],{suffix:x[2]});});}
 
   renderPerfChart();
   renderDuesDonut(paidD,totD,dues);
 
-  if(duesPct>=100&&!issues.length&&!window._dashCelebrated){
-    window._dashCelebrated=true;
-    setTimeout(launchConfetti,300);
-  }
   if(!(duesPct>=100&&!issues.length)){window._dashCelebrated=false;}
 
   // Leaderboard
@@ -2248,9 +2381,9 @@ function renderDashboard(){var qa=document.getElementById('dn-quick-actions');if
   var lbEl=document.getElementById('dn-leaderboard');
   if(lbEl){
     lbEl.innerHTML=top5.length?top5.map(function(m,i){
-      var medal=i===0?'👑 ':i===1?'🥈 ':i===2?'🥉 ':'';
+      var medal='';
       return '<div class="dn-person-row"><div class="dn-rank">'+(i+1)+'</div>'+avatarHTML(m,28)+'<div class="dn-person-name">'+medal+esc(m.name)+pointsTierBadge(totalPoints(m.id))+'</div><div class="dn-person-pts">'+totalPoints(m.id)+' pts</div></div>';
-    }).join(''):'<div class="dn-empty">🏆 No point activity yet — go award some!</div>';
+    }).join(''):'<div class="dn-empty">No point activity yet</div>';
   }
 
   // Recruitment pipeline
@@ -2262,7 +2395,7 @@ function renderDashboard(){var qa=document.getElementById('dn-quick-actions');if
     pipeEl.innerHTML=prospects.length?stages.map(function(s,i){
       var pct=Math.round(pipeCounts[i]/pipeMax*100);
       return '<div class="dn-bar-row"><div class="dn-bar-top"><span>'+s+'</span><b>'+pipeCounts[i]+'</b></div><div class="dn-bar-bg"><div class="dn-bar-fill" style="width:'+pct+'%"></div></div></div>';
-    }).join(''):'<div class="dn-empty">🎣 No prospects yet</div>';
+    }).join(''):'<div class="dn-empty">No prospects yet</div>';
   }
 
   // Activity feed — merges announcements + point log, newest first
@@ -2274,29 +2407,27 @@ function renderDashboard(){var qa=document.getElementById('dn-quick-actions');if
   if(feedEl){
     feedEl.innerHTML=feedItems.length?feedItems.map(function(f){
       return '<div class="dn-feed-row"><div class="dn-feed-ic" style="background:'+f.bg+';color:'+f.fg+'"><i class="ti '+f.ic+'"></i></div><div><div class="dn-feed-title">'+f.title+'</div><div class="dn-feed-sub">'+f.sub+(f.date?' · '+f.date:'')+'</div></div></div>';
-    }).join(''):'<div class="dn-empty">🦗 Quiet in here — post something!</div>';
+    }).join(''):'<div class="dn-empty">No recent activity</div>';
   }
 
   // Points activity recap (side column)
   var recapEl=document.getElementById('dn-recap');
   if(recapEl){
     var totalPts=points.reduce(function(a,p){return a+p.amount;},0);
-    var lastN=points.slice(-8);
-    var bars=lastN.length?'<div style="display:flex;align-items:flex-end;gap:3px;height:28px;margin-top:10px">'+lastN.map(function(p){var h=Math.max(4,Math.min(28,Math.abs(p.amount)*2));return '<div style="flex:1;height:'+h+'px;background:'+(p.amount>=0?'var(--n-yellow)':'var(--n-red)')+';border-radius:2px;opacity:.85"></div>';}).join('')+'</div>':'<div class="dn-empty" style="padding:10px 0 0">No point entries yet</div>';
-    recapEl.innerHTML='<div class="dn-card-hdr">Points activity</div><div class="dn-stat-val" style="font-size:20px">'+(totalPts>=0?'+':'')+totalPts+'</div><div class="dn-stat-ctx">Net points all-time</div>'+bars;
+    var lastN=points.slice(-12);
+    var maxA=Math.max.apply(null,lastN.map(function(p){return Math.abs(+p.amount||0);}).concat([1]));
+    var bars=lastN.length?'<div class="pts-chart">'+lastN.map(function(p){var amt=+p.amount||0,h=Math.max(6,Math.round(Math.abs(amt)/maxA*56));var m=members.find(function(x){return x.id===p.memberId;});return '<div class="pts-col" title="'+esc((m?m.name:'Unknown')+': '+(amt>=0?'+':'')+amt+' pts'+(p.date?' · '+p.date:''))+'"><div class="pts-bar'+(amt<0?' neg':'')+'" style="height:'+h+'px"></div></div>';}).join('')+'</div><div class="dn-stat-ctx" style="margin-top:8px">Last '+lastN.length+' point entries</div>':'<div class="dn-empty" style="padding:10px 0 0">No point entries yet</div>';
+    var pos=points.filter(function(p){return p.amount>0;}).reduce(function(a,p){return a+p.amount;},0),neg=points.filter(function(p){return p.amount<0;}).reduce(function(a,p){return a+p.amount;},0);
+    recapEl.innerHTML='<div class="dn-card-hdr">Points activity</div><div class="dn-stat-val" style="font-size:28px;margin-bottom:2px">'+(totalPts>=0?'+':'')+totalPts.toLocaleString()+'</div><div class="dn-stat-ctx" style="margin:0 0 12px">Net points all-time &middot; <span style="color:var(--n-green)">+'+pos.toLocaleString()+'</span> / <span style="color:var(--n-red)">'+neg.toLocaleString()+'</span></div>'+bars;
   }
 
   // Upcoming events / birthdays (side column, dark styled)
   var upE=events.filter(function(e){return isTodayOrLater(e.date);}).sort(function(a,b){return a.date.localeCompare(b.date);}).slice(0,4);
-  document.getElementById('dash-ev').innerHTML=upE.length?upE.map(function(e){var f=fmtDate(e.date);return '<div class="dn-ev-row"><div class="dn-ev-date"><div class="m">'+f.month+'</div><div class="d">'+f.day+'</div></div><div><div class="dn-ev-name">'+esc(e.name)+'</div><div class="dn-ev-sub">'+esc(e.time)+' &middot; '+esc(e.location)+'</div></div></div>';}).join(''):'<div class="dn-empty">📅 Nothing on the calendar</div>';
+  document.getElementById('dash-ev').innerHTML=upE.length?upE.map(function(e){var f=fmtDate(e.date);return '<div class="dn-ev-row"><div class="dn-ev-date"><div class="m">'+f.month+'</div><div class="d">'+f.day+'</div></div><div><div class="dn-ev-name">'+esc(e.name)+'</div><div class="dn-ev-sub">'+esc(e.time)+' &middot; '+esc(e.location)+'</div></div></div>';}).join(''):'<div class="dn-empty">Nothing on the calendar</div>';
   var bdays=getUpcomingBirthdays().slice(0,5);
-  document.getElementById('dash-bday').innerHTML=bdays.length?bdays.map(function(b){return '<div class="dn-ev-row"><div style="font-size:16px;min-width:30px;text-align:center">🎂</div><div><div class="dn-ev-name">'+esc(b.name)+'</div><div class="dn-ev-sub">'+(b.diffDays===0?'Today!':b.diffDays===1?'Tomorrow':'In '+b.diffDays+' days')+'</div></div></div>';}).join(''):'<div class="dn-empty">No birthdays in the next 30 days</div>';
+  document.getElementById('dash-bday').innerHTML=bdays.length?bdays.map(function(b){return '<div class="dn-ev-row"><div class="dn-bday-ic"><i class="ti ti-cake"></i></div><div><div class="dn-ev-name">'+esc(b.name)+'</div><div class="dn-ev-sub">'+(b.diffDays===0?'Today!':b.diffDays===1?'Tomorrow':'In '+b.diffDays+' days')+'</div></div></div>';}).join(''):'<div class="dn-empty">No birthdays in the next 30 days</div>';
 
   // KRA scorecard
-  syncKraAutoMetrics();
-  var kraList=(window.kra&&window.kra.metrics)||[];
-  renderKraRadarChart(kraList,'dash-kra-radar');
-  renderDashKraSummary(kraList);
 }
 function buildSparkline(values,color){
   if(!values||values.length<2)return '';
@@ -2315,12 +2446,13 @@ function buildSparkline(values,color){
 function renderDuesDonut(paidD,totD,duesArr){
   var canvasEl=document.getElementById('dues-donut');
   if(!canvasEl)return;
+  var _hasChart=typeof Chart!=='undefined';
   var paidCount=duesArr.filter(function(d){return d.status==='Paid';}).length;
   var partialCount=duesArr.filter(function(d){return d.status==='Partial';}).length;
-  var unpaidCount=duesArr.filter(function(d){return d.status==='Unpaid';}).length;
+  var unpaidCount=Math.max(0,duesArr.length-paidCount-partialCount);
   var total=duesArr.length;
-  if(duesDonut)duesDonut.destroy();
-  duesDonut=new Chart(canvasEl.getContext('2d'),{type:'doughnut',data:{labels:['Paid','Partial','Unpaid'],datasets:[{data:[paidCount,partialCount,unpaidCount],backgroundColor:['#4ade80','#f2c94c','#f87171'],borderWidth:0}]},options:{cutout:'72%',plugins:{legend:{display:false}}}});
+  if(duesDonut){duesDonut.destroy();duesDonut=null;}
+  if(_hasChart)duesDonut=new Chart(canvasEl.getContext('2d'),{type:'doughnut',data:{labels:['Paid','Partial','Unpaid'],datasets:[{data:[paidCount,partialCount,unpaidCount],backgroundColor:['#4ade80','#f2c94c','#f87171'],borderWidth:0}]},options:{cutout:'72%',plugins:{legend:{display:false}}}});
   document.getElementById('dn-donut-center').innerHTML='<div class="v">'+total+'</div><div class="l">Total</div>';
   document.getElementById('dn-donut-legend').innerHTML=
     '<div class="dn-legend-row"><span class="dn-legend-dot" style="background:#4ade80"></span>Paid<span class="lv">'+paidCount+'</span></div>'+
@@ -2349,6 +2481,58 @@ function getFoundingCountdown(){
   return{diffDays:diffDays,years:next.getFullYear()-year};
 }
 
+function perfSnapshot(){
+  var totD=dues.reduce(function(a,d){return a+(+d.amount||0);},0);
+  var paidD=dues.filter(function(d){return d.status==='Paid';}).reduce(function(a,d){return a+(+d.amount||0);},0);
+  var dp=totD?Math.round(paidD/totD*100):null;
+  var roster=members.filter(function(m){return m.status!=='Alumni';});
+  var req=events.filter(function(e){return e.required&&!isTodayOrLater(e.date);});
+  var ap=(req.length&&roster.length)?Math.round(req.reduce(function(a,e){return a+roster.filter(function(m){return (e.attendance||[]).indexOf(m.id)>=0;}).length;},0)/(req.length*roster.length)*100):null;
+  var gs=roster.map(function(m){return +m.gpa;}).filter(function(g){return g>0;});
+  var gp=gs.length?+(gs.reduce(function(a,b){return a+b;},0)/gs.length).toFixed(2):null;
+  return {dues:dp,attendance:ap,gpa:gp};
+}
+function perfGauge(pct,color,txt){
+  var r=26,c=2*Math.PI*r,v=pct===null?0:Math.max(0,Math.min(100,pct));
+  return '<svg viewBox="0 0 64 64" width="64" height="64" style="flex-shrink:0"><circle cx="32" cy="32" r="'+r+'" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="7"/><circle cx="32" cy="32" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+(c*v/100).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 32 32)"/><text x="32" y="36" text-anchor="middle" font-size="13" font-weight="700" fill="#f4f4ef">'+txt+'</text></svg>';
+}
+function perfAttBars(){
+  var roster=members.filter(function(m){return m.status!=='Alumni';});
+  var req=events.filter(function(e){return e.required&&!isTodayOrLater(e.date);}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));}).slice(-8);
+  if(!req.length||!roster.length)return '';
+  var W=420,H=110,bw=Math.min(34,(W-20)/req.length-8),gap=(W-20-bw*req.length)/Math.max(req.length-1,1);
+  var g='<line x1="10" x2="'+(W-10)+'" y1="86" y2="86" stroke="rgba(255,255,255,.12)"/><line x1="10" x2="'+(W-10)+'" y1="26" y2="26" stroke="rgba(255,255,255,.07)" stroke-dasharray="3 3"/>';
+  req.forEach(function(e,i){var n=roster.filter(function(m){return (e.attendance||[]).indexOf(m.id)>=0;}).length,p=Math.round(n/roster.length*100),h=60*p/100,x=10+i*(bw+gap);
+    g+='<rect x="'+x.toFixed(1)+'" y="'+(86-h).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="3" fill="#60a5fa"><title>'+esc(e.name||'Event')+': '+p+'%</title></rect><text x="'+(x+bw/2).toFixed(1)+'" y="'+(80-h).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#a6a69e">'+p+'%</text><text x="'+(x+bw/2).toFixed(1)+'" y="100" text-anchor="middle" font-size="8.5" fill="#6f6f68">'+esc(String(e.date).slice(5))+'</text>';});
+  return '<div class="dn-perf-mini" style="margin-top:10px"><div class="dn-perf-mini-hdr"><span>Attendance by event</span><span class="dn-perf-sub" style="margin:0">last '+req.length+' required</span></div><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+g+'</svg></div>';
+}
+function perfSnapshotHTML(){
+  var sn=perfSnapshot();
+  function tile(l,v,sfx,col,pct){return '<div class="dn-perf-mini" style="display:flex;align-items:center;gap:12px">'+perfGauge(pct,col,v===null?'—':v+sfx)+'<div><div class="dn-perf-mini-hdr" style="display:block"><span>'+l+'</span></div><div class="dn-perf-sub">'+(v===null?'Not enough data yet':'Live from current data')+'</div></div></div>';}
+  var can=sn.dues!==null||sn.attendance!==null||sn.gpa!==null;
+  return '<div class="dn-perf-grid">'+tile('Attendance',sn.attendance,'%','#60a5fa',sn.attendance)+tile('Dues',sn.dues,'%','#f2c94c',sn.dues)+tile('GPA',sn.gpa,'','#4ade80',sn.gpa===null?null:sn.gpa/4*100)+'<div class="dn-perf-mini" style="display:flex;flex-direction:column;justify-content:center;gap:8px"><div style="font-size:11.5px;color:var(--n-text2)">Log a snapshot to start the trend graph.</div>'+(officerAuthed&&can?'<button class="btn btn-sm" onclick="logPerfSnapshot()"><i class="ti ti-camera"></i> Log snapshot</button>':'<div style="font-size:11px;color:var(--n-text3)">'+(can?'Officers can log snapshots.':'Add members, dues and events first.')+'</div>')+'</div></div>'+perfAttBars();
+}
+function perfTrendSVG(){
+  var h=perfHistory,n=h.length,W=520,H=190,L=34,R=12,T=14,B=30,pw=W-L-R,ph=H-T-B;
+  var X=function(i){return L+(n===1?pw/2:i*pw/(n-1));},Y=function(v){return T+ph-(Math.max(0,Math.min(100,v))/100)*ph;};
+  var series=[['Attendance','#60a5fa',function(p){return +p.attendance||0;}],['Dues','#f2c94c',function(p){return +p.dues||0;}],['GPA','#4ade80',function(p){return (+p.gpa||0)/4*100;}]];
+  var o='';[0,25,50,75,100].forEach(function(t){o+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'" stroke="rgba(255,255,255,'+(t===0?.14:.06)+')"/><text x="'+(L-6)+'" y="'+(Y(t)+3)+'" text-anchor="end" font-size="9" fill="#6f6f68">'+t+'</text>';});
+  var step=Math.ceil(n/6);
+  h.forEach(function(p,i){if(i%step===0||i===n-1)o+='<text x="'+X(i)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="#a6a69e">'+esc(String(p.label||'').slice(0,12))+'</text>';});
+  series.forEach(function(s){var pts=h.map(function(p,i){return X(i)+','+Y(s[2](p));});
+    if(n>1)o+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s[1]+'" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+    h.forEach(function(p,i){o+='<circle cx="'+X(i)+'" cy="'+Y(s[2](p))+'" r="3.2" fill="'+s[1]+'"><title>'+esc(String(p.label||''))+' · '+s[0]+': '+(s[0]==='GPA'?(+p.gpa||0).toFixed(2):Math.round(s[2](p))+'%')+'</title></circle>';});});
+  var leg=series.map(function(s){return '<span style="display:inline-flex;align-items:center;gap:5px;margin-right:12px"><i style="width:10px;height:3px;border-radius:2px;background:'+s[1]+';display:inline-block"></i>'+s[0]+(s[0]==='GPA'?' (of 4.0)':'')+'</span>';}).join('');
+  return '<div class="dn-perf-mini" style="margin-top:10px"><div class="dn-perf-mini-hdr"><span>Trend over time</span><span style="font-size:10.5px;color:var(--n-text2)">'+leg+'</span></div><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">'+o+'</svg></div>';
+}
+function logPerfSnapshot(){
+  var sn=perfSnapshot();
+  var d=new Date();
+  var lbl=(settings.semester||'')+' '+(d.getMonth()+1)+'/'+d.getDate();
+  perfHistory.push({label:lbl.trim(),attendance:numOr(sn.attendance,80),dues:numOr(sn.dues,70),gpa:numOr(sn.gpa,3.3)});
+  save('perfHistory',perfHistory);
+  renderDashboard();
+}
 var perfCharts={};
 function renderPerfChart(){
   var ids=['attendance','dues','gpa','overall'];
@@ -2356,11 +2540,14 @@ function renderPerfChart(){
   if(!perfHistory||!perfHistory.length){
     ids.forEach(function(k){var id='chart-'+k;if(perfCharts[id]){perfCharts[id].destroy();perfCharts[id]=null;}});
     if(grid)grid.style.display='none';
-    if(emp)emp.style.display='';
+    if(emp){emp.style.display='';emp.innerHTML=perfSnapshotHTML();}
+    var tr0=document.getElementById('perf-trend');if(tr0)tr0.innerHTML='';
     return;
   }
   if(grid)grid.style.display='';
   if(emp)emp.style.display='none';
+  var tr=document.getElementById('perf-trend');if(tr)tr.innerHTML=perfTrendSVG()+perfAttBars();
+  if(typeof Chart==='undefined')return;
   var labels=perfHistory.map(function(p){return p.label;});
   var att=perfHistory.map(function(p){return +p.attendance||0;});
   var du=perfHistory.map(function(p){return +p.dues||0;});
@@ -4437,8 +4624,9 @@ function renderKraRadarChart(list,canvasId){
   var canvasEl=document.getElementById(canvasId);
   if(!canvasEl)return;
   if(kraRadarCharts[canvasId]){kraRadarCharts[canvasId].destroy();kraRadarCharts[canvasId]=null;}
-  if(!list.length)return;
+  if(!list.length||typeof Chart==='undefined')return;
   var c=kraChartColors();
+  if(canvasId==='dash-kra-radar')c={tick:'#a6a69e',grid:'rgba(255,255,255,.12)',navy:'#f2c94c',gold:'#f2c94c'};
   var pts=list.map(function(m){return m.goal>0?Math.min(Math.round(m.current/m.goal*100),150):0;});
   kraRadarCharts[canvasId]=new Chart(canvasEl.getContext('2d'),{type:'radar',data:{labels:list.map(function(m){return m.label;}),datasets:[{label:'% of goal',data:pts,borderColor:c.navy,backgroundColor:c.navy+'33',borderWidth:2,pointBackgroundColor:c.navy}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{r:{min:0,suggestedMax:100,ticks:{color:c.tick,backdropColor:'transparent',font:{size:9}},grid:{color:c.grid},angleLines:{color:c.grid},pointLabels:{color:c.tick,font:{size:10}}}}}});
 }
@@ -4953,7 +5141,7 @@ window.enterVault=function(){enter(false);};window.enterAndLogin=function(){ente
 // INIT
 document.getElementById('sb-chapter').textContent=settings.chapterName;
 document.getElementById('sb-sub').textContent=settings.semester;
-if(document.body.classList.contains('dark')){var tbtn=document.getElementById('theme-toggle');if(tbtn)tbtn.innerHTML='<i class="ti ti-sun"></i> Light mode';}
+if(document.body.classList.contains('dark')){var tbtn=document.getElementById('theme-toggle');if(tbtn)tbtn.innerHTML='<i class="ti ti-sun"></i>';}
 updateAddBtn();normalizeState();renderDashboard();
 
 // RESOURCE PAGES AND GLOBAL SEARCH

@@ -3,12 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Vault — Live Demo</title>
+<title>The Vault</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpolygon points='32,2 60,14 60,34 32,62 4,34 4,14' fill='%236d1a2a'/%3E%3Ctext x='32' y='40' font-family='Georgia, serif' font-weight='700' font-size='15' fill='%23c3c7cf' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getAuth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<script>try{Object.keys(localStorage).filter(function(k){return k.indexOf("fm_")===0}).forEach(function(k){localStorage.removeItem(k)})}catch(e){}</script><style>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDAxN6lncX70JIc7ppxQRHMJK3zPtqiZ8o",
+    authDomain: "fraternity-app-e9ff7.firebaseapp.com",
+    databaseURL: "https://fraternity-app-e9ff7-default-rtdb.firebaseio.com",
+    projectId: "fraternity-app-e9ff7",
+    storageBucket: "fraternity-app-e9ff7.firebasestorage.app",
+    messagingSenderId: "1012718155482",
+    appId: "1:1012718155482:web:4181013c5f553707d2d7e3",
+    measurementId: "G-WMHHYXRNRB"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  window._fbDb = db;
+  window._fbRef = ref;
+  window._fbSet = set;
+  window._fbOnValue = onValue;
+
+  const auth = getAuth(app);
+  window._fbAuth = auth;
+  window._fbSignInAnon = signInAnonymously;
+  window._fbSignInEmail = signInWithEmailAndPassword;
+  window._fbSignOut = signOut;
+  window._fbSignUp = createUserWithEmailAndPassword;
+  window._fbResetPw = sendPasswordResetEmail;
+  window._fbGet = get;
+
+  var unsubs = [];
+  var lastUid = null;
+  onAuthStateChanged(auth, function(user) {
+    var uid = user ? user.uid : null;
+    if (uid !== lastUid) { lastUid = uid; if (user && window._fbReattach) { window._fbReattach(); } }
+    if (window._onAuthChange) { window._onAuthChange(user); }
+    else { window._pendingAuthUser = user; }
+    // Nobody logged in (first visit or after sign-out): sign in anonymously so visitors can view public pages.
+    if (!user) { signInAnonymously(auth).catch(function(e) { console.error('Anonymous sign-in failed:', e); }); }
+  });
+
+  // Sign in anonymously by default so anyone can VIEW the app.
+  // Officers log in separately (email/password) to unlock editing.
+
+  // Keys to sync
+  const KEYS = ['members','events','dues','transactions','budget','fines','prospects','announcements','messages','chores','maintenance','settings','perfHistory','nid','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','quickNotes','shoutouts','ideas','polls','quickLinks','vibes','receipts','library','serviceRequests','kra','riskMgmt','auditLog','internships','internshipPrefs','opportunities','oppPrefs','customPages','officerRoles'];
+
+  // Listen for changes from Firebase and update local state + re-render
+  function attachKey(k) {
+    return onValue(ref(db, 'chapter/' + k), function(snapshot) {
+      var val = snapshot.val();
+      if (val === null || val === undefined) return;
+      if ((k === 'ideas' || k === 'polls') && window._cleanIds) val = window._cleanIds(val);
+      // Update the in-memory variable
+      if (k === 'nid') { window.nidVal = val; return; }
+      if (k === 'messages') { window.messages = val; }
+      else if (k === 'settings') { window.settings = val; }
+      else if (k === 'perfHistory') { window.perfHistory = val; }
+      else if (k === 'budget') { window.budget = val; }
+      else if (k === 'members') { window.members = val; }
+      else if (k === 'events') { window.events = val; }
+      else if (k === 'dues') { window.dues = val; }
+      else if (k === 'transactions') { window.transactions = val; }
+      else if (k === 'fines') { window.fines = val; }
+      else if (k === 'prospects') { window.prospects = val; }
+      else if (k === 'announcements') { window.announcements = val; }
+      else if (k === 'chores') { window.chores = val; }
+      else if (k === 'maintenance') { window.maintenance = val; }
+      else if (k === 'studyHours') { window.studyHours = val; }
+      else if (k === 'points') { window.points = val; }
+      else if (k === 'concessions') { window.concessions = val; }
+      else if (k === 'volunteers') { window.volunteers = val; }
+      else if (k === 'soberDrivers') { window.soberDrivers = val; }
+      else if (k === 'tkeWeek') { window.tkeWeek = val; }
+      else if (k === 'nationalEvents') { window.nationalEvents = val; }
+      else if (k === 'serviceHours') { window.serviceHours = val; }
+      else if (k === 'goals') { window.goals = val; }
+      else if (k === 'quickNotes') { window.quickNotes = val; }
+      else if (k === 'shoutouts') { window.shoutouts = val; }
+      else if (k === 'ideas') { window.ideas = val; }
+      else if (k === 'polls') { window.polls = val; }
+      else if (k === 'quickLinks') { window.quickLinks = val; }
+      else if (k === 'vibes') { window.vibes = val; }
+      else if (k === 'receipts') { window.receipts = val; }
+      else if (k === 'library') { window.library = val; }
+      else if (k === 'serviceRequests') { window.serviceRequests = val; }
+      else if (k === 'kra') { window.kra = val; }
+      else if (k === 'riskMgmt') { window.riskMgmt = val; }
+      else if (k === 'auditLog') { window.auditLog = val; }
+      else if (k === 'internships') { window.internships = val; }
+      else if (k === 'internshipPrefs') { window.internshipPrefs = val; }
+      else if (k === 'opportunities') { window.opportunities = val; }
+      else if (k === 'oppPrefs') { window.oppPrefs = val; }
+      else if (k === 'customPages') { window.customPages = val; }
+      else if (k === 'officerRoles') { window.officerRoles = Array.isArray(val) ? val : []; }
+      // Re-render current tab
+      if (window.renderAll) window.renderAll();
+      if (k === 'settings' && window.settings) {
+        var el1 = document.getElementById('sb-chapter');
+        var el2 = document.getElementById('sb-sub');
+        if (el1) el1.textContent = window.settings.chapterName || 'The Vault';
+        if (el2) el2.textContent = window.settings.semester || 'Fall 2026';
+      }
+    }, function(err) { /* no permission for this key with the current login (expected) */ });
+  }
+  // Listeners that are denied are cancelled for good, so re-attach whenever the login or role changes.
+  function attachAll() {
+    unsubs.forEach(function(u) { try { u(); } catch (e) {} });
+    unsubs = [];
+    KEYS.forEach(function(k) { unsubs.push(attachKey(k)); });
+    if (window._role === 'officer') {
+      unsubs.push(onValue(ref(db, 'chapter/serviceInbox'), function(s) { if (window._onInbox) window._onInbox(s.val()); }, function() {}));
+    }
+  }
+  window._fbReattach = attachAll;
+
+  // Show a syncing indicator
+  window._fbSyncing = false;
+  window._showSync = function() {
+    var el = document.getElementById('sync-status');
+    if (el) { el.textContent = '⟳ Syncing...'; el.style.color = 'var(--amber)'; }
+  };
+  window._showSynced = function() {
+    var el = document.getElementById('sync-status');
+    if (el) { el.textContent = '✓ Synced'; el.style.color = 'var(--green)'; }
+  };
+</script>
+<style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#ffffff;--bg2:#f4f5f8;--bg3:#eaecf2;
@@ -6034,37 +6162,5 @@ applyBrand(true);applyTerms(true);applyNav(true);
 })();
 </script>
 
-
-<script>
-(function(){
-function dt(n){var d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function ini(n){return n.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();}
-var names=[['Jordan Ellis','Senior','Finance','President',3.6],['Marcus Reid','Senior','Marketing','Vice President',3.4],['Tyler Brooks','Junior','Accounting','Treasurer',3.8],['Devon Price','Junior','Biology','Secretary',3.2],['Caleb Nguyen','Junior','Engineering','Social Chair',3.1],['Ethan Cole','Sophomore','Business','Member',2.9],['Noah Patel','Sophomore','Chemistry','Member',3.5],['Liam Foster','Sophomore','Communications','Member',2.4],['Owen Hayes','Freshman','Undecided','Member',3.0],['Mason Bell','Freshman','Psychology','Member',3.3],['Aiden Wu','Freshman','Computer Science','Member',3.7],['Lucas Grant','Junior','History','Member',2.8],['Isaac Moore','Senior','Economics','Member',3.0],['Gavin Rhodes','Sophomore','Nursing','Member',3.4]];
-members.length=0;
-names.forEach(function(n,i){members.push({id:i+1,name:n[0],initials:ini(n[0]),year:n[1],major:n[2],role:n[3],status:'Active',gpa:n[4],phone:'',email:'',birthday:'',pledgeClass:i<5?'Founding Class':(i<9?'Spring 2025':'Fall 2025'),big:i>4?names[i%5][0]:null,notes:'',photo:null});});
-var ev=[['Chapter Meeting',-21,'Meeting',0,1],['Service Day: Food Bank',-14,'Service',4,1],['Mixer with Sister Sorority',-9,'Social',0,0],['Chapter Meeting',-7,'Meeting',0,1],['Study Night',-3,'Academic',0,0],['Chapter Meeting',7,'Meeting',0,1],['Philanthropy 5K',14,'Philanthropy',3,1],['Formal',30,'Social',0,0]];
-events.length=0;
-ev.forEach(function(e,i){var att=[];if(e[1]<0)members.forEach(function(m,j){if((j+i)%5!==0)att.push(m.id);});events.push({id:100+i,name:e[0],date:dt(e[1]),time:'7:00 PM',location:i%2?'Student Union':'Chapter House',type:e[2],serviceHours:e[3],required:!!e[4],attended:att.length,total:members.length,attendance:att,rsvps:[]});});
-dues.length=0;members.forEach(function(m,i){dues.push({id:200+i,memberId:m.id,amount:400,dueDate:dt(10),status:i%4===0?'Unpaid':(i%7===0?'Partial':'Paid')});});
-transactions.length=0;[['Dues collected','Dues',-30,4200],['Philanthropy 5K registrations','Philanthropy',-12,1350],['Social supplies','Events & Socials',-10,-380],['House repairs','House Maintenance',-5,-620],['Food for service day','Philanthropy',-15,-145]].forEach(function(t,i){transactions.push({id:300+i,desc:t[0],category:t[1],date:dt(t[2]),amount:t[3]});});
-announcements.length=0;announcements.push({id:400,title:'Welcome to the demo',body:'This is sample data. Click around, add things, delete things. Nothing here is saved.',author:'demo@example.com',date:dt(0),pinned:true},{id:401,title:'Dues are due in 10 days',body:'Pay the treasurer or online. Reach out if you need a payment plan.',author:'treasurer@example.com',date:dt(-2),pinned:false});
-goals.length=0;goals.push({id:500,title:'Reach 90% meeting attendance',description:'Track attendance every meeting.',targetDate:dt(60),status:'In Progress'},{id:501,title:'Raise $5,000 for philanthropy',description:'5K plus two smaller events.',targetDate:dt(90),status:'In Progress'},{id:502,title:'Raise chapter GPA above 3.2',description:'',targetDate:dt(120),status:'Not Started'});
-chores.length=0;chores.push({id:600,name:'Kitchen cleanup',assignee:'Ethan Cole',frequency:'Weekly',notes:'',done:false},{id:601,name:'Trash and recycling',assignee:'Owen Hayes',frequency:'Weekly',notes:'',done:true},{id:602,name:'Common room vacuum',assignee:'Mason Bell',frequency:'Weekly',notes:'',done:false});
-serviceHours.length=0;members.forEach(function(m,i){serviceHours.push({id:700+i,memberId:m.id,hours:2+(i*3)%9,date:dt(-14),notes:'Food bank'});});
-studyHours.length=0;members.forEach(function(m,i){studyHours.push({id:800+i,memberId:m.id,hours:3+(i*5)%11,date:dt(-3),notes:''});});
-points.length=0;members.forEach(function(m,i){points.push({id:900+i,memberId:m.id,amount:5+(i*7)%20,reason:'Event attendance',date:dt(-7)});});
-fines.length=0;fines.push({id:1000,memberId:8,reason:'Missed chapter meeting',amount:25,date:dt(-7),paid:false});
-prospects.length=0;[['Sam Carter','Freshman','Bid Extended'],['Will Adams','Freshman','Interested'],['Ben Torres','Sophomore','Met Once'],['Chris Lee','Freshman','Interested']].forEach(function(p,i){prospects.push({id:1100+i,name:p[0],year:p[1],major:'—',contactInfo:'',stage:p[2],interest:'',contact:'Jordan Ellis',notes:'',bidStatus:p[2]==='Bid Extended'?'Pending':null,photo:'',lastContact:dt(-i-2)});});
-settings.chapterName='Alpha Chapter (Demo)';settings.semester='Fall 2026';
-window.nidVal=5000;
-officerEmail='demo@example.com';
-setRole('officer',{uid:'demo',email:'demo@example.com'});
-var bar=document.createElement('div');bar.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#111827;color:#fff;font:13px/1.4 system-ui,sans-serif;padding:9px 14px;text-align:center';
-bar.innerHTML='Live demo with sample data. You are logged in as an officer. Nothing is saved. Reload to reset.';
-document.body.appendChild(bar);
-var lb=document.getElementById('login-btn'),ob=document.getElementById('logout-btn');if(lb)lb.style.display='none';if(ob)ob.style.display='none';
-document.querySelectorAll('[onclick*="openLoginModal"]').forEach(function(e){e.style.display='none';});
-try{renderAll();}catch(e){}
-})();
-</script></body>
+</body>
 </html>

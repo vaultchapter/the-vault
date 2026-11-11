@@ -1809,6 +1809,7 @@ function logAudit(action,detail){
 }
 
 // ===== ACCOUNTS & ACCESS (visitor / pending / member / officer) =====
+window.VAULT_SIMPLE=true;
 var userRole='visitor',memberAuthed=false,signedIn=false,myUid=null;
 var PRIVATE_KEYS=['members','dues','transactions','budget','fines','prospects','messages','studyHours','points','serviceHours','kra','riskMgmt','auditLog','internships','internshipPrefs','oppPrefs','receipts','serviceRequests','attendance'];
 function authMsg(e){
@@ -1821,8 +1822,8 @@ function authMsg(e){
   return 'Something went wrong. Please try again.';
 }
 function openLoginModal(mode){
-  mode=(mode==='signup')?'signup':'login';
-  var tabs='<div style="display:flex;gap:6px;margin-bottom:12px"><button class="chip'+(mode==='login'?' on':'')+'" onclick="openLoginModal(\'login\')">Log in</button><button class="chip'+(mode==='signup'?' on':'')+'" onclick="openLoginModal(\'signup\')">Create account</button></div>';
+  mode=(mode==='signup'&&!window.VAULT_SIMPLE)?'signup':'login';
+  var tabs=window.VAULT_SIMPLE?'':'<div style="display:flex;gap:6px;margin-bottom:12px"><button class="chip'+(mode==='login'?' on':'')+'" onclick="openLoginModal(\'login\')">Log in</button><button class="chip'+(mode==='signup'?' on':'')+'" onclick="openLoginModal(\'signup\')">Create account</button></div>';
   var err='<div id="li-error" style="color:var(--red);font-size:12px;margin-bottom:8px;display:none"></div>';
   if(mode==='login'){
     openModal('Log in',tabs+
@@ -5029,7 +5030,7 @@ function openSettingsModal(){
   var roleLines=(Array.isArray(window.officerRoles)?window.officerRoles:[]).map(function(x){return x.email+' = '+x.role;}).join('\n');
   openModal('Chapter settings',
     '<div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border)">'+
-    '<button class="btn btn-sm" onclick="openCustomize()"><i class="ti ti-layout-sidebar"></i> Customize tabs</button><button class="btn btn-sm" onclick="openAccessModal()"><i class="ti ti-users"></i> Members &amp; access</button><button class="btn btn-sm" onclick="exportBackupJSON()"><i class="ti ti-download"></i> Download full backup</button>'+
+    '<button class="btn btn-sm" onclick="openCustomize()"><i class="ti ti-layout-sidebar"></i> Customize tabs</button>'+(window.VAULT_SIMPLE?'':'<button class="btn btn-sm" onclick="openAccessModal()"><i class="ti ti-users"></i> Members &amp; access</button>')+'<button class="btn btn-sm" onclick="exportBackupJSON()"><i class="ti ti-download"></i> Download full backup</button>'+
     '<button class="btn btn-sm" onclick="exportMembersCSV()"><i class="ti ti-file-spreadsheet"></i> Export members (CSV)</button>'+
     '<span id="settings-backup-note" style="font-size:11px;color:var(--text3)">'+(settings.lastBackupDate?'Last backup: '+settings.lastBackupDate:'No backup downloaded yet')+'</span>'+
     '</div>'+

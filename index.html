@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#6d1a2a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>The Vault</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpolygon points='32,2 60,14 60,34 32,62 4,34 4,14' fill='%236d1a2a'/%3E%3Ctext x='32' y='40' font-family='Georgia, serif' font-weight='700' font-size='15' fill='%23c3c7cf' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -193,7 +197,7 @@ body.dark{
     repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 22px),
     radial-gradient(circle at 50% 0%, rgba(195,199,207,0.16), transparent 55%),
     var(--navy);border-right:none;display:flex;flex-direction:column;flex-shrink:0;box-shadow:2px 0 12px rgba(0,0,0,0.18)}
-.sidebar::after{content:"VAULT";position:absolute;bottom:-40px;right:-16px;font-size:132px;font-weight:800;font-family:Georgia,serif;color:rgba(255,255,255,0.035);letter-spacing:-4px;pointer-events:none;line-height:1;z-index:0}
+.sidebar::after{content:var(--wm,"VAULT");position:absolute;bottom:-40px;right:-16px;font-size:132px;font-weight:800;font-family:Georgia,serif;color:rgba(255,255,255,0.035);letter-spacing:-4px;pointer-events:none;line-height:1;z-index:0}
 .sidebar>*{position:relative;z-index:1}
 .crest-badge{width:38px;height:44px;flex-shrink:0;background:linear-gradient(135deg,var(--gold),var(--gold-d));clip-path:polygon(50% 0%,100% 16%,100% 58%,50% 100%,0% 58%,0% 16%);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .crest-badge span{font-size:6.5px;font-weight:800;font-family:Georgia,serif;color:var(--navy);letter-spacing:0.2px}
@@ -228,7 +232,7 @@ body.dark{
 .topbar{padding:12px 20px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
 .pg-title{font-size:15px;font-weight:700;color:var(--navy)}
 .content{flex:1;overflow-y:auto;padding:20px;background:transparent;position:relative}
-.content::before{content:"VAULT";position:fixed;bottom:-30px;right:20px;font-size:220px;font-weight:800;font-family:Georgia,serif;color:rgba(var(--navy-rgb),0.025);letter-spacing:-8px;pointer-events:none;z-index:0}
+.content::before{content:var(--wm,"VAULT");position:fixed;bottom:-30px;right:20px;font-size:220px;font-weight:800;font-family:Georgia,serif;color:rgba(var(--navy-rgb),0.025);letter-spacing:-8px;pointer-events:none;z-index:0}
 .content>*{position:relative;z-index:1}
 .panel{display:none}.panel.active{display:block}
 
@@ -255,7 +259,7 @@ body.dark{
     radial-gradient(circle at 92% 105%, rgba(195,199,207,0.14), transparent 50%),
     linear-gradient(135deg,var(--navy-l),var(--navy) 55%,var(--navy-d));
   color:#fff;box-shadow:0 8px 26px rgba(var(--navy-rgb),0.28)}
-.dash-hero::after{content:"VAULT";position:absolute;top:-26px;right:-8px;font-size:130px;font-weight:800;font-family:Georgia,serif;color:rgba(255,255,255,0.06);letter-spacing:-4px;pointer-events:none;line-height:1}
+.dash-hero::after{content:var(--wm,"VAULT");position:absolute;top:-26px;right:-8px;font-size:130px;font-weight:800;font-family:Georgia,serif;color:rgba(255,255,255,0.06);letter-spacing:-4px;pointer-events:none;line-height:1}
 .dash-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1;flex-wrap:wrap}
 .dash-greet{font-size:20px;font-weight:700;letter-spacing:.01em}
 .dash-sub{font-size:12.5px;color:rgba(255,255,255,0.72);margin-top:4px}
@@ -915,7 +919,7 @@ textarea.inp{resize:vertical;min-height:70px}
   <div class="sidebar" id="sidebar">
     <div class="sb-hdr">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div class="crest-badge">
+        <div class="crest-badge" data-noterms="1">
           <span>VAULT</span>
         </div>
         <div>
@@ -1183,6 +1187,7 @@ textarea.inp{resize:vertical;min-height:70px}
           <select class="inp" style="width:140px" id="mem-filter" onchange="renderMembers()">
             <option value="all">All statuses</option><option value="Active">Active</option><option value="Pledge">Pledge</option><option value="Alumni">Alumni</option>
           </select>
+          <button class="btn btn-sm" onclick="openImportMembers()" title="Import members from a spreadsheet"><i class="ti ti-file-import"></i></button>
           <button class="btn btn-sm" onclick="exportMembersCSV()" title="Export CSV"><i class="ti ti-file-spreadsheet"></i></button>
           <button class="btn btn-sm" onclick="printRoster()" title="Print roster"><i class="ti ti-printer"></i></button>
         </div>
@@ -5032,6 +5037,7 @@ function openSettingsModal(){
     '<div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border)">'+
     '<button class="btn btn-sm" onclick="openCustomize()"><i class="ti ti-layout-sidebar"></i> Customize tabs</button>'+(window.VAULT_SIMPLE?'':'<button class="btn btn-sm" onclick="openAccessModal()"><i class="ti ti-users"></i> Members &amp; access</button>')+'<button class="btn btn-sm" onclick="exportBackupJSON()"><i class="ti ti-download"></i> Download full backup</button>'+
     '<button class="btn btn-sm" onclick="exportMembersCSV()"><i class="ti ti-file-spreadsheet"></i> Export members (CSV)</button>'+
+    '<button class="btn btn-sm" onclick="openImportMembers()"><i class="ti ti-file-import"></i> Import roster</button><button class="btn btn-sm" onclick="openReports()"><i class="ti ti-report"></i> Reports</button><button class="btn btn-sm" onclick="openNewSemester()"><i class="ti ti-calendar-event"></i> New semester</button><button class="btn btn-sm" onclick="openRestore()"><i class="ti ti-restore"></i> Restore backup</button>'+
     '<span id="settings-backup-note" style="font-size:11px;color:var(--text3)">'+(settings.lastBackupDate?'Last backup: '+settings.lastBackupDate:'No backup downloaded yet')+'</span>'+
     '</div>'+
     '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:0 0 8px">Officer roles</div>'+
@@ -5350,6 +5356,288 @@ function helpGo(tab){dashboardGo(tab);}
 function openOfficerContacts(){var officers=members.filter(function(m){return /president|vice|treasurer|secretary|chair|officer|manager/i.test(m.role||'');});var content=officers.length?officers.map(function(m){return '<div style="padding:9px 0;border-bottom:.5px solid var(--border)"><strong>'+esc(m.name)+'</strong><div style="font-size:12px;color:var(--text2);margin-top:2px">'+esc(m.role||'Officer')+(m.email?' · '+esc(m.email):'')+'</div></div>';}).join(''):'<div class="empty">No officer roles are listed yet. Update member roles on the Members page.</div>';openModal('Chapter Contacts',content+'<div class="fa"><button class="btn" onclick="closeModal()">Close</button></div>');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGlobalSearch();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openGlobalSearch();}});document.getElementById('search-bg').addEventListener('click',function(e){if(e.target===this)closeGlobalSearch();});
 
+
+// DATA TOOLS: import roster, reports, restore backup, new semester, setup checklist
+// Everything here is officer-only and only touches data through save().
+
+function csvSafe(v){
+  v=(v===undefined||v===null)?'':String(v);
+  if(/^[=+\-@\t\r]/.test(v))v="'"+v;   // stop spreadsheet formulas from running
+  return csvEscape(v);
+}
+function downloadRows(filename,headers,rows){
+  var lines=[headers.map(csvSafe).join(',')].concat(rows.map(function(r){return r.map(csvSafe).join(',');}));
+  downloadFile(filename+'-'+todayStr()+'.csv',lines.join('\n'),'text/csv');
+}
+function dtNeedOfficer(){if(canEdit())return false;showToast('Log in as an officer to use this','error');return true;}
+function dtNeedSettings(){if(canManageSettings())return false;showToast('You need settings access to use this','error');return true;}
+
+// ---------- CSV parsing ----------
+function parseDelimited(text){
+  text=String(text||'').replace(/^﻿/,'').replace(/\r\n?/g,'\n');
+  var first=text.split('\n')[0]||'';
+  var d=(first.indexOf('\t')>=0)?'\t':(((first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length)?';':',');
+  var rows=[],row=[],cur='',q=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(q){
+      if(c==='"'){if(text[i+1]==='"'){cur+='"';i++;}else q=false;}
+      else cur+=c;
+    }else if(c==='"'&&cur===''){q=true;}
+    else if(c===d){row.push(cur);cur='';}
+    else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+    else cur+=c;
+  }
+  if(cur!==''||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(function(r){return r.some(function(x){return String(x).trim()!=='';});});
+}
+var IMP_COLS={
+  name:['name','fullname','member','brother','sister','membername'],
+  first:['first','firstname','givenname'],
+  last:['last','lastname','surname','familyname'],
+  year:['year','classyear','grade','class','academicyear','standing'],
+  major:['major','degree','field','program'],
+  role:['role','position','office','title'],
+  status:['status','membership','membershipstatus'],
+  gpa:['gpa','grades'],
+  phone:['phone','mobile','cell','phonenumber','cellphone'],
+  email:['email','emailaddress','mail'],
+  birthday:['birthday','dob','birthdate','dateofbirth','bday'],
+  pledgeClass:['pledgeclass','pc','newmemberclass','initiationclass','line'],
+  big:['big','father','bigbrother','bigsister','mentor']
+};
+function impNorm(h){return String(h||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
+function impYear(v){
+  var s=impNorm(v);if(!s)return '';
+  if(/^(fr|fresh)/.test(s)||s==='1'||s==='1st')return 'Freshman';
+  if(/^(so|soph)/.test(s)||s==='2'||s==='2nd')return 'Sophomore';
+  if(/^(jr|jun)/.test(s)||s==='3'||s==='3rd')return 'Junior';
+  if(/^(sr|sen)/.test(s)||s==='4'||s==='4th')return 'Senior';
+  if(/^(gr|ma|phd|post)/.test(s))return 'Grad';
+  return String(v).replace(/[<>]/g,'').trim().slice(0,20);
+}
+function impStatus(v){
+  var s=impNorm(v);
+  if(/pledge|newmember|candidate|associate|prospect/.test(s))return 'Pledge';
+  if(/alum|graduat|inactive|former/.test(s))return 'Alumni';
+  return 'Active';
+}
+function impDate(v){
+  v=String(v||'').trim();if(!v)return '';
+  var m=/^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(v);
+  if(m)return m[1]+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[3]).slice(-2);
+  m=/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/.exec(v);
+  if(m){var y=m[3].length===2?(parseInt(m[3],10)>30?'19':'20')+m[3]:m[3];return y+'-'+('0'+m[1]).slice(-2)+'-'+('0'+m[2]).slice(-2);}
+  return '';
+}
+function impClean(v,n){return String(v==null?'':v).replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,n);}
+function impBuild(text){
+  var rows=parseDelimited(text);
+  if(rows.length<2)return {error:'Paste or choose a table with a header row (Name, Year, Major...) and at least one member.'};
+  var hdr=rows[0].map(impNorm),col={};
+  Object.keys(IMP_COLS).forEach(function(k){for(var i=0;i<hdr.length;i++){if(IMP_COLS[k].indexOf(hdr[i])>=0&&col[k]===undefined){col[k]=i;break;}}});
+  if(col.name===undefined&&col.first===undefined)return {error:'Could not find a Name column. The first row must be headers such as: Name, Year, Major, Status, Email.'};
+  var have={};members.forEach(function(m){have[String(m.name||'').toLowerCase()]=1;});
+  var ok=[],dups=[],bad=0;
+  rows.slice(1).forEach(function(r){
+    var g=function(k){return col[k]===undefined?'':(r[col[k]]||'');};
+    var name=col.name!==undefined?impClean(g('name'),80):impClean(g('first')+' '+g('last'),80);
+    if(col.name!==undefined&&col.first!==undefined&&!name)name=impClean(g('first')+' '+g('last'),80);
+    if(!name){bad++;return;}
+    if(have[name.toLowerCase()]){dups.push(name);return;}
+    have[name.toLowerCase()]=1;
+    var gpa=parseFloat(g('gpa'));if(!(gpa>=0&&gpa<=4.5))gpa=null;
+    var email=impClean(g('email'),120);if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))email='';
+    ok.push({name:name,initials:initials(name),year:impYear(g('year')),major:impClean(g('major'),60)||'—',role:impClean(g('role'),40)||'Member',status:col.status===undefined?'Active':impStatus(g('status')),gpa:gpa,phone:impClean(g('phone'),30),email:email,birthday:impDate(g('birthday')),pledgeClass:impClean(g('pledgeClass'),40),big:impClean(g('big'),80)||null,notes:'',photo:null});
+  });
+  return {ok:ok,dups:dups,bad:bad,found:Object.keys(col)};
+}
+function openImportMembers(){
+  if(dtNeedOfficer())return;
+  window._imp=null;
+  openModal('Import members',
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">Add your whole roster at once from a spreadsheet. Save your sheet as <b>CSV</b> (Excel: File &gt; Save As &gt; CSV; Google Sheets: File &gt; Download &gt; CSV), or copy the cells and paste them below. The first row must be headers. Members already on the roster are skipped.</div>'+
+    '<div class="fr" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><input type="file" id="imp-file" accept=".csv,.tsv,.txt,text/csv,text/plain" onchange="impFile(this)" style="max-width:100%"><button class="btn btn-sm" onclick="impTemplate()"><i class="ti ti-download"></i> Template</button></div>'+
+    '<div class="fr"><label class="fl">Or paste your table here</label><textarea class="inp" id="imp-text" rows="6" placeholder="Name,Year,Major,Status,Email&#10;Jordan Ellis,Senior,Finance,Active,jordan@school.edu" oninput="impPreview()"></textarea></div>'+
+    '<div id="imp-out"></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" id="imp-go" onclick="impCommit()" disabled>Import</button></div>');
+}
+function impTemplate(){downloadFile('members-template.csv','Name,Year,Major,Role,Status,GPA,Phone,Email,Birthday,Pledge Class,Father\nJordan Ellis,Senior,Finance,Member,Active,3.5,555-123-4567,jordan@school.edu,2004-03-15,Fall 2023,\n','text/csv');}
+function impFile(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  if(/\.(xlsx|xls|numbers)$/i.test(f.name)){showToast('Please save the sheet as CSV first, then choose that file','error');inp.value='';return;}
+  if(f.size>2000000){showToast('That file is too big for a roster','error');return;}
+  var rd=new FileReader();rd.onload=function(){document.getElementById('imp-text').value=String(rd.result||'');impPreview();};rd.readAsText(f);
+}
+function impPreview(){
+  var out=document.getElementById('imp-out'),go=document.getElementById('imp-go'),t=gv('imp-text');
+  if(!out)return;if(!t.trim()){out.innerHTML='';if(go)go.disabled=true;window._imp=null;return;}
+  var r=impBuild(t);window._imp=r;
+  if(r.error){out.innerHTML='<div style="color:var(--red);font-size:12.5px;margin:8px 0">'+esc(r.error)+'</div>';go.disabled=true;return;}
+  var rowsH=r.ok.slice(0,6).map(function(m){return '<tr><td>'+esc(m.name)+'</td><td>'+esc(m.year)+'</td><td>'+esc(m.major)+'</td><td>'+esc(m.status)+'</td></tr>';}).join('');
+  out.innerHTML='<div style="font-size:13px;margin:8px 0"><b>'+r.ok.length+'</b> ready to import'+(r.dups.length?', '+r.dups.length+' already on your roster (skipped)':'')+(r.bad?', '+r.bad+' rows with no name (skipped)':'')+'.</div>'+
+    (r.ok.length?'<div style="overflow:auto"><table class="tbl" style="font-size:12px;width:100%"><thead><tr><th>Name</th><th>Year</th><th>Major</th><th>Status</th></tr></thead><tbody>'+rowsH+'</tbody></table></div>'+(r.ok.length>6?'<div class="cz-note">…and '+(r.ok.length-6)+' more</div>':''):'');
+  go.disabled=!r.ok.length;go.textContent='Import '+r.ok.length+' member'+(r.ok.length===1?'':'s');
+}
+function impCommit(){
+  var r=window._imp;if(dtNeedOfficer()||!r||!r.ok||!r.ok.length)return;
+  if(r.ok.length>500){showToast('Import up to 500 members at a time','error');return;}
+  r.ok.forEach(function(m){m.id=nid();members.push(m);});
+  save('members',members);
+  try{logAudit('Members imported',r.ok.length+' added');}catch(e){}
+  var n=r.ok.length;window._imp=null;closeModal();renderAll();showToast(n+' member'+(n===1?'':'s')+' imported','success');
+}
+
+// ---------- Reports (CSV downloads) ----------
+function openReports(){
+  if(dtNeedOfficer())return;
+  var b=function(fn,label,icon){return '<button class="btn" style="justify-content:flex-start" onclick="'+fn+'()"><i class="ti ti-'+icon+'"></i> '+label+'</button>';};
+  openModal('Reports (download as spreadsheet)',
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">Each button downloads a CSV file you can open in Excel or Google Sheets.</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">'+
+    b('rpMembers','Members','users')+b('rpDues','Dues','coin')+b('rpFines','Fines','alert-triangle')+b('rpTx','Transactions','receipt')+b('rpService','Service hours','heart-handshake')+b('rpStudy','Study hours','book')+b('rpPoints','Points','star')+b('rpAttend','Event attendance','clipboard-check')+'</div>'+
+    '<div class="fa"><button class="btn btn-primary" onclick="closeModal()">Done</button></div>');
+}
+function rpMembers(){exportMembersCSV();}
+function rpDues(){downloadRows('dues',['Member','Amount','Due date','Status'],dues.map(function(d){return [memberName(d.memberId),d.amount,d.dueDate,d.status];}));}
+function rpFines(){downloadRows('fines',['Member','Reason','Amount','Date','Paid'],fines.map(function(f){return [memberName(f.memberId),f.reason,f.amount,f.date,f.paid?'Yes':'No'];}));}
+function rpTx(){downloadRows('transactions',['Date','Description','Category','Amount'],transactions.map(function(t){return [t.date,t.desc,t.category,t.amount];}));}
+function rpService(){downloadRows('service-hours',['Member','Hours','Date','Notes'],serviceHours.map(function(s){return [memberName(s.memberId),s.hours,s.date,s.notes];}));}
+function rpStudy(){downloadRows('study-hours',['Member','Hours','Date','Notes'],studyHours.map(function(s){return [memberName(s.memberId),s.hours,s.date,s.notes];}));}
+function rpPoints(){downloadRows('points',['Member','Points','Reason','Date'],points.map(function(p){return [memberName(p.memberId),p.amount,p.reason,p.date];}));}
+function rpAttend(){
+  var past=events.filter(function(e){return !isTodayOrLater(e.date)||(e.attendance||[]).length;}).sort(function(a,b){return String(a.date).localeCompare(String(b.date));});
+  var hdr=['Member'].concat(past.map(function(e){return (e.date||'')+' '+(e.name||e.title||'Event');})).concat(['Attended','Rate %']);
+  var rows=members.filter(function(m){return m.status!=='Alumni';}).map(function(m){
+    var marks=past.map(function(e){return (e.attendance||[]).indexOf(m.id)>=0?'Y':'';});
+    var n=marks.filter(Boolean).length;
+    return [m.name].concat(marks).concat([n,past.length?Math.round(n/past.length*100):'']);
+  });
+  downloadRows('attendance',hdr,rows);
+}
+
+// ---------- Restore from a backup file ----------
+var BACKUP_KEYS=['members','events','dues','transactions','budget','fines','prospects','announcements','chores','maintenance','studyHours','points','concessions','volunteers','soberDrivers','tkeWeek','nationalEvents','serviceHours','goals','receipts','library','serviceRequests','kra','riskMgmt','auditLog','internships','opportunities','perfHistory','quickNotes','shoutouts','ideas','polls','quickLinks','vibes','messages','settings','customPages'];
+function openRestore(){
+  if(dtNeedSettings())return;
+  window._rst=null;
+  openModal('Restore from a backup',
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px">Choose a backup file you downloaded earlier (Settings &gt; Download full backup). <b>This replaces everything currently in the site.</b> A safety backup of the current data downloads automatically first.</div>'+
+    '<div class="fr"><input type="file" id="rst-file" accept=".json,application/json" onchange="rstFile(this)" style="max-width:100%"></div><div id="rst-out"></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-danger" id="rst-go" onclick="rstCommit()" disabled>Restore</button></div>');
+}
+function rstFile(inp){
+  var f=inp.files&&inp.files[0],out=document.getElementById('rst-out'),go=document.getElementById('rst-go');if(!f)return;
+  go.disabled=true;window._rst=null;
+  if(f.size>25000000){out.innerHTML='<div style="color:var(--red)">That file is too large to be a backup.</div>';return;}
+  var rd=new FileReader();rd.onload=function(){
+    var data;try{data=JSON.parse(String(rd.result||''));}catch(e){out.innerHTML='<div style="color:var(--red);margin:8px 0">That file is not a valid backup (it could not be read).</div>';return;}
+    if(!data||typeof data!=='object'||Array.isArray(data)){out.innerHTML='<div style="color:var(--red);margin:8px 0">That file is not a Vault backup.</div>';return;}
+    var keys=[],skipped=[];
+    BACKUP_KEYS.forEach(function(k){
+      if(!(k in data))return;
+      var cur=window[k],v=data[k];
+      if(v===null||v===undefined){return;}
+      var curArr=Array.isArray(cur),newArr=Array.isArray(v);
+      if(k==='customPages'){if(typeof v!=='object'){skipped.push(k);return;}}
+      else if(cur!==undefined&&cur!==null&&curArr!==newArr){skipped.push(k);return;}
+      else if(typeof v!=='object'){skipped.push(k);return;}
+      if(newArr&&v.length>50000){skipped.push(k);return;}
+      keys.push(k);
+    });
+    if(!data.members&&!data.settings&&!data.events){out.innerHTML='<div style="color:var(--red);margin:8px 0">That file does not look like a Vault backup.</div>';return;}
+    window._rst={data:data,keys:keys};
+    var cnt=function(k){var v=data[k];return Array.isArray(v)?v.length:(v&&typeof v==='object'?Object.keys(v).length:0);};
+    out.innerHTML='<div style="font-size:13px;margin:8px 0"><b>Backup contains:</b> '+cnt('members')+' members, '+cnt('events')+' events, '+cnt('dues')+' dues records, '+cnt('transactions')+' transactions, '+cnt('serviceHours')+' service entries.'+(skipped.length?'<br><span style="color:var(--amber)">Skipped (wrong format): '+esc(skipped.join(', '))+'</span>':'')+'</div>'+
+      '<div class="fr"><label class="fl">Type RESTORE to confirm</label><input class="inp" id="rst-ok" oninput="document.getElementById(\'rst-go\').disabled=(this.value.trim()!==\'RESTORE\')"></div>';
+  };rd.readAsText(f);
+}
+function rstApply(k,v){
+  var cur=window[k];
+  if(k==='polls'||k==='ideas')v=window._cleanIds?window._cleanIds(v):v;
+  if(Array.isArray(cur)&&Array.isArray(v)){cur.length=0;v.forEach(function(x){cur.push(x);});save(k,cur);}
+  else if(cur&&typeof cur==='object'&&!Array.isArray(cur)&&k!=='customPages'){Object.keys(cur).forEach(function(x){delete cur[x];});Object.keys(v).forEach(function(x){cur[x]=v[x];});save(k,cur);}
+  else{window[k]=v;save(k,v);}
+}
+function rstCommit(){
+  var r=window._rst;if(dtNeedSettings()||!r)return;
+  if(gv('rst-ok').trim()!=='RESTORE')return;
+  try{exportBackupJSON();}catch(e){}
+  r.keys.forEach(function(k){try{rstApply(k,r.data[k]);}catch(e){console.error('restore '+k,e);}});
+  try{logAudit('Backup restored',r.keys.length+' sections');}catch(e){}
+  closeModal();showToast('Restored. Reloading…','success');
+  setTimeout(function(){location.reload();},2200);
+}
+
+// ---------- New semester ----------
+function nextSemesterName(s){
+  var m=/^(fall|spring|summer|winter)\s+(\d{4})$/i.exec(String(s||'').trim());
+  if(!m)return '';
+  var t=m[1].toLowerCase(),y=parseInt(m[2],10);
+  if(t==='fall')return 'Spring '+(y+1);
+  if(t==='spring')return 'Fall '+y;
+  if(t==='summer')return 'Fall '+y;
+  return 'Spring '+y;
+}
+function openNewSemester(){
+  if(dtNeedSettings())return;
+  var ck=function(id,label,on,note){return '<label style="display:flex;gap:8px;align-items:flex-start;margin:7px 0;font-size:13px"><input type="checkbox" id="'+id+'" style="width:auto;margin-top:3px"'+(on?' checked':'')+'> <span>'+label+(note?'<br><span style="font-size:11.5px;color:var(--text3)">'+note+'</span>':'')+'</span></label>';};
+  openModal('Start a new semester',
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:8px">Roll the site over for a new term. A full backup downloads first, so you can always go back. Members, dues, finances, events and everything not listed below are kept.</div>'+
+    '<div class="fr"><label class="fl">New semester name</label><input class="inp" id="ns-name" maxlength="40" value="'+esc(nextSemesterName(settings.semester))+'" placeholder="Spring 2027"></div>'+
+    ck('ns-pts','Reset points',true,points.length+' entries')+ck('ns-study','Reset study hours',true,studyHours.length+' entries')+ck('ns-svc','Reset service hours',true,serviceHours.length+' entries')+ck('ns-fines','Remove fines already paid',true,fines.filter(function(f){return f.paid;}).length+' paid fines')+ck('ns-ev','Remove events that already happened',false,'Also clears their attendance records')+
+    '<div class="fr"><label class="fl">Type NEW SEMESTER to confirm</label><input class="inp" id="ns-ok" oninput="document.getElementById(\'ns-go\').disabled=(this.value.trim()!==\'NEW SEMESTER\')"></div>'+
+    '<div class="fa"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" id="ns-go" onclick="doNewSemester()" disabled>Start new semester</button></div>');
+}
+function doNewSemester(){
+  if(dtNeedSettings())return;
+  if(gv('ns-ok').trim()!=='NEW SEMESTER')return;
+  var on=function(id){var e=document.getElementById(id);return !!(e&&e.checked);};
+  var name=impClean(gv('ns-name'),40);
+  try{exportBackupJSON();}catch(e){}
+  if(on('ns-pts')){points.length=0;save('points',points);}
+  if(on('ns-study')){studyHours.length=0;save('studyHours',studyHours);}
+  if(on('ns-svc')){serviceHours.length=0;save('serviceHours',serviceHours);}
+  if(on('ns-fines')){var keep=fines.filter(function(f){return !f.paid;});fines.length=0;keep.forEach(function(f){fines.push(f);});save('fines',fines);}
+  if(on('ns-ev')){var up=events.filter(function(e){return isTodayOrLater(e.date);});events.length=0;up.forEach(function(e){events.push(e);});save('events',events);}
+  if(name){settings.semester=name;}
+  save('settings',settings);
+  try{logAudit('New semester',name||'(unnamed)');}catch(e){}
+  closeModal();renderAll();showToast('New semester started'+(name?': '+name:''),'success');
+}
+
+// ---------- Setup checklist on the dashboard ----------
+function setupSteps(){
+  var s=window.settings||{},b=s.brand,t=s.terms,w=s.welcome;
+  var named=!!s.chapterName&&s.chapterName!=='The Vault';
+  var styled=!!((b&&Object.keys(b).length)||(t&&Object.keys(t).length)||(w&&Object.keys(w).length));
+  return [
+    {label:'Name your chapter',hint:'Chapter name and semester',done:named,btn:'Open settings',fn:'openSettingsModal()'},
+    {label:'Make it yours',hint:'Starter kit, site name, color and logo',done:styled,btn:'Customize',fn:'openCustomize()'},
+    {label:'Add your members',hint:'Import a spreadsheet or add one by one',done:members.length>=3,btn:'Import roster',fn:'openImportMembers()'},
+    {label:'Set up dues',hint:'Add what each member owes',done:dues.length>0,btn:'Add dues',fn:'addDuesModal()'},
+    {label:'Add your first event',hint:'A meeting, social or service day',done:events.length>0,btn:'Add event',fn:'addEventModal()'},
+    {label:'Download a backup',hint:'Keep a copy of your data',done:!!s.lastBackupDate,btn:'Download',fn:'exportBackupJSON()'}
+  ];
+}
+function renderSetupCard(){
+  var old=document.getElementById('setup-card');
+  var steps=setupSteps(),done=steps.filter(function(x){return x.done;}).length;
+  var show=officerAuthed&&!(window.settings&&settings.setupDismissed)&&done<steps.length;
+  if(!show){if(old)old.remove();return;}
+  var host=document.getElementById('dash-alert');if(!host||!host.parentNode)return;
+  if(!old){old=document.createElement('div');old.id='setup-card';old.className='dn-card';old.style.cssText='margin:0 0 14px;padding:16px';host.parentNode.insertBefore(old,host);}
+  var pct=Math.round(done/steps.length*100);
+  old.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><div style="font-weight:700;font-size:15px">Get set up</div><div style="font-size:12px;color:var(--text3)">'+done+' of '+steps.length+' done</div></div><button class="btn btn-sm" onclick="dismissSetup()">Hide</button></div>'+
+    '<div style="height:6px;border-radius:3px;background:var(--border);margin:10px 0 8px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--navy)"></div></div>'+
+    steps.map(function(x){return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-top:0.5px solid var(--border)"><i class="ti ti-'+(x.done?'circle-check':'circle')+'" style="font-size:18px;color:'+(x.done?'var(--green,#16a34a)':'var(--text3)')+'"></i><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;'+(x.done?'text-decoration:line-through;opacity:.6':'')+'">'+esc(x.label)+'</div><div style="font-size:11.5px;color:var(--text3)">'+esc(x.hint)+'</div></div>'+(x.done?'':'<button class="btn btn-sm btn-primary" onclick="'+x.fn+'">'+esc(x.btn)+'</button>')+'</div>';}).join('');
+}
+function dismissSetup(){settings.setupDismissed=true;save('settings',settings);renderSetupCard();}
+(function(){
+  var _rd=window.renderDashboard;
+  if(typeof _rd==='function'){window.renderDashboard=function(){var r=_rd.apply(this,arguments);try{renderSetupCard();}catch(e){console.error('setup card',e);}return r;};}
+  try{renderSetupCard();}catch(e){}
+})();
 </script>
 <script>
 
@@ -5490,11 +5778,47 @@ body.dark .cp-link,body.dark .cp-prose a{color:#e8a0b0}
 .cz-swatch{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:0 0 0 1px var(--border2)}
 .cz-swatch.on{border-color:var(--text);}
 .cz-logo-prev{width:34px;height:34px;object-fit:contain;border-radius:6px;background:var(--bg3)}
+
+.cp-build{background:var(--bg2,rgba(127,127,127,.08));border-radius:var(--r);padding:12px;margin-bottom:14px}
+.cp-q{display:flex;gap:8px}.cp-q .inp{flex:1;min-width:0}
+.cp-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cp-chip{font:inherit;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border,rgba(127,127,127,.35));background:transparent;color:inherit;cursor:pointer}
+.cp-chip:hover,.cp-chip:focus-visible{border-color:currentColor}
+/* ===== Refinement pass: quieter labels, flatter surfaces, less decoration ===== */
+/* Labels: sentence case, no tracking. Hierarchy comes from size and weight, not capitals. */
+.dn-section-lbl,.dn-card-hdr,.dn-stat-lbl,.sx-card-lbl,.countdown-title,.challenge-title,
+.nav-sec,.nav-lbl,.sl,.ch-sub,.sx-hero-kicker,.sx-ring-lbl,.cz-title,.dn-donut-center .l,.pulse-inner .pl,.dash-founding .fl{
+  text-transform:none;letter-spacing:0}
+.dn-section-lbl{font-size:13px;font-weight:600;color:var(--n-text2);margin:6px 0 -6px}
+.dn-card-hdr{font-size:13px;font-weight:600}
+.dn-stat-lbl{font-size:12.5px;font-weight:500;color:var(--n-text2)}
+.nav-sec,.nav-lbl{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.5)}
+.countdown-title,.challenge-title{font-size:12.5px;font-weight:600}
+.ch-sub{font-size:12px}
+
+/* Key metrics: one connected strip instead of four glowing cards */
+.dn-stats-row{gap:1px;background:var(--n-border);border:1px solid var(--n-border);border-radius:10px;overflow:hidden}
+.dn-stat{border:0;border-radius:0;background:var(--n-card);padding:18px 20px}
+.dn-stat::before,.dn-stat::after{display:none}
+.dn-stat:hover{box-shadow:none;border-color:transparent}
+.dn-stat-ic{background:none;width:auto;height:auto;border-radius:0;font-size:15px;opacity:.9}
+.dn-stat-body .dn-stat-val{font-size:32px;font-weight:600;letter-spacing:-.02em}
+.dn-ring{filter:none}
+
+/* Cards: calm, no lift, no hover motion */
+.dn-card,.dash-noir .pulse-card{border-radius:10px;background:var(--n-card)}
+.dn-card:hover,.dn-stat:hover{transform:none;box-shadow:none}
+.dn-card{transition:none}
+
+/* Keep keyboard users oriented */
+:focus-visible{outline:2px solid #f2c94c;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.dash-noir .countdown-title,.dash-noir .challenge-title,.dash-noir .dn-card-hdr,.dash-noir .dn-section-lbl{text-transform:none;letter-spacing:0}
 </style>
 <script>
 // ===== Chapter customization: show/hide/rename/reorder tabs + custom pages =====
 (function(){
-var ICONS=[['ti-star','Star'],['ti-list-check','Checklist'],['ti-calendar','Calendar'],['ti-file-text','Document'],['ti-link','Link'],['ti-users','People'],['ti-heart','Heart'],['ti-trophy','Trophy'],['ti-flag','Flag'],['ti-clipboard-list','Clipboard'],['ti-bell','Bell'],['ti-map-pin','Place'],['ti-camera','Camera'],['ti-music','Music'],['ti-coin','Money'],['ti-book','Book'],['ti-home','Home'],['ti-bulb','Idea'],['ti-tool','Tools'],['ti-shield','Shield']];
+var ICONS=[['ti-star','Star'],['ti-list-check','Checklist'],['ti-calendar','Calendar'],['ti-file-text','Document'],['ti-link','Link'],['ti-users','People'],['ti-heart','Heart'],['ti-trophy','Trophy'],['ti-flag','Flag'],['ti-clipboard-list','Clipboard'],['ti-bell','Bell'],['ti-map-pin','Place'],['ti-camera','Camera'],['ti-music','Music'],['ti-coin','Money'],['ti-book','Book'],['ti-home','Home'],['ti-bulb','Idea'],['ti-tool','Tools'],['ti-shield','Shield'],['ti-school','School'],['ti-clock','Clock'],['ti-ticket','Ticket'],['ti-gift','Gift'],['ti-mail','Mail'],['ti-chart-bar','Chart'],['ti-run','Activity'],['ti-confetti','Party']];
 var ICON_OK={};ICONS.forEach(function(i){ICON_OK[i[0]]=1;});
 var COL_TYPES=['text','date','number','check'];
 var PAGE_RE=/^cp[a-z0-9]+$/, GRP_RE=/^cg[a-z0-9]+$/;
@@ -5684,7 +6008,7 @@ window.go=function(tab,el){
 };
 var _renderAll=window.renderAll;
 window.renderAll=function(){
-  try{applyBrand();}catch(e){console.error('brand',e);}try{applyTerms();}catch(e){console.error('terms',e);}try{applyNav();}catch(e){console.error('nav',e);}
+  try{applyBrand();}catch(e){console.error('brand',e);}try{applyTerms();}catch(e){console.error('terms',e);}try{if(window.setupWelcomeScreen)setupWelcomeScreen();}catch(e){}try{applyWelcome();}catch(e){console.error('welcome',e);}try{applyNav();}catch(e){console.error('nav',e);}
   var r=_renderAll.apply(this,arguments);
   if(PAGE_RE.test(curTab)){try{renderCustomPage(curTab);}catch(e){console.error(e);}}
   return r;
@@ -5729,7 +6053,7 @@ window.renderCustomPage=function(id){
   if(admin)bar+='<button class="btn btn-sm" onclick="cpEditPage(\''+id+'\')"><i class="ti ti-settings"></i> Page settings</button>';
   if(bar)h+='<div class="cp-bar">'+bar+'</div>';
   if(p.type==='info'){
-    h+=p.text?'<div class="cp-prose">'+mdLite(p.text)+'</div>':'<div class="empty">Nothing here yet.'+(edit?' Click “Edit content” to add something.':'')+'</div>';
+    h+=p.text?'<div class="cp-prose">'+mdLite(p.text)+'</div>':'<div class="empty">This page has no content yet.'+(edit?' Click “Edit content” to write it.':'')+'</div>';
   }else if(p.type==='embed'){
     var es=embedSrc(p.url);
     h+=es?'<div class="cp-embed"><iframe src="'+esc(es)+'" title="'+esc(p.title)+'" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" allowfullscreen></iframe></div><div class="cz-note" style="margin-top:8px">Not loading? Some sites don\'t allow being shown inside other pages. <a class="cp-link" href="'+esc(es)+'" target="_blank" rel="noopener noreferrer">Open it in a new tab</a>.</div>':'<div class="empty">No web address set yet.'+(admin?' Click “Page settings” and paste one in.':'')+'</div>';
@@ -5748,7 +6072,8 @@ window.renderCustomPage=function(id){
         return '<td>'+esc(v)+'</td>';
       }).join('')+(edit?'<td style="white-space:nowrap"><button class="btn btn-sm" onclick="cpRowModal(\''+id+'\','+i+')"><i class="ti ti-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="cpRowDel(\''+id+'\','+i+')"><i class="ti ti-trash"></i></button></td>':'')+'</tr>';
     }).join('');
-    h+=p.rows.length?'<div class="tw"><div style="overflow-x:auto"><table><thead><tr>'+th+'</tr></thead><tbody>'+body+'</tbody></table></div></div>':'<div class="empty">No rows yet.'+(edit?' Click “Add row”.':'')+'</div>';
+    if(!p.rows.length)body='<tr><td colspan="'+(cols.length+(edit?1:0))+'" style="color:var(--text2)">No rows yet.'+(edit?' Click “Add row” to add the first one.':'')+'</td></tr>';
+    h+='<div class="tw"><div style="overflow-x:auto"><table><thead><tr>'+th+'</tr></thead><tbody>'+body+'</tbody></table></div></div>';
   }
   el.innerHTML=h;
 };
@@ -5807,6 +6132,85 @@ window.cpCsv=function(id){
 // ---- page settings (create / edit / delete) : needs settings access ----
 var cpReturn=false;
 function needAdmin(){if(!(typeof canManageSettings==='function'&&canManageSettings())){showToast('Log in as an officer with settings access to change pages','error');return true;}return false;}
+
+// ---- page builder: templates + "describe it" ----
+var CP_TPL=[
+ {k:'Rules & expectations',title:'Rules & expectations',icon:'ti-file-text',type:'info',intro:'What every member agrees to.',text:'# Our standards\n- Add your first rule here\n- Add your second rule here\n\n# Attendance\n- Describe what counts as excused and unexcused\n\n# Consequences\n- Describe what happens when a rule is broken\n'},
+ {k:'Traditions',title:'Traditions',icon:'ti-flag',type:'info',intro:'The things we do every year.',text:'# Every semester\n- Tradition name: what it is and when it happens\n\n# Every year\n- Tradition name: what it is and when it happens\n\n# Our history\nWrite a short paragraph about how the chapter started.\n'},
+ {k:'Success & goals',title:'Success',icon:'ti-trophy',type:'info',intro:'Goals for this semester and how we reach them.',text:'# Chapter goals this semester\n- Goal 1\n- Goal 2\n- Goal 3\n\n# Academic support\n- Study hours, tutoring and where to find help\n\n# Resources\n- Add a link or contact for each resource\n'},
+ {k:'Meeting notes',title:'Meeting notes',icon:'ti-clipboard-list',type:'info',intro:'What was decided and who owns what.',text:'# Date and attendees\nWrite the date and who was there.\n\n# Decisions\n- Decision one\n\n# Action items\n- Name: task, due date\n'},
+ {k:'Task tracker',title:'Task tracker',icon:'ti-list-check',type:'tracker',intro:'Who owes what, and by when.',cols:[{n:'Task',t:'text'},{n:'Assigned to',t:'text'},{n:'Due date',t:'date'},{n:'Done',t:'check'}]},
+ {k:'Service hours',title:'Service hours',icon:'ti-heart',type:'tracker',intro:'Volunteer hours by member.',cols:[{n:'Member',t:'text'},{n:'Activity',t:'text'},{n:'Hours',t:'number'},{n:'Date',t:'date'}]},
+ {k:'Volunteer sign-up',title:'Volunteer sign-up',icon:'ti-users',type:'tracker',intro:'Claim a shift.',cols:[{n:'Name',t:'text'},{n:'Shift',t:'date'},{n:'Role',t:'text'},{n:'Confirmed',t:'check'}]},
+ {k:'Event ideas',title:'Event ideas',icon:'ti-bulb',type:'tracker',intro:'Ideas we are considering.',cols:[{n:'Idea',t:'text'},{n:'Owner',t:'text'},{n:'Budget',t:'number'},{n:'Approved',t:'check'}]},
+ {k:'Resource links',title:'Resources',icon:'ti-link',type:'links',intro:'Links members use most.'},
+ {k:'Form or calendar',title:'Calendar',icon:'ti-calendar',type:'embed',intro:'Shown straight from Google.'}
+];
+var CP_ICON_WORDS=[[/hour|service|volunteer|philanthrop|charity/,'ti-heart'],[/task|todo|to-do|checklist|assign|chore/,'ti-list-check'],[/calendar|schedule|date|event/,'ti-calendar'],[/link|resource|website/,'ti-link'],[/rule|bylaw|policy|standard|doc/,'ti-file-text'],[/goal|success|win|award|achiev|trophy/,'ti-trophy'],[/money|budget|cost|pay|fund|dues|sponsor/,'ti-coin'],[/study|school|academ|grade|tutor/,'ti-school'],[/idea|brainstorm/,'ti-bulb'],[/photo|picture|camera/,'ti-camera'],[/music|playlist|song/,'ti-music'],[/people|member|alumni|contact|roster|pledge|recruit/,'ti-users'],[/note|meeting|minutes/,'ti-clipboard-list'],[/tradition|history|flag/,'ti-flag'],[/sport|intramural|workout|run/,'ti-run']];
+function cap(s){s=String(s||'').trim();return s.charAt(0).toUpperCase()+s.slice(1);}
+function colType(n){
+  var l=n.toLowerCase();
+  if(/\b(done|complete|completed|finished|paid|checked|confirmed|approved|attended|attending|signed|yes\/no|rsvp|passed)\b/.test(l))return 'check';
+  if(/\b(date|due|when|deadline|day|time)\b/.test(l))return 'date';
+  if(/\b(hours?|number|count|amount|how many|cost|price|budget|points?|score|total|gpa|qty|quantity)\b|[#$]/.test(l))return 'number';
+  return 'text';
+}
+function cpInfer(raw){
+  var t=String(raw||'').replace(/\s+/g,' ').trim().slice(0,300);if(!t)return null;
+  var l=t.toLowerCase(),type='info';
+  if(/\b(google (sheet|form|doc|slide|calendar)|spreadsheet|youtube|embed|calendar view|survey)\b/.test(l))type='embed';
+  else if(/\b(track|tracker|log|sign.?up|attendance|checklist|to-?do|tasks?|hours|assign|schedule|who (has|is|owes)|columns?|table|list of (people|members|names))\b/.test(l))type='tracker';
+  else if(/\b(links?|resources?|websites?|bookmarks?)\b/.test(l))type='links';
+  var m=/\b(?:with|columns?|fields?|including|includes|showing|for each|that has|has)\b[:\s]+(.+)$/i.exec(t);
+  var head=m?t.slice(0,m.index):t, tail=m?m[1]:'';
+  var items=tail.split(/,|;|\band\b|&|\//i).map(function(x){return x.replace(/^(a|an|the|their|its|each|every|columns?|fields?|for)\s+/i,'').replace(/[.!?]+$/,'').trim();}).filter(function(x){return x&&x.length<=30;});
+  head=head.replace(/^(?:i\s+(?:want|need|would like)|can you|please|we\s+(?:want|need)|make|create|add|build|set up|give me)\s+/i,'');
+  var guard=0;while(guard++<6&&/^(a|an|the|new|page|tab|section|that|which|to|for|where|about|of)\s+/i.test(head))head=head.replace(/^(a|an|the|new|page|tab|section|that|which|to|for|where|about|of)\s+/i,'');
+  head=head.replace(/^(?:links?|a list)\s+(?:to|of)\s+/i,'');
+  head=head.replace(/^(track|list|show|keep|log|store|put|have|share|display|manage|record)\s+(?:track of\s+)?(?:all\s+|our\s+|my\s+|the\s+)?/i,'').replace(/[.!?,]+$/,'').trim();
+  var title=cap(head).slice(0,40)||'New page';
+  var icon='ti-star';for(var i=0;i<CP_ICON_WORDS.length;i++){if(CP_ICON_WORDS[i][0].test(l)){icon=CP_ICON_WORDS[i][1];break;}}
+  if(type==='embed'&&icon==='ti-star')icon='ti-calendar';
+  var out={title:title,icon:icon,type:type,intro:'',cols:[],text:''};
+  if(type==='tracker'){
+    var cols=items.slice(0,12).map(function(n){return {n:cap(n),t:colType(n)};});
+    if(!cols.length){
+      if(/task|to-?do|checklist|assign/.test(l))cols=CP_TPL[4].cols.slice();
+      else if(/hour|service|volunteer/.test(l))cols=CP_TPL[5].cols.slice();
+      else if(/sign.?up|shift/.test(l))cols=CP_TPL[6].cols.slice();
+      else cols=[{n:'Name',t:'text'},{n:'Details',t:'text'},{n:'Date',t:'date'}];
+    }
+    out.cols=cols;
+  }else if(type==='info'){
+    var s='# '+title+'\n';
+    if(items.length){items.forEach(function(n){s+='\n# '+cap(n)+'\n- Write the first point here\n';});}
+    else s+=t.replace(/[.!?]*$/,'')+'.\n\n- Add your first point here\n- Add your second point here\n';
+    out.text=s;
+  }
+  return out;
+}
+window.cpSetType=function(v){
+  var y=document.getElementById('cpy');if(y)y.value=v;
+  var show=function(id,on){var e=document.getElementById(id);if(e)e.style.display=on?'':'none';};
+  show('cpcw',v==='tracker');show('cpuw',v==='embed');show('cpxw',v==='info'&&!window.__cpEditing);
+};
+function cpApply(sp){
+  if(!sp)return;
+  var set=function(id,v){var e=document.getElementById(id);if(e)e.value=v;};
+  set('cpt',sp.title||'');set('cpd',sp.intro||'');
+  var ic=document.getElementById('cpi');if(ic)ic.value=iconOf(sp.icon);
+  set('cpc',(sp.cols&&sp.cols.length?sp.cols:[{n:'Name',t:'text'},{n:'Notes',t:'text'}]).map(function(c){return c.n+(c.t&&c.t!=='text'?' | '+c.t:'');}).join('\n'));
+  set('cpx',sp.text||'');
+  cpSetType(sp.type);
+  var pv=document.getElementById('cpprev');
+  if(pv){var what={info:'a text page',links:'a list of links',tracker:'a tracker with columns: '+(sp.cols||[]).map(function(c){return c.n;}).join(', '),embed:'an embedded web page (paste its address below)'}[sp.type];pv.textContent='Built '+what+'. Change anything below, then create the page.';pv.style.display='';}
+}
+window.cpTpl=function(i){cpApply(CP_TPL[i]);};
+window.cpDescribe=function(){
+  var sp=cpInfer(gv('cpq'));
+  if(!sp){showToast('Describe the page first, for example: track service hours with name, hours and date','error');return;}
+  cpApply(sp);
+};
 window.cpEditPage=function(id,groupKey){
   if(needAdmin())return;
   var p=id?findPage(id):null;if(id&&!p)return;
@@ -5816,14 +6220,17 @@ window.cpEditPage=function(id,groupKey){
   var curG=p?p.group:(groupKey||groups[0].key);
   var type=p?p.type:'info';
   var colsTxt=p?p.cols.map(function(c){return c.n+(c.t&&c.t!=='text'?' | '+c.t:'');}).join('\n'):'Name\nNotes';
-  var h='<div class="fr"><label class="fl">Page name</label><input class="inp" id="cpt" maxlength="40" value="'+esc(p?p.title:'')+'" placeholder="e.g. Chapter Traditions"></div>'+
+  window.__cpEditing=!!p;
+  var build=p?'':'<div class="cp-build"><label class="fl" for="cpq">Describe the page you want</label><div class="cp-q"><input class="inp" id="cpq" maxlength="300" placeholder="e.g. Track pledge tasks with name, due date and done" onkeydown="if(event.key===\'Enter\'){event.preventDefault();cpDescribe();}"><button class="btn btn-primary" type="button" onclick="cpDescribe()">Build it</button></div><div class="cz-note" style="margin:8px 0 6px">Or start from a template:</div><div class="cp-chips">'+CP_TPL.map(function(t,i){return '<button type="button" class="cp-chip" onclick="cpTpl('+i+')">'+esc(t.k)+'</button>';}).join('')+'</div><div class="cz-note" id="cpprev" style="display:none;margin:8px 0 0"></div></div>';
+  var h=build+'<div class="fr"><label class="fl">Page name</label><input class="inp" id="cpt" maxlength="40" value="'+esc(p?p.title:'')+'" placeholder="e.g. Chapter Traditions"></div>'+
    '<div class="fr2"><div class="fr"><label class="fl">Icon</label><select class="inp" id="cpi">'+ICONS.map(function(i){return '<option value="'+i[0]+'"'+((p?iconOf(p.icon):'ti-star')===i[0]?' selected':'')+'>'+i[1]+'</option>';}).join('')+'</select></div>'+
    '<div class="fr"><label class="fl">Section</label><select class="inp" id="cpg">'+groups.map(function(g){return '<option value="'+g.key+'"'+(g.key===curG?' selected':'')+'>'+esc(g.name)+'</option>';}).join('')+'</select></div></div>'+
    '<div class="fr"><label class="fl">…or create a new section for it (optional)</label><input class="inp" id="cpng" maxlength="30" placeholder="e.g. Traditions"></div>'+
-   '<div class="fr"><label class="fl">What kind of page?</label><select class="inp" id="cpy" onchange="document.getElementById(\'cpcw\').style.display=this.value===\'tracker\'?\'\':\'none\';document.getElementById(\'cpuw\').style.display=this.value===\'embed\'?\'\':\'none\'"><option value="info"'+(type==='info'?' selected':'')+'>Text page (rules, info, notes)</option><option value="links"'+(type==='links'?' selected':'')+'>List of links</option><option value="tracker"'+(type==='tracker'?' selected':'')+'>Tracker table (your own columns)</option><option value="embed"'+(type==='embed'?' selected':'')+'>Embedded web page (Google Sheet, Form, calendar, video…)</option></select></div>'+
+   '<div class="fr"><label class="fl">What kind of page?</label><select class="inp" id="cpy" onchange="document.getElementById(\'cpcw\').style.display=this.value===\'tracker\'?\'\':\'none\';document.getElementById(\'cpuw\').style.display=this.value===\'embed\'?\'\':\'none\';cpSetType(this.value)"><option value="info"'+(type==='info'?' selected':'')+'>Text page (rules, info, notes)</option><option value="links"'+(type==='links'?' selected':'')+'>List of links</option><option value="tracker"'+(type==='tracker'?' selected':'')+'>Tracker table (your own columns)</option><option value="embed"'+(type==='embed'?' selected':'')+'>Embedded web page (Google Sheet, Form, calendar, video…)</option></select></div>'+
    '<div class="fr"><label class="fl">Short description (optional)</label><input class="inp" id="cpd" maxlength="200" value="'+esc(p?p.intro||'':'')+'"></div>'+
    '<div class="fr" id="cpcw" style="display:'+(type==='tracker'?'':'none')+'"><label class="fl">Tracker columns — one per line. Add “ | date”, “ | number” or “ | check” for other types.</label><textarea class="inp" id="cpc" rows="4">'+esc(colsTxt)+'</textarea></div>'+
    '<div class="fr" id="cpuw" style="display:'+(type==='embed'?'':'none')+'"><label class="fl">Web address to show on this page</label><input class="inp" id="cpu" placeholder="https://docs.google.com/forms/..." value="'+esc(p?p.url||'':'')+'"><div class="cz-note" style="margin-top:4px">Paste the link to a Google Form, Sheet, Doc, Slides, YouTube video or any page that allows embedding. For Google files, turn on link sharing first.</div></div>'+
+   '<div class="fr" id="cpxw" style="display:'+(!p&&type==='info'?'':'none')+'"><label class="fl">Starting text (you can edit it later)</label><textarea class="inp" id="cpx" rows="6" maxlength="8000" placeholder="Write what the page should say. Start a line with # for a heading or - for a bullet."></textarea></div>'+
    '<div class="cz-warn"><i class="ti ti-eye"></i> Custom pages can be seen by anyone who opens this site. Don\'t put private info (phone numbers, grades, money owed) on them.</div>'+
    '<div class="fa">'+(p?'<button class="btn btn-danger" style="margin-right:auto" onclick="cpDeletePage(\''+id+'\')">Delete page</button>':'')+'<button class="btn" onclick="cpCancel()">Cancel</button><button class="btn btn-primary" onclick="cpSavePage(\''+(id||'')+'\')">'+(p?'Save':'Create page')+'</button></div>';
   openModal(p?'Page settings':'Add a page',h);
@@ -5849,6 +6256,7 @@ window.cpSavePage=function(id){
   var existing=id?findPage(id):null;
   var page=existing?Object.assign({},existing):{id:'cp'+rid(),text:'',links:[],rows:[],cols:[]};
   page.title=title;page.icon=iconOf(gv('cpi'));page.group=group;page.type=type;page.intro=gv('cpd').trim().slice(0,200);if(type==='embed')page.url=embedUrl;
+  if(!existing&&type==='info'){page.text=gv('cpx').slice(0,8000);}
   if(type==='tracker'){
     page.cols=parseCols(gv('cpc'));
     page.rows=page.rows.map(function(r){return page.cols.map(function(c,j){return r[j]==null?'':String(r[j]);});});
@@ -5879,7 +6287,7 @@ function sw(on,fn){return '<label class="cz-sw"><input type="checkbox" '+(on?'ch
 function czHtml(){
   var groups=model();
   var h='<div class="cz-note">Turn tabs on or off, rename them, change their order, or add your own pages. <b>Changes save instantly</b> and apply to everyone. Turning a tab off only hides it — its data is kept, and you can turn it back on any time.</div>';
-  h+=brandHtml();h+=wordingHtml();
+  h+=kitsHtml();h+=brandHtml();h+=welcomeHtml();h+=wordingHtml();
   groups.forEach(function(g,gi){
     h+='<div class="cz-grp"><div class="cz-row cz-ghead'+(g.hidden?' cz-off':'')+'">'+mv('czMoveGroup',[g.key],gi,groups.length)+'<input class="inp" aria-label="Section name" maxlength="30" value="'+esc(tx(g.name))+'" onchange="czGroupName(\''+g.key+'\',this.value)">'+sw(!g.hidden,"czGroupVis('"+g.key+"',this.checked)")+(g.custom&&!g.virtual?'<button class="btn btn-sm btn-danger" title="Delete section" aria-label="Delete section" onclick="czDelGroup(\''+g.key+'\')"><i class="ti ti-trash"></i></button>':'')+'</div>';
     g.items.forEach(function(it,ii){
@@ -5989,7 +6397,7 @@ function applyBrand(force){
     var logo=LOGO_RE.test(b.logo||'')&&b.logo.length<120000?b.logo:'';
     var sp=badge.querySelector('span'),im=badge.querySelector('img');
     if(logo){badge.classList.add('has-logo');if(!im){im=document.createElement('img');im.alt='';badge.appendChild(im);}im.src=logo;if(sp)sp.style.display='none';}
-    else{badge.classList.remove('has-logo');if(im)im.remove();if(sp){sp.style.display='';sp.textContent=String(b.badge||'VAULT').slice(0,5);}}
+    else{badge.classList.remove('has-logo');if(im)im.remove();if(sp){sp.style.display='';sp.textContent=String(b.badge||defaultBadge()).slice(0,5);}}
   }
   var ic=document.querySelector('link[rel="icon"]');
   if(ic){
@@ -5999,6 +6407,18 @@ function applyBrand(force){
     else if(v){var letter=String(b.badge||'V').trim().charAt(0).toUpperCase()||'V';ic.setAttribute('href','data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><polygon points='32,2 60,14 60,34 32,62 4,34 4,14' fill='"+v['--navy']+"'/><text x='32' y='40' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='26' fill='#fff'>"+letter.replace(/[<>&]/g,'')+"</text></svg>"));}
     else ic.setAttribute('href',ORIG_ICON);
   }
+  try{setHomeIcon(getComputedStyle(document.documentElement).getPropertyValue('--navy').trim()||'#6d1a2a',LOGO_RE.test(b.logo||'')?b.logo:'',String(b.badge||defaultBadge()).trim().slice(0,3).toUpperCase()||'V');}catch(e){}
+}
+function defaultBadge(){var p=cleanTerm(obj(window.settings&&window.settings.terms).product);return p?p.split(/\s+/)[0].toUpperCase().slice(0,5):'VAULT';}
+function setHomeIcon(color,logo,text){
+  var tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.setAttribute('content',color);
+  var cv=document.createElement('canvas');cv.width=cv.height=180;var c=cv.getContext('2d');if(!c)return;
+  var link=document.querySelector('link[rel="apple-touch-icon"]');
+  if(!link){link=document.createElement('link');link.rel='apple-touch-icon';document.head.appendChild(link);}
+  c.fillStyle=color;c.fillRect(0,0,180,180);
+  if(logo){var im=new Image();im.onload=function(){var r=Math.min(130/im.width,130/im.height);c.fillStyle='#fff';c.fillRect(0,0,180,180);c.drawImage(im,(180-im.width*r)/2,(180-im.height*r)/2,im.width*r,im.height*r);try{link.href=cv.toDataURL('image/png');}catch(e){}};im.src=logo;return;}
+  c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';c.font='bold '+(text.length>2?62:(text.length>1?80:104))+'px system-ui,-apple-system,sans-serif';c.fillText(text,90,96);
+  try{link.href=cv.toDataURL('image/png');}catch(e){}
 }
 function bset(fn){
   var s=window.settings;s.brand=obj(s.brand);fn(s.brand);
@@ -6043,10 +6463,13 @@ window.czLogo=function(inp){
 
 // ---- wording: what each chapter calls things (brother/sister, father/big, pledge...) ----
 var TERM_DEFAULTS={member:'brother',brotherhood:'Brotherhood',father:'Father',pledge:'pledge'};
-var TR=[],trSig='',obs=null,tracked=new Map(),pending=new Set(),rafId=0;
+var TR=[],trSig='',obs=null,tracked=new Map(),attrTracked=new Map(),pending=new Set(),rafId=0;
+var TR_ATTRS=['placeholder','aria-label','title'];
 function cleanTerm(v){return String(v==null?'':v).replace(/[<>&"]/g,'').trim().slice(0,24);}
 function termRules(){
   var t=obj(window.settings&&window.settings.terms),r=[];
+  var pr=cleanTerm(t.product);
+  if(pr&&!/vault/i.test(pr)){r.push({re:/\bthe vault\b/gi,val:pr,plural:false,raw:true});r.push({re:/\bvault\b/gi,val:pr,plural:false,raw:true});}
   var mem=cleanTerm(t.member),bro=cleanTerm(t.brotherhood),fa=cleanTerm(t.father),pl=cleanTerm(t.pledge);
   if(mem&&mem.toLowerCase()!=='brother'){
     var bh=bro||(mem.toLowerCase()==='sister'?'Sisterhood':'Fellowship');
@@ -6063,7 +6486,7 @@ function matchCase(m,v){
   return v.charAt(0).toLowerCase()+v.slice(1);
 }
 function txWith(rules,s){
-  rules.forEach(function(r){s=s.replace(r.re,function(m,sfx){return matchCase(m,r.val+(r.plural&&typeof sfx==='string'&&sfx?'s':''));});});
+  rules.forEach(function(r){s=s.replace(r.re,function(m,sfx){if(r.raw)return (m.length>1&&m===m.toUpperCase())?r.val.toUpperCase():r.val;return matchCase(m,r.val+(r.plural&&typeof sfx==='string'&&sfx?'s':''));});});
   return s;
 }
 function tx(s){return TR.length?txWith(TR,String(s==null?'':s)):String(s==null?'':s);}
@@ -6079,15 +6502,19 @@ function procNode(n){
   if(out!==cur){tracked.set(n,{src:cur,out:out});n.nodeValue=out;}
   else if(rec)tracked.delete(n);
 }
+function attrOk(el){return !!el&&el.nodeType===1&&!/^(SCRIPT|STYLE)$/.test(el.tagName)&&!(el.closest&&el.closest('[data-noterms]'));}
 function walk(root){
   if(!TR.length)return;
   if(root.nodeType===3){if(termOk(root.parentNode))procNode(root);return;}
-  if(root.nodeType!==1||!termOk(root))return;
+  if(root.nodeType!==1||!(termOk(root)||attrOk(root)))return;
   var tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[];
   while(tw.nextNode())nodes.push(tw.currentNode);
   nodes.forEach(function(n){if(termOk(n.parentNode))procNode(n);});
-  var els=[].slice.call(root.querySelectorAll('[placeholder]'));if(root.hasAttribute('placeholder'))els.push(root);
-  els.forEach(function(el){if(!termOk(el))return;var v=el.getAttribute('placeholder'),o=txWith(TR,v);if(o!==v)el.setAttribute('placeholder',o);});
+  var els=[].slice.call(root.querySelectorAll('[placeholder],[aria-label],[title]'));els.push(root);
+  els.forEach(function(el){if(!attrOk(el))return;TR_ATTRS.forEach(function(a){
+    var v=el.getAttribute(a);if(v==null)return;var o=txWith(TR,v);
+    if(o!==v){var rec=attrTracked.get(el)||{};rec[a]={src:v,out:o};attrTracked.set(el,rec);el.setAttribute(a,o);}
+  });});
 }
 function flush(){
   rafId=0;var list=Array.from(pending);pending.clear();
@@ -6097,10 +6524,10 @@ function flush(){
 function ensureObs(){
   if(obs||!window.MutationObserver)return;
   obs=new MutationObserver(function(recs){
-    recs.forEach(function(r){if(r.type==='characterData')pending.add(r.target);else r.addedNodes.forEach(function(n){pending.add(n);});});
+    recs.forEach(function(r){if(r.type==='characterData'||r.type==='attributes')pending.add(r.target);else r.addedNodes.forEach(function(n){pending.add(n);});});
     if(!rafId)rafId=requestAnimationFrame(flush);
   });
-  obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  obs.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:TR_ATTRS});
 }
 function applyTerms(force){
   var sig=JSON.stringify(obj(window.settings&&window.settings.terms));
@@ -6108,6 +6535,8 @@ function applyTerms(force){
   if(obs)obs.takeRecords();
   tracked.forEach(function(rec,n){if(n.isConnected&&n.nodeValue===rec.out)n.nodeValue=rec.src;});
   tracked.clear();
+  attrTracked.forEach(function(rec,el){if(!el.isConnected)return;Object.keys(rec).forEach(function(a){if(el.getAttribute(a)===rec[a].out)el.setAttribute(a,rec[a].src);});});
+  attrTracked.clear();
   TR=termRules();
   if(!TR.length){if(obs){obs.disconnect();obs=null;}return;}
   ensureObs();walk(document.body);if(obs)obs.takeRecords();
@@ -6120,8 +6549,107 @@ window.natTypes=function(extra){
 };
 function sset(fn){
   var s=window.settings;fn(s);
-  save('settings',clone(s));writeCache();applyTerms();renderAll();
+  save('settings',clone(s));writeCache();applyTerms();applyWelcome();renderAll();
 }
+
+// ---- name, welcome screen and font ----
+var DEF_MOTTOS=['One Brotherhood. One Vault.','Built on brotherhood. Driven by purpose.','Your chapter. Your people. Your home.'];
+var DEF_WORDS=['VALUES','LOYALTY','TRUST'];
+var FONTS={serif:"Georgia,'Times New Roman',serif",modern:"-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif",rounded:"ui-rounded,'SF Pro Rounded','Segoe UI',system-ui,sans-serif",mono:"ui-monospace,Menlo,Consolas,monospace"};
+function wclean(v,n){return String(v==null?'':v).replace(/[<>]/g,'').replace(/\s+/g,' ').trim().slice(0,n);}
+function initialsOf(name){var w=String(name).trim().split(/\s+/).filter(Boolean);var s=w.length>=2?w.slice(0,3).map(function(x){return x.charAt(0);}).join(''):w[0]||'';return s.slice(0,3).toUpperCase();}
+function setTxt(sel,v){var e=document.querySelector(sel);if(e&&e.textContent!==v)e.textContent=v;}
+var lastWel=null;
+function applyWelcome(force){
+  var w=obj(window.settings&&window.settings.welcome),b=obj(window.settings&&window.settings.brand),prod=cleanTerm(obj(window.settings&&window.settings.terms).product);
+  var sig=JSON.stringify([w,b.font,prod]);if(!force&&sig===lastWel)return;
+  var prodChanged=!lastWel||JSON.parse(lastWel)[2]!==prod;lastWel=sig;
+  if(prodChanged){try{applyBrand(true);}catch(e){}}
+  var st=document.documentElement.style;
+  document.title=prod||'The Vault';
+  if(prod)st.setProperty('--wm','"'+prod.toUpperCase().replace(/["\\]/g,'')+'"');else st.removeProperty('--wm');
+  var fs=document.getElementById('cz-font');
+  if(FONTS[b.font]){if(!fs){fs=document.createElement('style');fs.id='cz-font';document.head.appendChild(fs);}fs.textContent='body,button,input,select,textarea{font-family:'+FONTS[b.font]+'}';}else if(fs)fs.remove();
+  var letters=wclean(w.letters,3).toUpperCase()||(prod?initialsOf(prod):'')||'VLT';
+  var box=document.querySelector('.pi-type');
+  if(box&&box.getAttribute('data-l')!==letters){box.innerHTML='';letters.split('').forEach(function(c){var s=document.createElement('span');s.className='pi-letter';s.textContent=c;box.appendChild(s);});box.setAttribute('data-l',letters);box.setAttribute('aria-label',prod||'The Vault');}
+  setTxt('.welcome-kicker',wclean(w.kicker,40)||'CHAPTER MANAGEMENT');
+  var cfg=window.VAULT_LOCKSCREEN_CONFIG;
+  if(cfg){
+    var ms=arr(w.mottos).map(function(x){return wclean(x,80);}).filter(Boolean).slice(0,3);
+    cfg.messages=(ms.length?ms:DEF_MOTTOS).map(function(x){return tx(x);});
+    cfg.publicPreview=cfg.publicPreview||{};
+    cfg.publicPreview.title=tx(wclean(w.ptitle,60)||'Welcome to The Vault');
+    cfg.publicPreview.body=tx(wclean(w.pbody,160)||'Your chapter workspace is one step away.');
+    setTxt('#pi-preview-title',cfg.publicPreview.title);setTxt('#pi-preview-body',cfg.publicPreview.body);
+    setTxt('.mini-next p',cfg.messages[0]);
+  }
+  var words=arr(w.words).map(function(x){return wclean(x,10).toUpperCase();}).filter(Boolean).slice(0,3);if(!words.length)words=DEF_WORDS;
+  var sp=document.querySelector('.pi-spell');
+  if(sp&&sp.getAttribute('data-w')!==words.join('|')){
+    sp.innerHTML='';sp.setAttribute('data-w',words.join('|'));sp.setAttribute('aria-label',words.join(' '));
+    words.forEach(function(word){var row=document.createElement('span');row.className='pi-word';row.setAttribute('aria-hidden','true');word.split('').forEach(function(c){var e=document.createElement('i');e.textContent=c;row.appendChild(e);});sp.appendChild(row);});
+  }
+}
+var _setupWelcome=window.setupWelcomeScreen;
+window.setupWelcomeScreen=function(){
+  var r=_setupWelcome&&_setupWelcome.apply(this,arguments);
+  var w=obj(window.settings&&window.settings.welcome),sub=document.getElementById('welcome-subtitle'),sl=wclean(w.subtitle,140);
+  if(sub&&sl)sub.textContent=tx(sl);
+  try{applyWelcome(true);}catch(e){console.error('welcome',e);}
+  return r;
+};
+
+// ---- starter kits: one click sets wording + which tabs are shown ----
+var KITS=[
+ {id:'frat',name:'Fraternity',note:'Brother, Father, pledge. Every tab on.',terms:{},hidden:[]},
+ {id:'soro',name:'Sorority',note:'Sister, Sisterhood, Big, new member.',terms:{member:'sister',brotherhood:'Sisterhood',father:'Big',pledge:'new member'},hidden:[]},
+ {id:'club',name:'Student club',note:'Member, Community, Mentor. Hides family tree, house, chapter week, national events, sober drivers, risk management and alumni opportunities.',terms:{member:'member',brotherhood:'Community',father:'Mentor',pledge:'new member'},hidden:['familytree','house','tkeweek','natevents','sober','riskmgmt','opportunities']},
+ {id:'honor',name:'Honor society',note:'Member, Fellowship, Mentor, candidate. Hides house, chapter week, sober drivers, risk management and fundraising.',terms:{member:'member',brotherhood:'Fellowship',father:'Mentor',pledge:'candidate'},hidden:['familytree','house','tkeweek','sober','riskmgmt','concessions']}
+];
+function kitsHtml(){
+  var btns=KITS.map(function(k){return '<div class="cz-row" style="align-items:flex-start"><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">'+esc(k.name)+'</div><div class="cz-note" style="margin:0">'+esc(k.note)+'</div></div><button class="btn btn-sm" onclick="czKit(\''+k.id+'\')">Use this</button></div>';}).join('');
+  return '<div class="cz-grp" data-noterms="1"><div class="cz-title">Starter kits</div><div class="cz-note" style="margin-bottom:8px">Setting up for a different kind of group? Pick a kit to set the wording and hide tabs that do not apply. You can still change anything below afterwards. Your data and custom pages are never deleted.</div>'+btns+'</div>';
+}
+window.czKit=function(id){
+  var k=KITS.filter(function(x){return x.id===id;})[0];if(!k)return;
+  if(!confirm('Apply the "'+k.name+'" kit? This replaces your wording and which tabs are hidden. Your data and custom pages are kept.'))return;
+  nset(function(n){n.hidden=k.hidden.slice();n.hiddenGroups=arr(n.hiddenGroups);});
+  var s=window.settings,prod=obj(s.terms).product;
+  var nt=Object.assign({},k.terms);if(prod)nt.product=prod;
+  if(Object.keys(nt).length)s.terms=nt;else delete s.terms;
+  save('settings',clone(s));writeCache();applyTerms(true);applyWelcome(true);renderAll();czRender();
+  showToast('Kit applied: '+k.name,'success');
+};
+function welcomeHtml(){
+  var w=obj(window.settings&&window.settings.welcome),t=obj(window.settings&&window.settings.terms),b=obj(window.settings&&window.settings.brand);
+  var inp=function(label,key,ph,max,val){return '<div class="cz-row"><span class="cz-lbl" style="width:150px">'+label+'</span><input class="inp" maxlength="'+max+'" placeholder="'+esc(ph)+'" aria-label="'+label+'" value="'+esc(val)+'" onchange="czWel(\''+key+'\',this.value)"></div>';};
+  var ms=arr(w.mottos).join(' | '),ws=arr(w.words).join(', ');
+  var fopts=[['','Default'],['modern','Clean sans-serif'],['serif','Classic serif'],['rounded','Rounded'],['mono','Typewriter']].map(function(o){return '<option value="'+o[0]+'"'+((b.font||'')===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join('');
+  return '<div class="cz-grp" data-noterms="1"><div class="cz-title">Name &amp; welcome screen</div>'+
+   '<div class="cz-note" style="margin-bottom:8px">Make the site feel like yours. Leave a box empty to use the default. Changes show on the welcome screen, so log out or reload to see them.</div>'+
+   '<div class="cz-row"><span class="cz-lbl" style="width:150px">Site name</span><input class="inp" maxlength="24" placeholder="The Vault" aria-label="Site name" value="'+esc(t.product||'')+'" onchange="czTerm(\'product\',this.value)"></div>'+
+   '<div class="cz-note" style="margin:0 0 8px">Replaces &ldquo;The Vault&rdquo; everywhere: the browser tab, the sidebar watermark, the AI helper and the welcome screen.</div>'+
+   inp('Big letters (up to 3)','letters','VLT',3,w.letters||'')+
+   inp('Label above the title','kicker','CHAPTER MANAGEMENT',40,w.kicker||'')+
+   inp('Welcome sentence','subtitle','Welcome to the semester...',140,w.subtitle||'')+
+   inp('Taglines (separate with |)','mottos','Brotherhood | Scholarship | Service',240,ms)+
+   inp('Animated words (comma)','words','VALUES, LOYALTY, TRUST',60,ws)+
+   inp('Welcome box title','ptitle','Welcome to The Vault',60,w.ptitle||'')+
+   inp('Welcome box message','pbody','Your chapter workspace is one step away.',160,w.pbody||'')+
+   '<div class="cz-row"><span class="cz-lbl" style="width:150px">Font</span><select class="inp" aria-label="Font" onchange="czFont(this.value)">'+fopts+'</select></div></div>';
+}
+window.czWel=function(key,v){
+  var lim={letters:3,kicker:40,subtitle:140,ptitle:60,pbody:160,mottos:240,words:60}[key]||60;
+  v=wclean(v,lim);
+  var val=v;
+  if(key==='mottos')val=v?v.split('|').map(function(x){return x.trim();}).filter(Boolean).slice(0,3):'';
+  if(key==='words')val=v?v.split(/[,|]/).map(function(x){return x.trim();}).filter(Boolean).slice(0,3):'';
+  if(key==='letters')val=v.replace(/\s/g,'');
+  sset(function(s){s.welcome=obj(s.welcome);if(val&&(!Array.isArray(val)||val.length))s.welcome[key]=val;else delete s.welcome[key];if(!Object.keys(s.welcome).length)delete s.welcome;});
+  czRender();
+};
+window.czFont=function(v){bset(function(b){if(FONTS[v])b.font=v;else delete b.font;});applyWelcome();czRender();};
 function wordingHtml(){
   var t=obj(window.settings&&window.settings.terms);
   var dl=function(id,opts){return '<datalist id="'+id+'">'+opts.map(function(o){return '<option value="'+o+'">';}).join('')+'</datalist>';};
@@ -6159,7 +6687,7 @@ window.czNatTypes=function(v){
 };
 
 // ---- init ----
-applyBrand(true);applyTerms(true);applyNav(true);
+applyBrand(true);applyTerms(true);applyWelcome(true);applyNav(true);
 })();
 </script>
 

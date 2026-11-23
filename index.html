@@ -2097,6 +2097,7 @@ function vaultAIContext(){
     'When it is actually relevant to what they asked, you may use this live chapter data, but do not force it into unrelated answers: '+
     active.length+' active members, '+upcoming.length+' upcoming event(s), '+unpaid+' unpaid dues record(s), '+points.length+' point log entries. '+
     'System health: '+(failed.length?failed.length+' issue(s) — '+failed.map(function(c){return c.label+': '+c.detail;}).join('; '):'all normal')+'. '+
+    'If you are asked for ideas, polls, captions or similar, give fresh, specific options each time and never repeat an earlier answer in this conversation. '+
     'Keep replies concise and use plain text only (no markdown and no HTML).';
 }
 function setVaultAIStatus(text,cls){var el=document.getElementById('ai-status-badge');if(el){el.innerHTML='<i class="ti ti-circle-filled"></i> '+esc(text);el.className='ai-status'+(cls?' '+cls:'');}}
@@ -5050,7 +5051,7 @@ function openSettingsModal(){
     '<div class="fr"><label class="fl">Study hours minimum (per semester)</label><input class="inp" id="sstudy" type="number" value="'+numOr(settings.studyMin,10)+'"></div>'+
     '<div class="fr"><label class="fl">Chapter founding date (optional)</label><input class="inp" id="sfd" type="date" value="'+(settings.foundingDate||'')+'"></div>'+
     '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 8px">Vault AI</div>'+
-    '<div class="fr"><label class="fl">AI proxy URL (optional — connects Vault AI to a real language model)</label><input class="inp" id="svaiurl" placeholder="https://your-worker.workers.dev" value="'+esc(settings.vaultAIProxyUrl||'')+'"></div>'+
+    '<div class="fr"><label class="fl">AI address (optional — connects Vault AI to a real AI like Claude or ChatGPT; setup steps are in AI-SETUP.md)</label><input class="inp" id="svaiurl" placeholder="https://your-worker.workers.dev" value="'+esc(settings.vaultAIProxyUrl||'')+'"></div>'+
     '<div class="fr2"><div class="fr"><label class="fl">Points per event attended</label><input class="inp" id="sppe" type="number" value="'+(typeof settings.pointsPerEvent==='number'?settings.pointsPerEvent:0)+'"></div>'+
     '<div class="fr"><label class="fl">Points per study hour</label><input class="inp" id="spph" type="number" value="'+(typeof settings.pointsPerStudyHour==='number'?settings.pointsPerStudyHour:1)+'"></div></div>'+
     '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 8px">Add performance chart data point</div>'+
@@ -5637,6 +5638,64 @@ function dismissSetup(){settings.setupDismissed=true;save('settings',settings);r
   var _rd=window.renderDashboard;
   if(typeof _rd==='function'){window.renderDashboard=function(){var r=_rd.apply(this,arguments);try{renderSetupCard();}catch(e){console.error('setup card',e);}return r;};}
   try{renderSetupCard();}catch(e){}
+})();
+// Offline Vault AI: fresh answers every time (shuffled decks, no immediate repeats) + one-time hint to connect a real AI.
+(function(){
+var decks={};
+function deck(kind,items){var d=decks[kind];if(!d||!d.left.length){var a=items.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}
+  if(d&&d.last!==undefined&&a.length>1&&a[0]===d.last){var s=a.shift();a.push(s);}
+  d=decks[kind]={left:a,last:d&&d.last};}
+  var x=d.left.shift();d.last=x;return x;}
+function some(kind,items,n){var out=[];for(var i=0;i<n&&i<items.length;i++){var x=deck(kind,items);if(out.indexOf(x)<0)out.push(x);else i--;if(out.length>=items.length)break;}return out;}
+var POLLS=[
+ ['Which brotherhood event should we do next?',['Game tournament','Group dinner','Outdoor day','Movie night']],
+ ['What day works best for weekly study hours?',['Sunday evening','Monday','Tuesday','Wednesday']],
+ ['Which philanthropy cause should we back this semester?',['Local food bank','Animal shelter','Children’s hospital','Campus cleanup']],
+ ['What should our next fundraiser be?',['Restaurant percentage night','Cookout or tailgate','Gaming tournament','Car wash']],
+ ['Which social theme do you want most?',['Decades night','Neon night','Around the world','Country club']],
+ ['How should we spend the next chunk of the budget?',['Chapter apparel','Social events','Service project supplies','Savings for next semester']],
+ ['What time should chapter meetings start?',['6:00 PM','7:00 PM','8:00 PM','9:00 PM']],
+ ['Which guest speaker would help most?',['Alumni in your career field','A campus leader','A financial literacy coach','A resume and interview coach']],
+ ['What should our next group trip be?',['Hiking day','Lake day','Sports game','Escape room']],
+ ['How should we hand out recognition this month?',['Member of the month vote','Shoutouts at meeting','Points leaderboard prize','Group dinner for top attendance']],
+ ['What is the biggest thing holding attendance back?',['Class schedule conflicts','Too many events','Not enough notice','Events not fun enough']],
+ ['Which recruitment event should we run?',['Cookout','Game night','Service day with prospects','Coffee meetups']],
+ ['What do you want more of this semester?',['Study support','Social events','Service hours','Alumni networking']],
+ ['Which meeting format do you prefer?',['Shorter and weekly','Longer and every two weeks','Committee breakouts first','Mostly reports in writing']]
+];
+var THEMES=[['Decades Night','each group dresses from a different decade'],['Country Club','golf attire, lawn games and mocktails'],['Neon Night','blacklights, glow paint and music'],['Around the World','food and decorations from different countries'],['Casino Night','play-money games with prizes at the end'],['Beach Day Indoors','tropical outfits, sand-free games and smoothies'],['Superhero vs. Villain','teams, costumes and a trivia showdown'],['Mystery Dinner','assigned characters and a whodunit'],['Tailgate Takeover','grill, yard games and a game-day watch'],['Retro Arcade','tournaments on classic games with a high-score board'],['Formal Throwback','dress up and recreate your old school dance'],['Campfire Night','s’mores, stories and a playlist from members']];
+var FUND=[['Restaurant percentage night','ask a local spot to donate a share of sales for the evening'],['Cookout or tailgate','sell plates and promote it through announcements and social media'],['Gaming or trivia tournament','collect entry fees and give small prizes'],['Car wash','simple, visible and good for recruitment too'],['Sponsored challenge','members collect pledges per mile, push-up or study hour'],['Merch pre-order','sell a limited shirt or hat run and order only what is sold'],['Local business partnership','sell a coupon card good at nearby shops'],['Bake sale or coffee cart','set up near a busy campus spot at exam time'],['Talent show','sell tickets and let members compete for a trophy'],['Alumni matching gift','ask an alumnus to match every dollar raised up to a limit']];
+var BROTH=[['Rotating cook night','one member hosts dinner each week'],['Game tournament','FIFA, Madden, poker, bowling or trivia'],['Outdoor day','pickup sports, hiking, fishing or a park cookout'],['Alumni panel and dinner','hear how others got where they are'],['Movie night with a check-in','watch something, then each person shares a high and a low'],['Skills swap','everyone teaches a 10-minute skill: cooking, budgeting, a card trick'],['Early-morning workout club','a regular time anyone can join'],['Big-little or mentor lunches','pair people up and cover lunch'],['Road trip to a game or concert','split gas and plan the playlist together'],['Service-and-pizza day','volunteer for two hours, then eat together'],['Photo scavenger hunt','teams race around campus completing silly challenges'],['Story night','members share a short story about why they joined']];
+var SERVICE=[['Campus or neighborhood cleanup','bring bags and gloves, pick a street or park'],['Food bank sorting and delivery','a quick, high-impact shift'],['Yard work or moving help','for elderly residents or neighbors'],['Animal shelter day','walk dogs, clean kennels, collect supplies'],['School supply drive','collect backpacks and notebooks before the semester'],['Meal-prep for a shelter','cook in the house and deliver'],['Park or trail restoration','paint, plant or clear brush with a local group'],['Reading hour at a library','read to kids on a weekend morning'],['Blood drive helpers','set up, check people in and hand out snacks'],['Senior center game day','cards, bingo and conversation']];
+var CAPS=['Built by brotherhood. Driven by purpose.','Show up. Serve up. Step up.','Good people, good grades, good times.','The work we put in today is the chapter we leave behind.','Proud of the people who show up every week.','Friendships that last longer than the semester.','Leadership is a habit. We practice it together.','Small things, done together, add up.'];
+var TAGS=['#Brotherhood #Leadership #Service #CampusLife','#GreekLife #Community #Leadership #Together','#ChapterLife #Service #Scholarship #Friendship'];
+var ATT=['Post event details at least one week ahead.','Send a reminder the day before and again the morning of.','Tie attendance to points or accountability expectations.','Offer carpool coordination for off-campus events.','Recognize strong attendance out loud at chapter meeting.','Follow up personally with members who miss required events.','Avoid scheduling over common class blocks; ask in a poll.','Keep meetings short and end on time so people come back.','Rotate event types so there is something for everyone.','Ask absent members what got in the way and adjust.'];
+var STUDY=['Set a weekly minimum and publish it in Announcements.','Create two recurring library or campus study blocks.','Pair members by major or class for accountability.','Recognize members who meet the minimum in the Points tab.','Review progress at chapter meeting and follow up early with anyone falling behind.','Start a test bank: members share old notes and practice exams.','Hold a pre-exam quiet night with snacks provided.','Give a small prize to the highest-improving GPA, not just the highest.','Invite a tutor or campus academic center to run a session.'];
+var EVENTS=[['Brotherhood dinner and game night','low cost and easy to repeat'],['Service day with a social after','volunteer in the morning, cookout in the afternoon'],['Alumni career night','short talks, then small-group Q&A'],['Open mic or talent show','a fun way to meet new faces'],['Tailgate for a campus game','invite other orgs and prospects'],['Sports tournament','flag football, dodgeball or volleyball by teams'],['Philanthropy kickoff','announce a cause and set a goal together'],['Movie under the stars','projector, blankets and popcorn'],['Cooking competition','teams, one mystery ingredient, guest judges'],['Campus trivia night','host it and invite other organizations']];
+function list(items){return items.map(function(x,i){return (i+1)+'. <strong>'+x[0]+'</strong>'+(x[1]?' — '+x[1]:'');}).join('<br>');}
+function bullets(items){return items.map(function(x){return '• '+(typeof x==='string'?x:'<strong>'+x[0]+'</strong> — '+x[1]);}).join('<br>');}
+function vary(q){
+  q=(q||'').toLowerCase();
+  if(/\bpoll\b|\bvote\b/.test(q)&&!/dues|agenda/.test(q)){var p=deck('poll',POLLS);return 'Poll idea:<br><br><strong>'+p[0]+'</strong><br>'+p[1].map(function(o,i){return (i+1)+'. '+o;}).join('<br>')+'<br><br>Ask again for a different one, or create this in the <strong>Polls & Votes</strong> tab so members can vote and see live results.';}
+  if(/event idea|an event\b/.test(q)&&!/agenda|attendance|dues/.test(q))return 'Event ideas:<br><br>'+list(some('event',EVENTS,3))+'<br><br>Add the one you pick in the <strong>Events</strong> tab so it shows up on the calendar and in attendance.';
+  if(/social event|theme|party/.test(q))return 'Social event themes:<br><br>'+bullets(some('theme',THEMES,4))+'<br><br>Keep it inclusive, follow all campus and national policies, and plan safe transportation.';
+  if(/fundrais|revenue/.test(q))return 'Fundraising ideas:<br><br>'+list(some('fund',FUND,4))+'<br><br>Set a dollar goal and a deadline before you start, and log the money in <strong>Transactions</strong>.';
+  if(/brotherhood (event|ideas)|bonding/.test(q))return 'Brotherhood ideas:<br><br>'+bullets(some('broth',BROTH,5));
+  if(/service|volunteer/.test(q)&&!/hours? (log|tab)/.test(q))return 'Service project ideas:<br><br>'+bullets(some('serv',SERVICE,5))+'<br><br>Log the hours afterward in the Service Hours tab.';
+  if(/caption|instagram|social media/.test(q))return 'Caption idea:<br><br>“'+deck('cap',CAPS)+'”<br><br><strong>Hashtags:</strong> '+deck('tag',TAGS);
+  if(/attendance|show up|turnout/.test(q)&&/improve|brainstorm|ways|increase|boost|raise|how/.test(q))return 'Ways to improve attendance:<br><br>'+some('att',ATT,5).map(function(x,i){return (i+1)+'. '+x;}).join('<br>');
+  if(/study|gpa|academic|homework/.test(q)&&/improve|plan|how|help|raise/.test(q))return 'Study-hour improvement plan:<br><br>'+some('study',STUDY,5).map(function(x,i){return (i+1)+'. '+x;}).join('<br>');
+  return null;
+}
+if(typeof vaultAIReply==='function'){
+  var base=vaultAIReply;
+  vaultAIReply=function(q){
+    var r=null;try{r=vary(q);}catch(e){}
+    if(r==null)r=base.apply(this,arguments);
+    if(!window.__aiHint&&!(window.settings&&window.settings.vaultAIProxyUrl)){window.__aiHint=1;r+='<br><br><span style="color:var(--text3);font-size:11px">Offline mode: ideas come from a built-in list, so they can repeat over time. To get answers from a real AI like Claude or ChatGPT, connect one in Settings (see AI-SETUP.md).</span>';}
+    return r;
+  };
+}
 })();
 </script>
 <script>

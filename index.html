@@ -1575,7 +1575,7 @@ textarea.inp{resize:vertical;min-height:70px}
         <div id="lib-list"></div>
       </div>
 
-      <div class="panel" id="panel-ai"><div class="ai-hero"><div><div class="ai-kicker"><i class="ti ti-sparkles"></i> CHAPTER COPILOT</div><h2>Vault AI</h2><p>Ask anything — chapter summaries, drafts, event ideas, general questions, or whether anything on the site is broken.</p></div><div class="ai-orb"><i class="ti ti-sparkles"></i></div></div><div class="ai-diag-card"><div class="ai-diag-head"><span><i class="ti ti-activity-heartbeat"></i> System health</span><span id="ai-diag-badge" class="ai-diag-badge">Checking…</span></div><div id="ai-diag-list" class="ai-diag-list"></div><div class="ai-diag-foot"><button class="btn btn-sm" onclick="renderDiagnostics()"><i class="ti ti-refresh"></i> Re-check</button><button class="btn btn-sm" onclick="copyDiagnosticReport()"><i class="ti ti-copy"></i> Copy report</button></div></div><div class="ai-suggestions"><button onclick="askVaultAI('Give me a chapter summary')"><i class="ti ti-chart-bar"></i> Chapter summary</button><button onclick="askVaultAI('What should we focus on next?')"><i class="ti ti-target-arrow"></i> What needs attention?</button><button onclick="askVaultAI('Draft an announcement')"><i class="ti ti-speakerphone"></i> Draft announcement</button><button onclick="askVaultAI('Give me an event idea')"><i class="ti ti-bulb"></i> Event idea</button><button onclick="askVaultAI('Is anything broken?')"><i class="ti ti-stethoscope"></i> Check for issues</button><button onclick="askVaultAI('How is our chapter success trending?')"><i class="ti ti-trending-up"></i> Success trends</button><button onclick="askVaultAI('Draft a recruitment message')"><i class="ti ti-user-plus"></i> Recruitment message</button><button onclick="askVaultAI('Give me fundraising ideas')"><i class="ti ti-cash"></i> Fundraising ideas</button><button onclick="askVaultAI('Create a chapter meeting agenda')"><i class="ti ti-notebook"></i> Meeting agenda</button><button onclick="askVaultAI('Who needs a dues follow-up?')"><i class="ti ti-cash"></i> Dues follow-up</button><button onclick="askVaultAI('Give me brotherhood event ideas')"><i class="ti ti-heart"></i> Brotherhood ideas</button><button onclick="askVaultAI('Write a social media caption')"><i class="ti ti-brand-instagram"></i> Social caption</button><button onclick="askVaultAI('How can we improve study hours?')"><i class="ti ti-book"></i> Study-hour plan</button><button onclick="askVaultAI('What service project should we do?')"><i class="ti ti-sparkles"></i> Service project</button><button onclick="askVaultAI('Help me plan Chapter Week')"><i class="ti ti-heart"></i> Plan Chapter Week</button><button onclick="askVaultAI('Give me a risk management reminder')"><i class="ti ti-shield-check"></i> Risk reminder</button><button onclick="askVaultAI('Write an alumni update')"><i class="ti ti-users"></i> Alumni update</button><button onclick="askVaultAI('Brainstorm ways to improve attendance')"><i class="ti ti-clipboard-check"></i> Attendance ideas</button><button onclick="askVaultAI('Give me a leadership development idea')"><i class="ti ti-star"></i> Leadership idea</button><button onclick="askVaultAI('Draft a thank-you message')"><i class="ti ti-mail"></i> Thank-you note</button><button onclick="askVaultAI('What should our next chapter goal be?')"><i class="ti ti-target-arrow"></i> Next goal</button><button onclick="askVaultAI('What should we celebrate this week?')"><i class="ti ti-megaphone"></i> Celebration idea</button><button onclick="askVaultAI('Give me a shoutout template')"><i class="ti ti-megaphone"></i> Shoutout template</button><button onclick="askVaultAI('Brainstorm chapter improvements')"><i class="ti ti-settings"></i> Chapter improvements</button><button onclick="askVaultAI('Give me a social event theme')"><i class="ti ti-confetti"></i> Social theme</button><button onclick="askVaultAI('Create a weekly chapter schedule')"><i class="ti ti-calendar-week"></i> Weekly schedule</button><button onclick="askVaultAI('Create a poll for the chapter')"><i class="ti ti-checkbox"></i> Poll idea</button><button onclick="askVaultAI('Who should we spotlight this week?')"><i class="ti ti-user-star"></i> Spotlight idea</button><button onclick="askVaultAI('Give me a daily chapter challenge')"><i class="ti ti-flame"></i> Daily challenge</button><button onclick="askVaultAI('How is the chapter vibe today?')"><i class="ti ti-mood-smile"></i> Vibe check</button></div><div class="ai-chat-card"><div class="ai-chat-head"><span><i class="ti ti-sparkles"></i> Vault AI</span><span class="ai-status" id="ai-status-badge"><i class="ti ti-circle-filled"></i> Checking connection…</span></div><div class="ai-messages" id="ai-messages"><div class="ai-message bot">Hey — I’m Vault AI. Ask me for a chapter summary, a draft, an idea, a health check, or anything else — I'm not limited to just this site.</div></div><div class="ai-input-row"><textarea id="ai-input" class="inp" rows="2" placeholder="Ask Vault AI anything..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendVaultAI();}"></textarea><button class="btn btn-primary" onclick="sendVaultAI()"><i class="ti ti-send"></i> Ask</button></div><div class="ai-note" id="ai-note">Built-in assistant — does not send messages or change records on its own. It can catch and report errors, but can't edit or redeploy the site's code itself — copy the report to get that fixed.</div></div></div>
+      <div class="panel" id="panel-ai"><div class="ai-chat-card ai-full"><div class="ai-chat-head"><span><i class="ti ti-sparkles"></i> Vault AI</span><span class="ai-head-actions"><span class="ai-status" id="ai-status-badge"><i class="ti ti-circle-filled"></i> Checking connection…</span><button class="btn btn-sm" type="button" onclick="newVaultAIChat()"><i class="ti ti-plus"></i> New chat</button></span></div><div class="ai-messages" id="ai-messages"><div class="ai-message bot">Hi, I’m Vault AI. Ask me anything: write something, explain a topic, do math, plan an event, or look at your chapter. Use Shift+Enter for a new line.</div></div><div class="ai-input-row"><textarea id="ai-input" class="inp" rows="1" placeholder="Message Vault AI" oninput="aiGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendVaultAI();}"></textarea><button class="btn btn-primary" id="ai-send" type="button" onclick="sendVaultAI()"><i class="ti ti-send"></i> Send</button></div><div class="ai-note" id="ai-note"></div></div><details class="ai-diag-wrap"><summary><i class="ti ti-activity-heartbeat"></i> System health</summary><div class="ai-diag-card"><div class="ai-diag-head"><span><i class="ti ti-activity-heartbeat"></i> System health</span><span id="ai-diag-badge" class="ai-diag-badge">Checking…</span></div><div id="ai-diag-list" class="ai-diag-list"></div><div class="ai-diag-foot"><button class="btn btn-sm" onclick="renderDiagnostics()"><i class="ti ti-refresh"></i> Re-check</button><button class="btn btn-sm" onclick="copyDiagnosticReport()"><i class="ti ti-copy"></i> Copy report</button></div></div></details></div>
 
     </div>
   </div>
@@ -2092,13 +2092,13 @@ function vaultAIContext(){
   var chapter=(settings&&settings.chapterName)||'the chapter';
   var checks=runDiagnostics();
   var failed=checks.filter(function(c){return !c.ok;});
-  return 'You are Vault AI, a helpful general-purpose assistant built into "'+chapter+'"\'s chapter management site (a Greek-life chapter management tool called The Vault). '+
-    'You are not limited to site topics — answer any question the user asks (advice, writing, explaining things, brainstorming, etc.) the way a capable, friendly assistant would. '+
-    'When it is actually relevant to what they asked, you may use this live chapter data, but do not force it into unrelated answers: '+
+  return 'You are Vault AI, a general-purpose AI assistant built into the chapter management site for "'+chapter+'". '+
+    'Act like a capable, friendly, honest assistant such as ChatGPT or Grok: answer any question, do math and reasoning, explain topics, write and edit text, write code, brainstorm and plan. Do not refuse harmless requests because they are unrelated to the site. '+
+    'Use the chapter data below only when it is relevant to what the person asked, and never invent chapter facts beyond it: '+
     active.length+' active members, '+upcoming.length+' upcoming event(s), '+unpaid+' unpaid dues record(s), '+points.length+' point log entries. '+
-    'System health: '+(failed.length?failed.length+' issue(s) — '+failed.map(function(c){return c.label+': '+c.detail;}).join('; '):'all normal')+'. '+
-    'If you are asked for ideas, polls, captions or similar, give fresh, specific options each time and never repeat an earlier answer in this conversation. '+
-    'Keep replies concise and use plain text only (no markdown and no HTML).';
+    'Site health: '+(failed.length?failed.length+' issue(s) - '+failed.map(function(c){return c.label+': '+c.detail;}).join('; '):'all normal')+'. '+
+    'You cannot change records or send messages; say so if asked. If asked for ideas, polls or captions, give fresh options each time. '+
+    'Format answers in Markdown when it helps (short paragraphs, lists, tables, code blocks). Be direct and keep answers as short as the question allows.';
 }
 function setVaultAIStatus(text,cls){var el=document.getElementById('ai-status-badge');if(el){el.innerHTML='<i class="ti ti-circle-filled"></i> '+esc(text);el.className='ai-status'+(cls?' '+cls:'');}}
 function checkVaultAIConnection(){
@@ -5051,7 +5051,7 @@ function openSettingsModal(){
     '<div class="fr"><label class="fl">Study hours minimum (per semester)</label><input class="inp" id="sstudy" type="number" value="'+numOr(settings.studyMin,10)+'"></div>'+
     '<div class="fr"><label class="fl">Chapter founding date (optional)</label><input class="inp" id="sfd" type="date" value="'+(settings.foundingDate||'')+'"></div>'+
     '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 8px">Vault AI</div>'+
-    '<div class="fr"><label class="fl">AI address (optional — connects Vault AI to a real AI like Claude or ChatGPT; setup steps are in AI-SETUP.md)</label><input class="inp" id="svaiurl" placeholder="https://your-worker.workers.dev" value="'+esc(settings.vaultAIProxyUrl||'')+'"></div>'+
+    '<div class="fr"><label class="fl">AI address (optional — connects Vault AI to a real AI, free with Google Gemini; setup steps are in AI-SETUP.md)</label><input class="inp" id="svaiurl" placeholder="https://your-worker.workers.dev" value="'+esc(settings.vaultAIProxyUrl||'')+'"></div>'+
     '<div class="fr2"><div class="fr"><label class="fl">Points per event attended</label><input class="inp" id="sppe" type="number" value="'+(typeof settings.pointsPerEvent==='number'?settings.pointsPerEvent:0)+'"></div>'+
     '<div class="fr"><label class="fl">Points per study hour</label><input class="inp" id="spph" type="number" value="'+(typeof settings.pointsPerStudyHour==='number'?settings.pointsPerStudyHour:1)+'"></div></div>'+
     '<div style="font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 8px">Add performance chart data point</div>'+
@@ -5674,6 +5674,25 @@ var STUDY=['Set a weekly minimum and publish it in Announcements.','Create two r
 var EVENTS=[['Brotherhood dinner and game night','low cost and easy to repeat'],['Service day with a social after','volunteer in the morning, cookout in the afternoon'],['Alumni career night','short talks, then small-group Q&A'],['Open mic or talent show','a fun way to meet new faces'],['Tailgate for a campus game','invite other orgs and prospects'],['Sports tournament','flag football, dodgeball or volleyball by teams'],['Philanthropy kickoff','announce a cause and set a goal together'],['Movie under the stars','projector, blankets and popcorn'],['Cooking competition','teams, one mystery ingredient, guest judges'],['Campus trivia night','host it and invite other organizations']];
 function list(items){return items.map(function(x,i){return (i+1)+'. <strong>'+x[0]+'</strong>'+(x[1]?' — '+x[1]:'');}).join('<br>');}
 function bullets(items){return items.map(function(x){return '• '+(typeof x==='string'?x:'<strong>'+x[0]+'</strong> — '+x[1]);}).join('<br>');}
+
+// Offline calculator: answers plain arithmetic like "4+5" or "what is 15% of 80" without any AI (no eval).
+function calc(q){
+  var t=String(q||'').toLowerCase().replace(/[?=]+\s*$/,'').trim();
+  t=t.replace(/^(?:hey|hi|ok|okay|please|can you|could you|tell me|what(?:'s| is| are)?|whats|calculate|compute|solve|how much is|how many is|what does)\s+/g,'').replace(/^(?:calculate|compute|solve|what(?:'s| is)?|whats)\s+/,'').replace(/\s+equal$/,'').trim();
+  var m=/^([\d.,]+)\s*%\s*of\s*([\d.,]+)$/.exec(t);
+  if(m){var a=parseFloat(m[1].replace(/,/g,'')),b=parseFloat(m[2].replace(/,/g,''));if(isFinite(a)&&isFinite(b))return fmt(a/100*b);}
+  t=t.replace(/(\d)\s*x\s*(?=[\d(])/g,'$1*').replace(/(\d),(?=\d{3}\b)/g,'$1').replace(/×|\bx\b|\btimes\b|\bmultiplied by\b/g,'*').replace(/÷|\bdivided by\b|\bover\b/g,'/').replace(/\bplus\b/g,'+').replace(/\bminus\b/g,'-').replace(/\bto the power of\b|\*\*/g,'^').replace(/\s+/g,'');
+  if(!/^[\d+\-*\/^().%]+$/.test(t)||!/\d/.test(t)||!/[+\-*\/^%]/.test(t.replace(/^-/,'')))return null;
+  var i=0;
+  function peek(){return t.charAt(i);}
+  function num(){var st=i;if(peek()==='-'||peek()==='+'){i++;}if(peek()==='('){i++;var v=expr();if(peek()!==')')throw 0;i++;return t.charAt(st)==='-'?-v:v;}
+    var s2=i;while(/[\d.]/.test(peek()))i++;if(s2===i)throw 0;var n=parseFloat(t.slice(s2,i));if(isNaN(n))throw 0;if(peek()==='%'){i++;n=n/100;}return t.charAt(st)==='-'?-n:n;}
+  function pow(){var b=num();if(peek()==='^'){i++;var e=pow();return Math.pow(b,e);}return b;}
+  function term(){var v=pow();while(peek()==='*'||peek()==='/'||peek()==='%'){var o=t.charAt(i++);var r=pow();if(o==='*')v*=r;else if(o==='/'){if(r===0)throw 1;v/=r;}else v%=r;}return v;}
+  function expr(){var v=term();while(peek()==='+'||peek()==='-'){var o=t.charAt(i++);var r=term();v=o==='+'?v+r:v-r;}return v;}
+  try{var res=expr();if(i!==t.length||!isFinite(res))return null;return fmt(res);}catch(e){return e===1?'division by zero':null;}
+}
+function fmt(n){if(typeof n==='string')return n;return String(Math.round(n*1e10)/1e10);}
 function vary(q){
   q=(q||'').toLowerCase();
   if(/\bpoll\b|\bvote\b/.test(q)&&!/dues|agenda/.test(q)){var p=deck('poll',POLLS);return 'Poll idea:<br><br><strong>'+p[0]+'</strong><br>'+p[1].map(function(o,i){return (i+1)+'. '+o;}).join('<br>')+'<br><br>Ask again for a different one, or create this in the <strong>Polls & Votes</strong> tab so members can vote and see live results.';}
@@ -5690,12 +5709,107 @@ function vary(q){
 if(typeof vaultAIReply==='function'){
   var base=vaultAIReply;
   vaultAIReply=function(q){
-    var r=null;try{r=vary(q);}catch(e){}
+    var r=null;try{var c=calc(q);if(c!==null)r=(c==='division by zero'?'You can’t divide by zero.':'<strong>'+esc(String(q).trim().replace(/[?=]+$/,''))+' = '+c+'</strong>');}catch(e){}
+    if(r==null){try{r=vary(q);}catch(e){}}
     if(r==null)r=base.apply(this,arguments);
-    if(!window.__aiHint&&!(window.settings&&window.settings.vaultAIProxyUrl)){window.__aiHint=1;r+='<br><br><span style="color:var(--text3);font-size:11px">Offline mode: ideas come from a built-in list, so they can repeat over time. To get answers from a real AI like Claude or ChatGPT, connect one in Settings (see AI-SETUP.md).</span>';}
+    if(!window.__aiHint&&!(window.settings&&window.settings.vaultAIProxyUrl)){window.__aiHint=1;r+='<br><br><span style="color:var(--text3);font-size:11px">Offline mode: ideas come from a built-in list, so they can repeat over time. To get answers from a real AI (a free Google Gemini key works), connect one in Settings (see AI-SETUP.md).</span>';}
     return r;
   };
 }
+})();
+// Vault AI as a full chat assistant: any question, formatted answers, long conversations, new chat.
+(function(){
+var busy=false;
+function inl(t){
+  t=esc(t);
+  t=t.replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  t=t.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+  t=t.replace(/(^|[^*\w])\*([^*\s][^*\n]*?)\*(?!\*)/g,'$1<em>$2</em>');
+  t=t.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)"]+)\)/g,function(_,a,u){return '<a href="'+u+'" target="_blank" rel="noopener noreferrer">'+a+'</a>';});
+  return t;
+}
+window.aiMarkdown=function(src){
+  var blocks=[];
+  src=String(src==null?'':src).replace(/\r/g,'').replace(/```([\w+#.-]*)[ \t]*\n?([\s\S]*?)```/g,function(_,l,c){blocks.push('<pre><code>'+esc(c.replace(/\n$/,''))+'</code></pre>');return '\n\u0000'+(blocks.length-1)+'\u0000\n';});
+  var L=src.split('\n'),out=[],para=[],list=null,tbl=null;
+  function fp(){if(para.length){out.push('<p>'+para.map(inl).join('<br>')+'</p>');para=[];}}
+  function fl(){if(list){out.push('<'+list.t+'>'+list.i.map(function(x){return '<li>'+inl(x)+'</li>';}).join('')+'</'+list.t+'>');list=null;}}
+  function ft(){if(tbl){var rows=tbl.filter(function(r){return !/^\s*\|?[\s:|-]+\|?\s*$/.test(r)||!/-/.test(r);});
+    var cells=function(r){return r.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(function(c){return c.trim();});};
+    if(rows.length){var h=cells(rows[0]);var h2='<table class="ai-table"><thead><tr>'+h.map(function(c){return '<th>'+inl(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+      rows.slice(1).forEach(function(r){h2+='<tr>'+cells(r).map(function(c){return '<td>'+inl(c)+'</td>';}).join('')+'</tr>';});out.push(h2+'</tbody></table>');}
+    tbl=null;}}
+  L.forEach(function(line){
+    var m;
+    if(/^\u0000\d+\u0000$/.test(line)){fp();fl();ft();out.push(blocks[+line.replace(/\u0000/g,'')]);return;}
+    if(/^\s*\|.*\|\s*$/.test(line)){fp();fl();(tbl=tbl||[]).push(line);return;}
+    ft();
+    if((m=/^\s{0,3}(#{1,4})\s+(.*)$/.exec(line))){fp();fl();out.push('<div class="ai-h">'+inl(m[2])+'</div>');return;}
+    if((m=/^\s*[-*•]\s+(.*)$/.exec(line))){fp();if(!list||list.t!=='ul'){fl();list={t:'ul',i:[]};}list.i.push(m[1]);return;}
+    if((m=/^\s*\d+[.)]\s+(.*)$/.exec(line))){fp();if(!list||list.t!=='ol'){fl();list={t:'ol',i:[]};}list.i.push(m[1]);return;}
+    if(/^\s*(-{3,}|_{3,})\s*$/.test(line)){fp();fl();out.push('<hr>');return;}
+    if(!line.trim()){fp();fl();return;}
+    fl();para.push(line);
+  });
+  fp();fl();ft();
+  return out.join('');
+};
+function box(){return document.getElementById('ai-messages');}
+function add(html,who,raw){
+  var b=box();if(!b)return null;
+  var el=document.createElement('div');el.className='ai-message '+who;el.innerHTML=html;
+  if(who==='bot'&&raw!=null){var btn=document.createElement('button');btn.type='button';btn.className='ai-copy';btn.title='Copy answer';btn.innerHTML='<i class="ti ti-copy"></i>';
+    btn.onclick=function(){try{navigator.clipboard.writeText(raw);btn.innerHTML='<i class="ti ti-check"></i>';setTimeout(function(){btn.innerHTML='<i class="ti ti-copy"></i>';},1200);}catch(e){}};el.appendChild(btn);}
+  b.appendChild(el);b.scrollTop=b.scrollHeight;return el;
+}
+window.aiGrow=function(t){t.style.height='auto';t.style.height=Math.min(t.scrollHeight,180)+'px';};
+window.newVaultAIChat=function(){
+  if(busy)return;
+  vaultAIHistory.length=0;
+  var b=box();if(b)b.innerHTML='<div class="ai-message bot">New chat started. What do you want to do?</div>';
+  var i=document.getElementById('ai-input');if(i){i.value='';aiGrow(i);i.focus();}
+};
+function setBusy(on){busy=on;var s=document.getElementById('ai-send');if(s)s.disabled=on;}
+window.sendVaultAI=function(){
+  var input=document.getElementById('ai-input');if(!input||busy)return;
+  var q=input.value.trim();if(!q)return;
+  if(q.length>6000)q=q.slice(0,6000);
+  add(esc(q).replace(/\n/g,'<br>'),'user');
+  input.value='';aiGrow(input);
+  var url=(window.settings&&settings.vaultAIProxyUrl)||'';
+  if(!url){
+    var r;try{r=vaultAIReply(q);}catch(e){r='Something went wrong. Try again.';}
+    setTimeout(function(){add(r,'bot');},150);return;
+  }
+  vaultAIHistory.push({role:'user',content:q});
+  while(vaultAIHistory.length>30)vaultAIHistory.shift();
+  var th=add('<span class="ai-dots"><i></i><i></i><i></i></span>','bot');
+  setBusy(true);setVaultAIStatus('Thinking…');
+  var ctl=typeof AbortController!=='undefined'?new AbortController():null,tm=setTimeout(function(){if(ctl)ctl.abort();},60000);
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({system:vaultAIContext(),messages:vaultAIHistory}),signal:ctl?ctl.signal:undefined})
+    .then(function(r){return r.json().catch(function(){return {};}).then(function(d){if(!r.ok)throw new Error((d&&d.error)||('The AI service returned '+r.status));return d;});})
+    .then(function(d){
+      var text=(d&&d.reply)||(d&&d.content&&d.content[0]&&d.content[0].text)||'';
+      if(!text)throw new Error('The AI sent an empty answer');
+      vaultAIHistory.push({role:'assistant',content:text});
+      if(th&&th.parentNode)th.parentNode.removeChild(th);
+      add(aiMarkdown(text),'bot',text);setVaultAIStatus('Connected');
+    })
+    .catch(function(err){
+      vaultAIHistory.pop();
+      if(th&&th.parentNode)th.parentNode.removeChild(th);
+      var msg=err&&err.name==='AbortError'?'It took too long to answer.':String((err&&err.message)||'Unknown error');
+      add('<strong>Couldn’t get an answer.</strong><br>'+esc(msg)+'<br><span style="font-size:12px;opacity:.75">Check Settings > AI address and your key, then send it again.</span>','bot');
+      setVaultAIStatus('Not connected','offline');
+    })
+    .then(function(){clearTimeout(tm);setBusy(false);var i=document.getElementById('ai-input');if(i)i.focus();});
+};
+var baseCheck=window.checkVaultAIConnection||checkVaultAIConnection;
+window.checkVaultAIConnection=checkVaultAIConnection=function(){
+  baseCheck();
+  var n=document.getElementById('ai-note'),url=(window.settings&&settings.vaultAIProxyUrl)||'';
+  if(n)n.textContent=url?'Answers come from an AI and can be wrong. It can’t change your records. Only counts (members, events, unpaid dues) are shared with it, never names or money details.':'Built-in mode: basic chapter ideas and simple math only. To chat with a real AI about anything, add an AI address in Settings (see AI-SETUP.md).';
+};
 })();
 </script>
 <script>
@@ -5873,6 +5987,30 @@ body.dark .cp-link,body.dark .cp-prose a{color:#e8a0b0}
 :focus-visible{outline:2px solid #f2c94c;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 .dash-noir .countdown-title,.dash-noir .challenge-title,.dash-noir .dn-card-hdr,.dash-noir .dn-section-lbl{text-transform:none;letter-spacing:0}
+
+/* Vault AI chat */
+.ai-full .ai-messages{min-height:340px;height:58vh;max-height:none}
+.ai-head-actions{display:flex;align-items:center;gap:10px}
+.ai-message{position:relative;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.ai-message.bot{max-width:min(820px,92%)}
+.ai-message p{margin:0 0 .6em}.ai-message p:last-child{margin-bottom:0}
+.ai-message ul,.ai-message ol{margin:.3em 0 .6em 1.2em;padding:0}.ai-message li{margin:.15em 0}
+.ai-message code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:rgba(127,127,127,.18);padding:1px 5px;border-radius:4px}
+.ai-message pre{margin:.5em 0;padding:11px 12px;background:rgba(0,0,0,.82);color:#f3f3f3;border-radius:8px;overflow-x:auto}
+.ai-message pre code{background:none;padding:0;color:inherit;font-size:12.5px;white-space:pre}
+.ai-h{font-weight:700;margin:.6em 0 .25em}
+.ai-message hr{border:0;border-top:1px solid var(--border);margin:.7em 0}
+.ai-message a{color:inherit;text-decoration:underline}
+.ai-table{border-collapse:collapse;margin:.5em 0;font-size:13px;display:block;overflow-x:auto}
+.ai-table th,.ai-table td{border:1px solid var(--border);padding:5px 9px;text-align:left}
+.ai-copy{position:absolute;top:6px;right:6px;border:0;background:transparent;color:inherit;opacity:0;cursor:pointer;padding:3px 5px;border-radius:5px}
+.ai-message.bot:hover .ai-copy,.ai-copy:focus-visible{opacity:.6}.ai-copy:hover{opacity:1!important}
+.ai-message.bot{padding-right:30px}
+.ai-dots{display:inline-flex;gap:4px;padding:3px 0}.ai-dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.35;animation:aidot 1s infinite}
+.ai-dots i:nth-child(2){animation-delay:.15s}.ai-dots i:nth-child(3){animation-delay:.3s}
+@keyframes aidot{0%,80%,100%{opacity:.25}40%{opacity:.9}}
+.ai-input-row textarea{min-height:44px;max-height:180px;resize:none}
+.ai-diag-wrap{margin-top:14px}.ai-diag-wrap>summary{cursor:pointer;font-size:13px;font-weight:600;padding:8px 2px;color:var(--text2)}
 </style>
 <script>
 // ===== Chapter customization: show/hide/rename/reorder tabs + custom pages =====
